@@ -1,0 +1,13 @@
+<div class="fcentered alert alert-{{ error is none ? 'success' : 'error' }}">
+{% if error is none %}
+	<i class="icon-ok"></i>
+	Configuration deployed.
+{% else %}
+	<i class="icon-remove"></i>
+	Configuration deployment failed.
+{% endif %}
+</div>
+
+{% if error is not none %}
+	<pre>{{ error }}</pre>
+{% endif %}

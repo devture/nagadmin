@@ -1,0 +1,162 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% macro render_command_picker(field_name, commands, selected_command) %}
+	<select name="{{ field_name }}" id="{{ field_name }}" class="js-chosen-select js-command-chooser" required="required">
+		<option value="">-- Pick one --</option>
+	{% for command in commands %}
+		<option value="{{ command.id }}"
+			data-command-line="{{ command.line }}"
+			{{ selected_command is not none and selected_command.id == command.id ? 'selected="selected"' : '' }}
+			>{{ command.title }}</option>
+	{% endfor %}
+	</select>
+	<div class="js-command-preview top-spaced-minor hide"><pre></pre></div>
+{% endmacro %}
+
+{% block devture_nagios_content %}
+	{{ render_form_violations(form, '__other__') }}
+
+	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+		{{ form_csrf_token(form) }}
+
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Identifier</label>
+				<div class="controls">
+					<input type="text" name="name" id="name"
+						required="required"
+						value="{{ entity.name }}" />
+					{{ render_form_violations(form, 'name') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-envelope"></i> Email</label>
+				<div class="controls">
+					<input type="text" name="email" id="email"
+						value="{{ entity.email }}" />
+					<span class="help-inline">(ends up in the $CONTACTEMAIL$ macro)</span>
+					{{ render_form_violations(form, 'email') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Addresses</label>
+				<div class="controls">
+					<p class="help-block">
+						You can enter some additional address values
+						if notification commands require them.
+					</p>
+					<fieldset class="top-spaced-minor">
+					{% for _ in range(0, addressSlotsCount - 1) %}
+						{% set slot = loop.index %}
+						{% set address = entity.getAddressBySlot(slot) %}
+						<div class="control-group {{ loop.last ? 'last' : '' }}">
+							<label class="control-label">Address {{ slot }}</label>
+							<div class="controls">
+								<input type="text" name="addresses[{{ slot }}]"
+									value="{{ address }}" />
+								<span class="help-inline">(ends up in the $CONTACTADDRESS{{ slot }}$ macro)</span>
+							</div>
+						</div>
+					{% endfor %}
+					</fieldset>
+					{{ render_form_violations(form, 'addresses') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-share"></i> Notifications</label>
+				<div class="controls">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label"><i class="icon-cog"></i> Command</label>
+							<div class="controls">
+								{{ _self.render_command_picker('serviceNotificationCommandId', notificationCommands, entity.serviceNotificationCommand) }}
+								{{ render_form_violations(form, 'serviceNotificationCommand') }}
+							</div>
+						</div>
+						<div class="control-group last">
+							<label class="control-label"><i class="icon-time"></i> Period</label>
+							<div class="controls">
+								{% set selected_period = entity.timePeriod %}
+								<select name="timePeriodId" id="timePeriodId" class="js-chosen-select" required="required">
+								{% for time_period in timePeriods %}
+									<option value="{{ time_period.id }}"
+										{{ selected_period is not none and selected_period.id == time_period.id ? 'selected="selected"' : '' }}
+										>{{ time_period.title }}</option>
+								{% endfor %}
+								</select>
+
+								{% for time_period in timePeriods %}
+								<div class="js-time-period-preview hide" data-id="{{ time_period.id }}">
+									<div class="top-spaced-minor"></div>
+									{% include app['devture_nagios.views']['time_period.rules_table'] with {'rules': time_period.rules} %}
+								</div>
+								{% endfor %}
+								{{ render_form_violations(form, 'timePeriod') }}
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Save
+				</button>
+
+				{% if isAdded %}
+				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+					Delete
+				</button>
+				{% endif %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	{% if isAdded %}
+	$('#form-delete-btn').bind('click', function () {
+		if (confirm('Are you sure you want to delete this?')) {
+			$.ajax({
+				"url": {{ path('devture_nagios.contact.delete', {'id': entity.id, 'token': csrf_token('delete-contact-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						window.location = {{ path('devture_nagios.contact.manage')|json_encode|raw }};
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		}
+		return false;
+	});
+	{% endif %}
+
+	$('#timePeriodId').change(function () {
+		var selectedTimePeriodId = $(this).val();
+		$('.js-time-period-preview').hide();
+		$.each($('.js-time-period-preview'), function () {
+			if ($(this).data('id') == selectedTimePeriodId) {
+				$(this).show();
+				return false;
+			}
+		});
+	}).trigger('change');
+
+	$('.js-command-chooser').change(function () {
+		var $previewContainer = $(this).parent().find('.js-command-preview');
+		if ($(this).val() === '') {
+			$previewContainer.hide();
+		} else {
+			$previewContainer.find('pre').text($(this).find('option').filter(':selected').data('command-line'));
+			$previewContainer.show();
+		}
+	}).trigger('change');
+{% endblock %}

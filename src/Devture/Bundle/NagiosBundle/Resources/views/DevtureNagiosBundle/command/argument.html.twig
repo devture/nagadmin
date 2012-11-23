@@ -1,0 +1,25 @@
+<fieldset>
+	<div class="control-group">
+		<label class="control-label">Argument</label>
+		<div class="controls">
+			$ARG{{ ident }}$
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">Description</label>
+		<div class="controls">
+			<input type="text" name="arguments[{{ ident }}][description]"
+				value="{{ entity is not none ? entity.description : '' }}"
+				style="width: 400px;" />
+		</div>
+	</div>
+	<div class="control-group last">
+		<label class="control-label">Default Value</label>
+		<div class="controls">
+			<input type="text" name="arguments[{{ ident }}][defaultValue]"
+				value="{{ entity is not none ? entity.defaultValue : '' }}"
+				style="width: 400px;" />
+		</div>
+	</div>
+	<div class="top-spaced-minor"></div>
+</fieldset>

@@ -1,0 +1,202 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	{{ render_form_violations(form, '__other__') }}
+
+	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+		{{ form_csrf_token(form) }}
+
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Identifier</label>
+				<div class="controls">
+					<input type="text" name="name" id="name"
+						required="required"
+						value="{{ entity.name }}" />
+					{{ render_form_violations(form, 'name') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-th-large"></i> Host</label>
+				<div class="controls">
+					{% set selected_host = entity.host %}
+					<select name="hostId" class="span4 js-chosen-select">
+						<option value="">-- Pick one --</option>
+					{% for host in hosts %}
+						<option value="{{ host.id }}"
+							{{ selected_host is not none and selected_host.id == host.id ? 'selected="selected"' : '' }}
+							>{{ host.name }} ({{ host.address }})</option>
+					{% endfor %}
+					</select>
+					{{ render_form_violations(form, 'host') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-cog"></i> Command</label>
+				<div class="controls">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">Command</label>
+							<div class="controls">
+								<a href="{{ path('devture_nagios.command.edit', {'id': entity.command.id}) }}">
+									{{ entity.command.name }} / {{ entity.command.title }}
+								</a>
+								<pre class="top-spaced-minor" style="padding: 2px;"
+									><code>{{ entity.command.line }}</code></pre>
+							</div>
+						</div>
+						{% for argument in entity.command.arguments %}
+							<div class="control-group {{ loop.last ? 'last' : '' }}">
+								<label class="control-label">$ARG{{ loop.index }}$</label>
+								<div class="controls">
+									{% set command_argument = entity.getArgumentById(argument.id) %}
+									<strong>{{ argument.description }}</strong>:
+									<br />
+									<input type="text" name="arguments[{{ argument.id }}][value]"
+										value="{{ command_argument is not none ? command_argument.value : argument.defaultValue }}"
+										style="width: 400px;" />
+								</div>
+							</div>
+						{% endfor %}
+						{{ render_form_violations(form, 'arguments') }}
+					</fieldset>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-check"></i> Checks</label>
+				<div class="controls">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">Check Interval</label>
+							<div class="controls">
+								<div class="input-append">
+									<input type="number" min="1" class="span1"
+										name="checkInterval" id="checkInterval"
+										required="required"
+										value="{{ entity.checkInterval }}" />
+									<span class="add-on">minutes</span>
+								</div>
+								<p class="help-block">
+									How often to re-check the service when it's OK.
+								</p>
+								{{ render_form_violations(form, 'checkInterval') }}
+							</div>
+						</div>
+
+						<div class="control-group last">
+							<label class="control-label">Retry Interval</label>
+							<div class="controls">
+								<div class="input-append">
+									<input type="number" min="1" class="span1"
+										name="retryInterval" id="retryInterval"
+										required="required"
+										value="{{ entity.retryInterval }}" />
+									<span class="add-on">minutes</span>
+								</div>
+								<p class="help-block">
+									How often to re-check the service when it's starting to fail,
+									until the failure is confirmed.
+								</p>
+								{{ render_form_violations(form, 'retryInterval') }}
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label">Max Check Attempts</label>
+							<div class="controls">
+								<div class="input-append">
+									<input type="number" min="1" class="span1"
+										name="maxCheckAttempts" id="maxCheckAttempts"
+										required="required"
+										value="{{ entity.maxCheckAttempts }}" />
+									<span class="add-on">times</span>
+								</div>
+								<p class="help-block">
+									Number of Retry Checks to run, before failure is confirmed and notifications get sent.
+								</p>
+								{{ render_form_violations(form, 'maxCheckAttempts') }}
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-share"></i> Notifications</label>
+				<div class="controls">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">Interval</label>
+							<div class="controls">
+								<div class="input-append">
+									<input type="number" name="notificationInterval" id="notificationInterval"
+										class="span1"
+										required="required"
+										value="{{ entity.notificationInterval }}" />
+									<span class="add-on">minutes</span>
+								</div>
+								<p class="help-block">
+									How often to re-send notifications.
+								</p>
+								{{ render_form_violations(form, 'notificationInterval') }}
+							</div>
+						</div>
+						<div class="control-group last">
+							<label class="control-label"><i class="icon-user"></i> People to Notify</label>
+							<div class="controls">
+								<select name="contactsIds[]" id="contactsIds"
+									multiple="multiple" class="js-chosen-select"
+									data-placeholder="Choose some contacts.."
+									style="width: 100%;">
+								{% for contact in contacts %}
+									<option value="{{ contact.id }}"
+										{{ contact in entity.contacts ? 'selected="selected"' : '' }}>{{ contact.name }}</option>
+								{% endfor %}
+								</select>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Save
+				</button>
+
+				{% if isAdded %}
+				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+					Delete
+				</button>
+				{% endif %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	{% if isAdded %}
+	$('#form-delete-btn').bind('click', function () {
+		if (confirm('Are you sure you want to delete this?')) {
+			$.ajax({
+				"url": {{ path('devture_nagios.service.delete', {'id': entity.id, 'token': csrf_token('delete-service-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						window.location = {{ path('devture_nagios.service.manage')|json_encode|raw }};
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		}
+		return false;
+	});
+	{% endif %}
+{% endblock %}

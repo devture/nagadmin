@@ -1,0 +1,121 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% macro render_rules_example() %}
+{% spaceless %}
+monday							  08:00-24:00
+tuesday							 09:00-17:00
+wednesday						   08:00-12:00,15:00-19:00
+thursday							08:00-24:00
+sunday							  14:00-19:00
+2007-01-01 - 2008-02-01			 00:00-24:00
+tuesday 1 april - friday 2 may	  15:00-17:00
+monday 3							00:00-09:00,17:00-24:00
+day 2							   00:00-24:00
+february 10						 00:00-24:00
+february -1						 00:00-24:00
+{% endspaceless %}
+{% endmacro %}
+
+{% block devture_nagios_content %}
+	{{ render_form_violations(form, '__other__') }}
+
+	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+		{{ form_csrf_token(form) }}
+
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Identifier</label>
+				<div class="controls">
+					<input type="text" name="name" id="name"
+						required="required"
+						value="{{ entity.name }}" />
+					{{ render_form_violations(form, 'name') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Title</label>
+				<div class="controls">
+					<input type="text" name="title" id="title"
+						required="required"
+						value="{{ entity.title }}" />
+					{{ render_form_violations(form, 'title') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Rules</label>
+				<div class="controls">
+					<div id="js-rules-container">
+					{% for rule in entity.rules %}
+						{% include app['devture_nagios.views']['time_period.rule_editor'] with {'entity': rule, 'number': loop.index} %}
+					{% endfor %}
+					</div>
+
+					<script id="js-rule-editor-template" type="text/template">
+						{% include app['devture_nagios.views']['time_period.rule_editor'] with {'entity': none, 'number': '__NUMBER__'} %}
+					</script>
+
+					<a class="btn" href="javascript://" id="js-button-add-rule">Add new rule</a>
+
+					<p class="help-block top-spaced-minor">
+						<strong>Example:</strong><br />
+						<pre style="width: 500px;"><code>{{ _self.render_rules_example() }}</code></pre>
+						To learn more, read the docs on
+						<a href="http://nagios.sourceforge.net/docs/3_0/objectdefinitions.html#timeperiod"
+							target="_blank">Time Period definitions</a>
+					</p>
+					{{ render_form_violations(form, 'rules') }}
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Save
+				</button>
+
+				{% if isAdded %}
+				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+					Delete
+				</button>
+				{% endif %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	{% if isAdded %}
+	$('#form-delete-btn').bind('click', function () {
+		if (confirm('Are you sure you want to delete this?')) {
+			$.ajax({
+				"url": {{ path('devture_nagios.time_period.delete', {'id': entity.id, 'token': csrf_token('delete-time-period-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						window.location = {{ path('devture_nagios.time_period.manage')|json_encode|raw }};
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		}
+		return false;
+	});
+	{% endif %}
+
+	$('#js-button-add-rule').click(function () {
+		var html = $('#js-rule-editor-template').html(),
+			$lastEditor = $('.js-rule-editor').last(),
+			lastNumber = $lastEditor.length === 1 ? $lastEditor.data('number') : 0;
+		html = html.replace(/__NUMBER__/g, lastNumber + 1);
+		$(html).appendTo($('#js-rules-container')).find('input[type=text]').first().focus();
+	});
+
+	$('#js-rules-container').on('click', '.js-button-remove-rule', function (ev) {
+		$(this).closest('.js-rule-editor').remove();
+	});
+{% endblock %}

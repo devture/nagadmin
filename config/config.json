@@ -1,0 +1,50 @@
+{
+	"trust_proxy_data": "%is_proxy_data_trusted%",
+	"project.name": "%project_name%",
+	"debug": "%is_debug%",
+	"mongo": {
+		"db_name": "%db_name%"
+	},
+	"SharedBundle": {
+		"token.validity_time": 7200,
+		"token.salt": "%SharedBundle.token_salt%",
+		"token.hash_function": "md5"
+	},
+	"NagiosBundle": {
+		"database_service_id": "mongodb.database",
+		"deployment_handler": {
+			"path": "%NagiosBundle.deployment_handler.path%",
+			"post_deployment_command": "%NagiosBundle.deployment_handler.post_deployment_command%"
+		},
+		"defaults": {
+			"service": {
+				"max_check_attempts": "%NagiosBundle.defaults.service.max_check_attempts%",
+				"check_interval": "%NagiosBundle.defaults.service.check_interval%",
+				"retry_interval": "%NagiosBundle.defaults.service.retry_interval%",
+				"notification_interval": "%NagiosBundle.defaults.service.notification_interval%"
+			}
+		},
+		"notifications": {
+			"email": {
+				"sender_email_address": "%NagiosBundle.notifications.email.sender_email_address%",
+				"host": "%NagiosBundle.notifications.email.host%",
+				"port": "%NagiosBundle.notifications.email.port%",
+				"username": "%NagiosBundle.notifications.email.username%",
+				"password": "%NagiosBundle.notifications.email.password%",
+				"encryption": "%NagiosBundle.notifications.email.encryption%",
+				"auth_mode": "%NagiosBundle.notifications.email.auth_mode%"
+			},
+			"sms": {
+				"gateway_name": "%NagiosBundle.notifications.sms.gateway_name%",
+				"sender_id": "%NagiosBundle.notifications.sms.sender_id%",
+				"gateway_config": {
+					"username": "%NagiosBundle.notifications.sms.gateway_config.username%",
+					"password": "%NagiosBundle.notifications.sms.gateway_config.password%"
+				}
+			}
+		},
+		"auto_service_dependency": {
+			"master_service_regexes": "%NagiosBundle.auto_service_dependency.master_service_regexes%"
+		}
+	}
+}

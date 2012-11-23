@@ -1,0 +1,16 @@
+<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+	<i class="icon-plus"></i>
+	Add new
+	<span class="caret"></span>
+</a>
+<ul class="dropdown-menu" style="min-width: 0;">
+{% set base_params = selectedHost is none ? {} : {'hostId': selectedHost.id ~ ''} %}
+{% set base_params = base_params|merge({'next': app.request.uri}) %}
+{% for command in commands %}
+	<li>
+		<a href="{{ path('devture_nagios.service.add', base_params|merge({'commandId': command.id})) }}">
+			{{ command.title }}
+		</a>
+	</li>
+{% endfor %}
+</ul>

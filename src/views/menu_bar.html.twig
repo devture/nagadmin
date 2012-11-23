@@ -1,0 +1,26 @@
+{% macro menu_item(route, url, title, icon, position) %}
+	<li class="pull-{{ position }} {{ is_route_prefix(route) ? 'active' : '' }}">
+		<a href="{{ url }}">
+			{% if icon is not none %}
+				<i class="{{ icon }}"></i>
+			{% endif %}
+			{{ title }}
+		</a>
+	</li>
+{% endmacro %}
+
+<ul class="nav clearfix">
+	{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'icon-time', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'icon-cog', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'icon-user', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.host.', path('devture_nagios.host.manage'), 'Hosts', 'icon-th-large', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.service.', path('devture_nagios.service.manage'), 'Services', 'icon-signal', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.resource.', path('devture_nagios.resource.manage'), 'Resource Variables', 'icon-wrench', 'left') }}
+
+	{{ _self.menu_item('devture_nagios.configuration.', path('devture_nagios.configuration.test'), 'Deployment', 'icon-retweet', 'right') }}
+</ul>

@@ -1,0 +1,17 @@
+<div class="js-rule-editor" data-number="{{ number }}">
+	<div class="input-prepend">
+	{% spaceless %}
+		<input type="text" name="rules[{{ number }}][dateRange]"
+			value="{{ entity is not none ? entity.dateRange : '' }}"
+			placeholder="Weekday or date range" class="add-on" style="text-align: left; width: 200px;" />
+
+		<input type="text" name="rules[{{ number }}][timeRange]"
+			value="{{ entity is not none ? entity.timeRange : '' }}"
+			placeholder="Time range" />
+	{% endspaceless %}
+	</div>
+
+	<a href="javascript://" class="btn btn-mini js-button-remove-rule"><i class="icon-remove"></i> Remove rule</a>
+
+	<div class="top-spaced-minor"></div>
+</div>

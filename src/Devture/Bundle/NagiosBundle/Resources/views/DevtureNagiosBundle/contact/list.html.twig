@@ -1,0 +1,36 @@
+{% if items|length == 0 %}
+	No items found.
+{% else %}
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Identifier</th>
+				<th>Addresses</th>
+				<th>Notifications Period</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for entity in items %}
+			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
+			<tr>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.name }}
+					</a>
+				</td>
+				<td>
+					{% set addresses = (entity.email ? [entity.email] : [])|merge(entity.addresses) %}
+					<a href="{{ link }}" class="display-block">
+						{{ addresses|join(', ') }}
+					</a>
+				</td>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.timePeriod.title }}
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

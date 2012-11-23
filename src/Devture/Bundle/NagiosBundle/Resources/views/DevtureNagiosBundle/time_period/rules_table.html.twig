@@ -1,0 +1,14 @@
+{% if rules|length == 0 %}
+	Never
+{% else %}
+	<table class="table table-bordered table-striped table-condensed">
+		<tbody>
+		{% for rule in rules %}
+			<tr>
+				<td style="width: 30%;">{{ rule.dateRange|capitalize }}</td>
+				<td>{{ rule.timeRange }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

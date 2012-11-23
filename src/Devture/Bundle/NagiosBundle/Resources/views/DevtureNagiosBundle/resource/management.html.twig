@@ -1,0 +1,36 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	<div class="alert alert-info">
+		These <a target="_blank" href="http://nagios.sourceforge.net/docs/3_0/configmain.html#resource_file"
+			><strong>resource file</strong></a> macros are typically used in
+		<a target="_blank" href="{{ path('devture_nagios.command.manage') }}"><strong>commands definitions</strong></a>
+		to avoid hardcoding paths and passwords.
+	</div>
+
+	{{ render_form_violations(form, '__other__') }}
+	{{ render_form_violations(form, 'variables') }}
+
+	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+		{{ form_csrf_token(form) }}
+
+		<fieldset>
+			{% for i in range(1, userVariablesCount) %}
+				{% set variableName = '$USER' ~ i ~ '$' %}
+				<div class="control-group">
+					<label class="control-label">{{ variableName }}</label>
+					<div class="controls">
+						<input type="text" name="variables[{{ variableName }}]"
+							value="{{ entity.getVariableByName(variableName) }}" />
+					</div>
+				</div>
+			{% endfor %}
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Save
+				</button>
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}

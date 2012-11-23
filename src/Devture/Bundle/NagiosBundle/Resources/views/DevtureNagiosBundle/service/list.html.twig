@@ -1,0 +1,36 @@
+{% if items|length == 0 %}
+	No services found.
+{% else %}
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th><i class="icon-th-large"></i> Host</th>
+				<th><i class="icon-signal"></i> Service</th>
+				<th><i class="icon-user"></i> Users to Notify</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for entity in items %}
+			{% set link = path('devture_nagios.service.edit', {'id': entity.id, 'next': app.request.uri}) %}
+			<tr>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.host.name }}
+					</a>
+				</td>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.name }}
+					</a>
+				</td>
+				<td>
+				{% for contact in entity.contacts %}
+					<span class="label label-nagadmin label-info"
+						style="background-color: {{ contact.name|colorize }};">{{ contact.name }}</span>
+				{% endfor %}
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

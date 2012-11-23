@@ -1,0 +1,14 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	<div class="clearfix">
+		<a class="btn pull-right" href="{{ path('devture_nagios.contact.add') }}">
+			<i class="icon-plus"></i>
+			Add new
+		</a>
+	</div>
+
+	<div class="top-spaced-minor"></div>
+
+	{% include app['devture_nagios.views']['contact.list'] with {'items': items} %}
+{% endblock %}

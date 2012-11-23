@@ -1,0 +1,119 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	{{ render_form_violations(form, '__other__') }}
+
+	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+		{{ form_csrf_token(form) }}
+
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Name</label>
+				<div class="controls">
+					<input type="text" name="name" id="name"
+						required="required"
+						value="{{ entity.name }}" />
+					{{ render_form_violations(form, 'name') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Address</label>
+				<div class="controls">
+					<input type="text" name="address" id="address"
+						required="required"
+						value="{{ entity.address }}" />
+					<p class="help-block">
+						IP address or hostname.
+					</p>
+					{{ render_form_violations(form, 'address') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Groups</label>
+				<div class="controls">
+					<select name="groups[]" id="groups" multiple="multiple" class="js-chosen-select"
+						style="width: 100%;"
+						data-placeholder="Choose some existing groups..">
+					{% for groupName in groups %}
+						<option value="{{ groupName }}"
+							{{ groupName in entity.groups ? 'selected="selected"' : '' }}>{{ groupName }}</option>
+					{% endfor %}
+					</select>
+					<button class="btn" id="js-add-group">Create a new Group</button>
+					{{ render_form_violations(form, 'groups') }}
+				</div>
+			</div>
+
+			{% if isAdded %}
+			<div class="control-group">
+				<label class="control-label"><i class="icon-signal"></i> Services</label>
+				<div class="controls">
+					<div class="clearfix">
+						<div class="btn-group pull-right">
+							{% include app['devture_nagios.views']['service.add_new_picker'] with {'commands': commands, 'selectedHost': entity} %}
+						</div>
+					</div>
+
+					<div class="top-spaced-minor"></div>
+
+					{% include app['devture_nagios.views']['service.list'] with {'items': services} %}
+				</div>
+			</div>
+			{% endif %}
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					Save
+				</button>
+
+				{% if isAdded %}
+				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+					Delete
+				</button>
+				{% endif %}
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	{% if isAdded %}
+	$('#form-delete-btn').bind('click', function () {
+		if (confirm('Are you sure you want to delete this?')) {
+			$.ajax({
+				"url": {{ path('devture_nagios.host.delete', {'id': entity.id, 'token': csrf_token('delete-host-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						window.location = {{ path('devture_nagios.host.manage')|json_encode|raw }};
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		}
+		return false;
+	});
+	{% endif %}
+
+	$('#js-add-group').click(function (ev) {
+		ev.preventDefault();
+		var name = prompt('Enter a new group name:'),
+			$select = $('#groups');
+		if (name) {
+			var $option = $('<option></option>').text(name).attr('value', name).attr('selected', true)
+			var $existing = $select.find('option[value=' + name + ']');
+			if ($existing.length > 0) {
+				$existing.attr('selected', true);
+			} else {
+				$option.appendTo($select);
+			}
+			$select.trigger('liszt:updated');
+		}
+	});
+{% endblock %}

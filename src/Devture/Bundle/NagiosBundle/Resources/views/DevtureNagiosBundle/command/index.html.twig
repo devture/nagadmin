@@ -1,0 +1,27 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	<a class="btn pull-right" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
+		<i class="icon-plus"></i>
+		Add new
+	</a>
+
+	<ul class="nav nav-tabs">
+		<li {{ type == 'serviceCheck' ? 'class="active"' : '' }}>
+			<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceCheck'}) }}">
+				<i class="icon-check"></i>
+				Service Check commands
+			</a>
+		</li>
+		<li {{ type == 'serviceNotification' ? 'class="active"' : '' }}>
+			<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceNotification'}) }}">
+				<i class="icon-share"></i>
+				Service Notification commands
+			</a>
+		</li>
+	</ul>
+
+	<div class="clear top-spaced-minor"></div>
+
+	{% include app['devture_nagios.views']['command.list'] with {'items': items} %}
+{% endblock %}

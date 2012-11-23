@@ -1,0 +1,29 @@
+{% if items|length == 0 %}
+	No items found.
+{% else %}
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Identifier</th>
+				<th>Title</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for entity in items %}
+			{% set link = path('devture_nagios.command.edit', {'id': entity.id}) %}
+			<tr>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.name }}
+					</a>
+				</td>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ entity.title }}
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

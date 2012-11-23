@@ -1,0 +1,75 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	<div class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label">Check Status</label>
+			<div class="controls fcentered">
+				<div class="fcentered alert alert-{{ isValid ? 'success' : 'error' }}">
+					{% if isValid %}
+						The configuration was checked and seems safe to deploy.
+					{% else %}
+						The configuration was checked and seems broken.
+					{% endif %}
+				</div>
+				{% if isValid %}
+					<form name="deploy" method="post" action="{{ path('devture_nagios.configuration.deploy') }}"
+						id="js-deployment-form">
+						<input type="hidden" name="token" value="{{ csrf_token('deploy') }}" />
+						<button type="submit" class="btn btn-primary btn-large" id="js-deployment-button-submit">
+							<i class="icon-retweet icon-white"></i>
+							Deploy the configuration now
+						</button>
+					</form>
+					<div id="js-deployment-progress" class="hide">
+						<div class="progress progress-info progress-striped active">
+							<div class="bar" style="width: 100%"></div>
+						</div>
+					</div>
+					<div id="js-deployment-result"></div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Check Output</label>
+			<div class="controls">
+				<pre style="max-height: 300px; overflow-y: auto;">{{ checkOutput }}</pre>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Configuration</label>
+			<div class="controls">
+				{% for file in files %}
+					<strong>{{ file.path }}</strong>
+					<pre class="top-spaced-minor" style="max-height: 300px; overflow-y: auto;">{{ file.configuration }}</pre>
+					{% if not loop.last %}<hr />{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	$('#js-deployment-form').submit(function (ev) {
+		ev.preventDefault();
+
+		$('#js-deployment-button-submit').attr('disabled', true);
+		$('#js-deployment-progress').show();
+		$('#js-deployment-result').hide();
+
+		$.ajax({
+			"url": {{ path('devture_nagios.configuration.deploy')|json_encode|raw }},
+			"data": $(this).serialize(),
+			"type": "POST",
+			"dataType": "html"
+		}).done(function (response) {
+			$('#js-deployment-result').html(response);
+		}).fail(function () {
+			$('#js-deployment-result').html('<div class="alert alert-error">Deployment failed. Reload the page and try again.</div>');
+		}).always(function () {
+			$('#js-deployment-progress').hide();
+			$('#js-deployment-result').show();
+			$('#js-deployment-button-submit').attr('disabled', false);
+		});
+	});
+{% endblock %}

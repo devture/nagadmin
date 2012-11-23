@@ -1,0 +1,33 @@
+{% extends app['devture_nagios.views']['layout'] %}
+
+{% block devture_nagios_content %}
+	<div class="clearfix">
+		<div class="pull-left">
+			<form method="get" name="hostFilter" action="{{ path('devture_nagios.service.manage') }}">
+				<select class="js-chosen-select" id="js-host-filter-select" name="hostId">
+					<option value="">-- All hosts --</option>
+					{% for host in hosts %}
+					<option value="{{ host.id }}"
+						{{ selectedHost is not none and selectedHost == host ? 'selected="selected"' : '' }}
+						>{{ host.name }}</option>
+					{% endfor %}
+				</select>
+			</form>
+		</div>
+		<div class="btn-group pull-right">
+			{% include app['devture_nagios.views']['service.add_new_picker'] with {'commands': commands, 'selectedHost': selectedHost} %}
+		</div>
+	</div>
+
+	<div class="top-spaced-minor"></div>
+
+	{% include app['devture_nagios.views']['service.list'] with {'items': items} %}
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	$('#js-host-filter-select').change(function () {
+		$(this).closest('form').submit();
+	});
+{% endblock %}
