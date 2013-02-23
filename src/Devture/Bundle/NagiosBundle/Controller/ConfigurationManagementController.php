@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;

@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
@@ -33,8 +34,7 @@ class ServiceManagementController extends BaseController {
 
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
-		$commands = $this->getNs('command.repository')->findBy($findBy, array(
-				'sort' => array('title' => 1)));
+		$commands = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('title' => 1)));
 
 		return $this->renderView('DevtureNagiosBundle/service/index.html.twig', array(
 			'items' => $items,
@@ -46,10 +46,8 @@ class ServiceManagementController extends BaseController {
 
 	private function getBaseViewData() {
 		$viewData = array();
-		$viewData['hosts'] = $this->getNs('host.repository')->findBy(array(), array(
-				'sort' => array('name' => 1)));
-		$viewData['contacts'] = $this->getNs('contact.repository')->findBy(array(), array(
-				'sort' => array('name' => 1)));
+		$viewData['hosts'] = $this->getNs('host.repository')->findBy(array(), array('sort' => array('name' => 1)));
+		$viewData['contacts'] = $this->getNs('contact.repository')->findBy(array(), array('sort' => array('name' => 1)));
 		return $viewData;
 	}
 
@@ -80,17 +78,17 @@ class ServiceManagementController extends BaseController {
 		}
 
 		$binder = $this->getNs('service.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('service.repository')->add($entity);
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
 
 		return $this->renderView('DevtureNagiosBundle/service/record.html.twig', array_merge($this->getBaseViewData(), array(
-				'entity' => $entity,
-				'isAdded' => false,
-				'form' => $binder,)));
+			'entity' => $entity,
+			'isAdded' => false,
+			'form' => $binder,
+		)));
 	}
 
 	public function editAction(Request $request, $id) {
@@ -101,17 +99,17 @@ class ServiceManagementController extends BaseController {
 		}
 
 		$binder = $this->getNs('service.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('service.repository')->update($entity);
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
 
 		return $this->renderView('DevtureNagiosBundle/service/record.html.twig', array_merge($this->getBaseViewData(), array(
-				'entity' => $entity,
-				'isAdded' => true,
-				'form' => $binder,)));
+			'entity' => $entity,
+			'isAdded' => true,
+			'form' => $binder,
+		)));
 	}
 
 	public function deleteAction(Request $request, $id, $token) {

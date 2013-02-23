@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Validator;
+
 use Devture\Bundle\NagiosBundle\Model\CommandArgument;
 
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;

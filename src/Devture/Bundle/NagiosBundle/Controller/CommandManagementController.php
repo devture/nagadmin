@@ -14,8 +14,7 @@ class CommandManagementController extends BaseController {
 			return $this->abort(404);
 		}
 		$findBy = array('type' => $type);
-		$items = $this->getNs('command.repository')->findBy($findBy, array(
-				'sort' => array('name' => 1)));
+		$items = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/command/index.html.twig', array('items' => $items, 'type' => $type));
 	}
 
@@ -24,16 +23,16 @@ class CommandManagementController extends BaseController {
 		$entity->setType($type);
 
 		$binder = $this->getNs('command.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('command.repository')->add($entity);
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
-				'entity' => $entity,
-				'isAdded' => false,
-				'form' => $binder,));
+			'entity' => $entity,
+			'isAdded' => false,
+			'form' => $binder,
+		));
 	}
 
 	public function editAction(Request $request, $id) {
@@ -44,16 +43,16 @@ class CommandManagementController extends BaseController {
 		}
 
 		$binder = $this->getNs('command.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('command.repository')->update($entity);
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
-				'entity' => $entity,
-				'isAdded' => true,
-				'form' => $binder,));
+			'entity' => $entity,
+			'isAdded' => true,
+			'form' => $binder,
+		));
 	}
 
 	public function deleteAction(Request $request, $id, $token) {

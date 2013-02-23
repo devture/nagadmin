@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
+
 use Doctrine\MongoDB\Database;
 use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Service;

@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Form;
+
 use Symfony\Component\HttpFoundation\Request;
 use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;

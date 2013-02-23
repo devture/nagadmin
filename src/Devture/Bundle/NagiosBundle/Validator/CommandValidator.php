@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Validator;
+
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;

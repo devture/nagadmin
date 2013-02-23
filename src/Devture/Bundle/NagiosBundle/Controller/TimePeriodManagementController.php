@@ -9,8 +9,7 @@ use Devture\Bundle\SharedBundle\Controller\BaseController;
 class TimePeriodManagementController extends BaseController {
 
 	public function indexAction() {
-		$items = $this->getNs('time_period.repository')->findBy(array(), array(
-				'sort' => array('title' => 1)));
+		$items = $this->getNs('time_period.repository')->findBy(array(), array('sort' => array('title' => 1)));
 		return $this->renderView('DevtureNagiosBundle/time_period/index.html.twig', array('items' => $items));
 	}
 
@@ -18,16 +17,16 @@ class TimePeriodManagementController extends BaseController {
 		$entity = $this->getNs('time_period.repository')->createModel(array());
 
 		$binder = $this->getNs('time_period.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('time_period.repository')->add($entity);
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
-				'entity' => $entity,
-				'isAdded' => false,
-				'form' => $binder,));
+			'entity' => $entity,
+			'isAdded' => false,
+			'form' => $binder,
+		));
 	}
 
 	public function editAction(Request $request, $id) {
@@ -38,16 +37,16 @@ class TimePeriodManagementController extends BaseController {
 		}
 
 		$binder = $this->getNs('time_period.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('time_period.repository')->update($entity);
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
-				'entity' => $entity,
-				'isAdded' => true,
-				'form' => $binder,));
+			'entity' => $entity,
+			'isAdded' => true,
+			'form' => $binder,
+		));
 	}
 
 	public function deleteAction(Request $request, $id, $token) {

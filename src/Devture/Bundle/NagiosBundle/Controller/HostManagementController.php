@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
@@ -10,8 +11,7 @@ use Devture\Bundle\NagiosBundle\Model\Command;
 class HostManagementController extends BaseController {
 
 	public function indexAction() {
-		$items = $this->getNs('host.repository')->findBy(array(), array(
-				'sort' => array('name' => 1)));
+		$items = $this->getNs('host.repository')->findBy(array(), array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/host/index.html.twig', array('items' => $items));
 	}
 
@@ -27,8 +27,7 @@ class HostManagementController extends BaseController {
 		ksort($groupsMap);
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
-		$commands = $this->getNs('command.repository')->findBy($findBy, array(
-				'sort' => array('title' => 1)));
+		$commands = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('title' => 1)));
 
 		$viewData = array();
 		$viewData['groups'] = array_keys($groupsMap);
@@ -41,16 +40,16 @@ class HostManagementController extends BaseController {
 		$entity = $this->getNs('host.repository')->createModel(array());
 
 		$binder = $this->getNs('host.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('host.repository')->add($entity);
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/host/record.html.twig', array_merge($this->getBaseViewData($entity), array(
-				'entity' => $entity,
-				'isAdded' => false,
-				'form' => $binder,)));
+			'entity' => $entity,
+			'isAdded' => false,
+			'form' => $binder,)
+		));
 	}
 
 	public function editAction(Request $request, $id) {
@@ -61,16 +60,16 @@ class HostManagementController extends BaseController {
 		}
 
 		$binder = $this->getNs('host.form_binder');
-		if ($request->getMethod() === 'POST'
-				&& $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('host.repository')->update($entity);
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/host/record.html.twig', array_merge($this->getBaseViewData($entity), array(
-				'entity' => $entity,
-				'isAdded' => true,
-				'form' => $binder,)));
+			'entity' => $entity,
+			'isAdded' => true,
+			'form' => $binder,
+		)));
 	}
 
 	public function deleteAction(Request $request, $id, $token) {
