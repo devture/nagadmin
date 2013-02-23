@@ -16,7 +16,7 @@
 		"symfony/finder": "2.1.*",
 		"symfony/process": "2.1.*",
 		"swiftmailer/swiftmailer": "4.3.*",
-		"devture/silex-provider-mongodb": "@dev",
+		"devture/silex-provider-doctrine-mongodb": "1.0.*",
 		"devture/silex-provider-config": "1.0.*",
 		"devture/silex-shared-bundle": "1.1.*",
 		"devture/sms-sender": "1.0.*"

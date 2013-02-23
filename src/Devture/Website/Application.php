@@ -43,9 +43,9 @@ class Application extends \Silex\Application {
 
 		$app->register(new \Silex\Provider\SwiftmailerServiceProvider());
 
-		$app->register(new \Devture\SilexProvider\MongoDB\ServicesProvider('mongodb', array()));
+		$app->register(new \Devture\SilexProvider\DoctrineMongoDB\ServicesProvider('mongodb', array()));
 
-		$app['mongodb.database'] = $app->share(function () use ($app) {
+		$app['mongodb.database'] = $app->share(function ($app) {
 			return $app['mongodb.connection']->selectDatabase($app['config']['mongo']['db_name']);
 		});
 

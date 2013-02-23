@@ -1,5 +1,5 @@
 {
-    "hash": "a6ae5432f2e808ce15c8aa6ffe635833",
+    "hash": "4bc1d5e4274eb79448e5add2abe22f32",
     "packages": [
         {
             "name": "devture/silex-provider-config",
@@ -35,31 +35,46 @@
             ]
         },
         {
-            "name": "devture/silex-provider-mongodb",
-            "version": "dev-master",
+            "name": "devture/silex-provider-doctrine-mongodb",
+            "version": "1.0",
             "source": {
                 "type": "git",
-                "url": "git.devture.com:silex-provider-mongodb.git",
-                "reference": "0196cc3acb7fe002b1c6a9095b0f55a67313275b"
+                "url": "https://github.com/spantaleev/silex-provider-doctrine-mongodb.git",
+                "reference": "1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spantaleev/silex-provider-doctrine-mongodb/zipball/1.0",
+                "reference": "1.0",
+                "shasum": ""
             },
             "require": {
-                "doctrine/mongodb": "dev-master",
+                "doctrine/mongodb": "1.0.*",
                 "php": ">=5.3.0"
             },
-            "time": "2012-06-02 08:09:20",
+            "time": "2013-02-23 16:30:51",
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Devture\\SilexProvider\\MongoDB": "src/"
+                    "Devture\\SilexProvider\\DoctrineMongoDB\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
             "authors": [
                 {
                     "name": "Slavi Pantaleev",
                     "email": "s.pantaleev@gmail.com"
                 }
             ],
-            "description": "Silex provider of MongoDB integration via Doctrine"
+            "description": "Silex provider for MongoDB integration via Doctrine",
+            "keywords": [
+                "doctrine",
+                "mongodb",
+                "silex"
+            ]
         },
         {
             "name": "devture/silex-shared-bundle",
@@ -998,7 +1013,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "silex/silex": 20,
-        "devture/silex-provider-mongodb": 20
+        "silex/silex": 20
     }
 }
