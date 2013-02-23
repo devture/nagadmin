@@ -14,23 +14,24 @@
 	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset>
+		<fieldset class="compact">
 			{% for i in range(1, userVariablesCount) %}
 				{% set variableName = '$USER' ~ i ~ '$' %}
 				<div class="control-group">
 					<label class="control-label">{{ variableName }}</label>
 					<div class="controls">
 						<input type="text" name="variables[{{ variableName }}]"
-							value="{{ entity.getVariableByName(variableName) }}" />
+							value="{{ entity.getVariableByName(variableName) }}"
+							class="input-xxlarge" />
 					</div>
 				</div>
 			{% endfor %}
-
-			<div class="form-actions">
-				<button type="submit" class="btn btn-primary">
-					Save
-				</button>
-			</div>
 		</fieldset>
+
+		<div class="form-actions compact">
+			<button type="submit" class="btn btn-primary">
+				Save
+			</button>
+		</div>
 	</form>
 {% endblock %}
