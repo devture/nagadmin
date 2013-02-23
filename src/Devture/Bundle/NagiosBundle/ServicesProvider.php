@@ -144,9 +144,41 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$this->registerInstallerServices($app);
 
+		$this->registerControllers($app);
+	}
+
+	private function registerControllers(Application $app) {
 		$app['devture_nagios.controllers_provider.management'] = $app->share(function () {
 			return new Controller\Provider\ControllersProvider();
 		});
+
+		$app['devture_nagios.controller.time_period.management'] = function ($app) {
+			return new Controller\TimePeriodManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.command.management'] = function ($app) {
+			return new Controller\CommandManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.contact.management'] = function ($app) {
+			return new Controller\ContactManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.host.management'] = function ($app) {
+			return new Controller\HostManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.service.management'] = function ($app) {
+			return new Controller\ServiceManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.configuration.management'] = function ($app) {
+			return new Controller\ConfigurationManagementController($app, 'devture_nagios');
+		};
+
+		$app['devture_nagios.controller.resource.management'] = function ($app) {
+			return new Controller\ResourceManagementController($app, 'devture_nagios');
+		};
 	}
 
 	private function registerDeploymentServices(Application $app) {

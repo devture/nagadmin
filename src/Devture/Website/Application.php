@@ -34,6 +34,8 @@ class Application extends \Silex\Application {
 
 		$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
+		$app->register(new \Silex\Provider\ServiceControllerServiceProvider());
+
 		$app->register(new \Silex\Provider\TwigServiceProvider(), array(
 				'twig.options' => array(
 						'cache' => $this->basePath . '/cache/twig',
