@@ -17,9 +17,9 @@
 		"symfony/process": "2.1.*",
 		"swiftmailer/swiftmailer": "4.3.*",
 		"devture/silex-provider-mongodb": "@dev",
-		"devture/silex-provider-config": "@dev",
+		"devture/silex-provider-config": "1.0.*",
 		"devture/silex-shared-bundle": "1.1.*",
-		"devture/sms-sender": "@dev"
+		"devture/sms-sender": "1.0.*"
 	},
 	"autoload": {
 		"psr-0": {

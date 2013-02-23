@@ -1,31 +1,38 @@
 {
-    "hash": "c200b908115d125b29dd88531cd9f309",
+    "hash": "a6ae5432f2e808ce15c8aa6ffe635833",
     "packages": [
         {
             "name": "devture/silex-provider-config",
-            "version": "dev-master",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "git.devture.com:silex-provider-config.git",
-                "reference": "7d5e7d16fa6224bada477aab63e53c948f296e55"
+                "reference": "1.0"
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-10-21 19:42:07",
+            "time": "2013-02-23 12:16:38",
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Devture\\SilexProvider\\Config": "src/"
+                    "Devture\\SilexProvider\\Config\\": "src/"
                 }
             },
+            "license": [
+                "BSD"
+            ],
             "authors": [
                 {
                     "name": "Slavi Pantaleev",
                     "email": "s.pantaleev@gmail.com"
                 }
             ],
-            "description": "Silex provider for config files parsing"
+            "description": "Silex provider for configuration management",
+            "keywords": [
+                "config",
+                "silex"
+            ]
         },
         {
             "name": "devture/silex-provider-mongodb",
@@ -82,11 +89,11 @@
         },
         {
             "name": "devture/sms-sender",
-            "version": "dev-master",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "git.devture.com:sms-sender.git",
-                "reference": "307b568d320ab964e6f7dabe9dca5370aa9b0f6f"
+                "reference": "1.0"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -992,8 +999,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "silex/silex": 20,
-        "devture/silex-provider-mongodb": 20,
-        "devture/silex-provider-config": 20,
-        "devture/sms-sender": 20
+        "devture/silex-provider-mongodb": 20
     }
 }
