@@ -113,3 +113,6 @@ ul.validation-errors li {
 .fcentered { text-align: center; }
 
 .label-nagadmin { font-size: 13px; padding: 2px 4px 2px; }
+
+/* Fix the "x" button on Chosen multiple-selects (12px -> 16px) */
+.chzn-container-multi .chzn-choices .search-choice .search-choice-close { width: 16px !important; }
