@@ -36,7 +36,7 @@ class ServiceManagementController extends BaseController {
 		$commands = $this->getNs('command.repository')->findBy($findBy, array(
 				'sort' => array('title' => 1)));
 
-		return $this->renderView('service.index', array(
+		return $this->renderView('DevtureNagiosBundle/service/index.html.twig', array(
 			'items' => $items,
 			'commands' => $commands,
 			'hosts' => $hosts,
@@ -87,7 +87,7 @@ class ServiceManagementController extends BaseController {
 			return $this->redirect($next);
 		}
 
-		return $this->renderView('service.record', array_merge($this->getBaseViewData(), array(
+		return $this->renderView('DevtureNagiosBundle/service/record.html.twig', array_merge($this->getBaseViewData(), array(
 				'entity' => $entity,
 				'isAdded' => false,
 				'form' => $binder,)));
@@ -108,7 +108,7 @@ class ServiceManagementController extends BaseController {
 			return $this->redirect($next);
 		}
 
-		return $this->renderView('service.record', array_merge($this->getBaseViewData(), array(
+		return $this->renderView('DevtureNagiosBundle/service/record.html.twig', array_merge($this->getBaseViewData(), array(
 				'entity' => $entity,
 				'isAdded' => true,
 				'form' => $binder,)));

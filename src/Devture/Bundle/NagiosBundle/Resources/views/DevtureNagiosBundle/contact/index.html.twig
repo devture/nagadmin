@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
 	<div class="clearfix">
@@ -10,5 +10,5 @@
 
 	<div class="top-spaced-minor"></div>
 
-	{% include app['devture_nagios.views']['contact.list'] with {'items': items} %}
+	{% include 'DevtureNagiosBundle/contact/list.html.twig' with {'items': items} %}
 {% endblock %}

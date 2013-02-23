@@ -12,7 +12,7 @@ class HostManagementController extends BaseController {
 	public function indexAction() {
 		$items = $this->getNs('host.repository')->findBy(array(), array(
 				'sort' => array('name' => 1)));
-		return $this->renderView('host.index', array('items' => $items));
+		return $this->renderView('DevtureNagiosBundle/host/index.html.twig', array('items' => $items));
 	}
 
 	private function getBaseViewData(Host $currentHost) {
@@ -47,7 +47,7 @@ class HostManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
-		return $this->renderView('host.record', array_merge($this->getBaseViewData($entity), array(
+		return $this->renderView('DevtureNagiosBundle/host/record.html.twig', array_merge($this->getBaseViewData($entity), array(
 				'entity' => $entity,
 				'isAdded' => false,
 				'form' => $binder,)));
@@ -67,7 +67,7 @@ class HostManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
-		return $this->renderView('host.record', array_merge($this->getBaseViewData($entity), array(
+		return $this->renderView('DevtureNagiosBundle/host/record.html.twig', array_merge($this->getBaseViewData($entity), array(
 				'entity' => $entity,
 				'isAdded' => true,
 				'form' => $binder,)));

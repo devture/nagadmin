@@ -16,7 +16,7 @@ class ResourceManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('resource.manage'));
 		}
 
-		return $this->renderView('resource.management', array(
+		return $this->renderView('DevtureNagiosBundle/resource/management.html.twig', array(
 				'userVariablesCount' => Resource::USER_VARIABLES_COUNT,
 				'entity' => $entity,
 				'form' => $binder,));

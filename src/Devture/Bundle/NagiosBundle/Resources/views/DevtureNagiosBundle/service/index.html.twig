@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
 	<div class="clearfix">
@@ -15,13 +15,13 @@
 			</form>
 		</div>
 		<div class="btn-group pull-right">
-			{% include app['devture_nagios.views']['service.add_new_picker'] with {'commands': commands, 'selectedHost': selectedHost} %}
+			{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': selectedHost} %}
 		</div>
 	</div>
 
 	<div class="top-spaced-minor"></div>
 
-	{% include app['devture_nagios.views']['service.list'] with {'items': items} %}
+	{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': items} %}
 {% endblock %}
 
 {% block js %}

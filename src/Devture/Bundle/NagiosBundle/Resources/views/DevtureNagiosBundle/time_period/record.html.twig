@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% macro render_rules_example() %}
 {% spaceless %}
@@ -48,12 +48,12 @@ february -1						 00:00-24:00
 				<div class="controls">
 					<div id="js-rules-container">
 					{% for rule in entity.rules %}
-						{% include app['devture_nagios.views']['time_period.rule_editor'] with {'entity': rule, 'number': loop.index} %}
+						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': rule, 'number': loop.index} %}
 					{% endfor %}
 					</div>
 
 					<script id="js-rule-editor-template" type="text/template">
-						{% include app['devture_nagios.views']['time_period.rule_editor'] with {'entity': none, 'number': '__NUMBER__'} %}
+						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': none, 'number': '__NUMBER__'} %}
 					</script>
 
 					<a class="btn" href="javascript://" id="js-button-add-rule">Add new rule</a>

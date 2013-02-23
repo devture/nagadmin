@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% macro render_command_picker(field_name, commands, selected_command) %}
 	<select name="{{ field_name }}" id="{{ field_name }}" class="js-chosen-select js-command-chooser" required="required">
@@ -91,7 +91,7 @@
 								{% for time_period in timePeriods %}
 								<div class="js-time-period-preview hide" data-id="{{ time_period.id }}">
 									<div class="top-spaced-minor"></div>
-									{% include app['devture_nagios.views']['time_period.rules_table'] with {'rules': time_period.rules} %}
+									{% include 'DevtureNagiosBundle/time_period/rules_table.html.twig' with {'rules': time_period.rules} %}
 								</div>
 								{% endfor %}
 								{{ render_form_violations(form, 'timePeriod') }}

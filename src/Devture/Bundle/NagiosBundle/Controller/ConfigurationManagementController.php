@@ -17,7 +17,7 @@ class ConfigurationManagementController extends BaseController {
 	public function testAction() {
 		list($files, $isValid, $checkOutput) = $this->getTestedConfiguration();
 		$viewData = array('files' => $files, 'isValid' => $isValid, 'checkOutput' => $checkOutput);
-		return $this->renderView('configuration.test', $viewData);
+		return $this->renderView('DevtureNagiosBundle/configuration/test.html.twig', $viewData);
 	}
 
 	public function deployAction(Request $request) {
@@ -38,7 +38,7 @@ class ConfigurationManagementController extends BaseController {
 		} catch (DeploymentFailedException $e) {
 			$viewData['error'] = $e->getMessage();
 		}
-		return $this->renderView('configuration.deploy', $viewData);
+		return $this->renderView('DevtureNagiosBundle/configuration/deploy.html.twig', $viewData);
 	}
 
 }

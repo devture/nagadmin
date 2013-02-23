@@ -3,6 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Devture\Bundle\SharedBundle\Model\BaseModel;
 use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\TimePeriod;
@@ -25,11 +26,11 @@ class ContactRepository extends BaseMongoRepository {
 		$this->commandRepository = $commandRepository;
 	}
 
-	public function getModelClass() {
+	protected function getModelClass() {
 		return '\\Devture\Bundle\\NagiosBundle\\Model\\Contact';
 	}
 
-	public function getCollectionName() {
+	protected function getCollectionName() {
 		return 'contact';
 	}
 
@@ -71,7 +72,8 @@ class ContactRepository extends BaseMongoRepository {
 		return $this->findBy(array('timePeriodId' => $timePeriod->getId()));
 	}
 
-	public function delete(Contact $object) {
+	public function delete(BaseModel $object) {
+		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_CONTACT_DELETE, new ModelEvent($object));
 		parent::delete($object);
 	}

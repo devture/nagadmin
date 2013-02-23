@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
@@ -10,7 +11,7 @@ class TimePeriodManagementController extends BaseController {
 	public function indexAction() {
 		$items = $this->getNs('time_period.repository')->findBy(array(), array(
 				'sort' => array('title' => 1)));
-		return $this->renderView('time_period.index', array('items' => $items));
+		return $this->renderView('DevtureNagiosBundle/time_period/index.html.twig', array('items' => $items));
 	}
 
 	public function addAction(Request $request) {
@@ -23,7 +24,7 @@ class TimePeriodManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
 
-		return $this->renderView('time_period.record', array(
+		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
 				'entity' => $entity,
 				'isAdded' => false,
 				'form' => $binder,));
@@ -43,7 +44,7 @@ class TimePeriodManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
 
-		return $this->renderView('time_period.record', array(
+		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
 				'entity' => $entity,
 				'isAdded' => true,
 				'form' => $binder,));

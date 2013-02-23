@@ -17,33 +17,6 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.bundle_path'] = dirname(__FILE__);
 
-		//Wrap views in an array object, otherwise we won't be able to change them
-		//as arrays are copied when returned from the container (and we need a reference).
-		$app['devture_nagios.views'] = new \ArrayObject(array(
-				'time_period.index' => 'DevtureNagiosBundle/time_period/index.html.twig',
-				'time_period.list' => 'DevtureNagiosBundle/time_period/list.html.twig',
-				'time_period.record' => 'DevtureNagiosBundle/time_period/record.html.twig',
-				'time_period.rule_editor' => 'DevtureNagiosBundle/time_period/rule_editor.html.twig',
-				'time_period.rules_table' => 'DevtureNagiosBundle/time_period/rules_table.html.twig',
-				'command.index' => 'DevtureNagiosBundle/command/index.html.twig',
-				'command.list' => 'DevtureNagiosBundle/command/list.html.twig',
-				'command.record' => 'DevtureNagiosBundle/command/record.html.twig',
-				'command.argument' => 'DevtureNagiosBundle/command/argument.html.twig',
-				'contact.index' => 'DevtureNagiosBundle/contact/index.html.twig',
-				'contact.list' => 'DevtureNagiosBundle/contact/list.html.twig',
-				'contact.record' => 'DevtureNagiosBundle/contact/record.html.twig',
-				'host.index' => 'DevtureNagiosBundle/host/index.html.twig',
-				'host.list' => 'DevtureNagiosBundle/host/list.html.twig',
-				'host.record' => 'DevtureNagiosBundle/host/record.html.twig',
-				'service.index' => 'DevtureNagiosBundle/service/index.html.twig',
-				'service.list' => 'DevtureNagiosBundle/service/list.html.twig',
-				'service.record' => 'DevtureNagiosBundle/service/record.html.twig',
-				'service.add_new_picker' => 'DevtureNagiosBundle/service/add_new_picker.html.twig',
-				'configuration.test' => 'DevtureNagiosBundle/configuration/test.html.twig',
-				'configuration.deploy' => 'DevtureNagiosBundle/configuration/deploy.html.twig',
-				'resource.management' => 'DevtureNagiosBundle/resource/management.html.twig',
-				'layout' => 'DevtureNagiosBundle/layout.html.twig',));
-
 		$app['devture_nagios.event_dispatcher'] = $app->share(function ($app) {
 			$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 			foreach ($app['devture_nagios.event_subscribers'] as $subscriber) {
@@ -338,7 +311,7 @@ class ServicesProvider implements ServiceProviderInterface {
 	}
 
 	public function boot(Application $app) {
-		$app['twig.loader']->addLoader(new \Twig_Loader_Filesystem(dirname(__FILE__) . '/Resources/views/'));
+		$app['twig.loader.filesystem']->addPath(dirname(__FILE__) . '/Resources/views/');
 
 		$app['twig']->addExtension($app['devture_nagios.twig.extension.colorize']);
 	}

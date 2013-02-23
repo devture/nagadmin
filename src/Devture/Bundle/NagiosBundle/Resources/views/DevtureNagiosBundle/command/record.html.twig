@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}
@@ -65,13 +65,13 @@
 				<div class="controls">
 					{% for parameter in entity.arguments %}
 					<div class="js-parameter-definition" data-number="{{ loop.index }}">
-						{% include app['devture_nagios.views']['command.argument'] with {'entity': parameter, 'ident': loop.index} %}
+						{% include 'DevtureNagiosBundle/command/argument.html.twig' with {'entity': parameter, 'ident': loop.index} %}
 					</div>
 					{% endfor %}
 
 					{% for i in range(entity.arguments|length + 1, 32) %}
 					<div class="js-parameter-definition" data-number="{{ i }}">
-						{% include app['devture_nagios.views']['command.argument'] with {'entity': none, 'ident': i} %}
+						{% include 'DevtureNagiosBundle/command/argument.html.twig' with {'entity': none, 'ident': i} %}
 					</div>
 					{% endfor %}
 					{{ render_form_violations(form, 'arguments') }}

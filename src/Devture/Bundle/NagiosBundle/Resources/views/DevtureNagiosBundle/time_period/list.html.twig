@@ -18,7 +18,7 @@
 					</a>
 				</td>
 				<td>
-					{% include app['devture_nagios.views']['time_period.rules_table'] with {'rules': entity.rules} %}
+					{% include 'DevtureNagiosBundle/time_period/rules_table.html.twig' with {'rules': entity.rules} %}
 				</td>
 			</tr>
 		{% endfor %}

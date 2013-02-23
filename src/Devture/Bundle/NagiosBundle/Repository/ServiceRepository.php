@@ -22,11 +22,11 @@ class ServiceRepository extends BaseMongoRepository {
 		$this->contactRepository = $contactRepository;
 	}
 
-	public function getModelClass() {
+	protected function getModelClass() {
 		return '\\Devture\Bundle\\NagiosBundle\\Model\\Service';
 	}
 
-	public function getCollectionName() {
+	protected function getCollectionName() {
 		return 'service';
 	}
 

@@ -12,7 +12,7 @@ class ContactManagementController extends BaseController {
 	public function indexAction() {
 		$items = $this->getNs('contact.repository')->findBy(array(), array(
 				'sort' => array('name' => 1)));
-		return $this->renderView('contact.index', array('items' => $items));
+		return $this->renderView('DevtureNagiosBundle/contact/index.html.twig', array('items' => $items));
 	}
 
 	private function getBaseViewData() {
@@ -35,7 +35,7 @@ class ContactManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
 
-		return $this->renderView('contact.record', array_merge($this->getBaseViewData(), array(
+		return $this->renderView('DevtureNagiosBundle/contact/record.html.twig', array_merge($this->getBaseViewData(), array(
 				'entity' => $entity,
 				'isAdded' => false,
 				'form' => $binder,)));
@@ -55,7 +55,7 @@ class ContactManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
 
-		return $this->renderView('contact.record', array_merge($this->getBaseViewData(), array(
+		return $this->renderView('DevtureNagiosBundle/contact/record.html.twig', array_merge($this->getBaseViewData(), array(
 				'entity' => $entity,
 				'isAdded' => true,
 				'form' => $binder,)));

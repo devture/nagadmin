@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
@@ -15,7 +16,7 @@ class CommandManagementController extends BaseController {
 		$findBy = array('type' => $type);
 		$items = $this->getNs('command.repository')->findBy($findBy, array(
 				'sort' => array('name' => 1)));
-		return $this->renderView('command.index', array('items' => $items, 'type' => $type));
+		return $this->renderView('DevtureNagiosBundle/command/index.html.twig', array('items' => $items, 'type' => $type));
 	}
 
 	public function addAction(Request $request, $type) {
@@ -29,7 +30,7 @@ class CommandManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
-		return $this->renderView('command.record', array(
+		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
 				'entity' => $entity,
 				'isAdded' => false,
 				'form' => $binder,));
@@ -49,7 +50,7 @@ class CommandManagementController extends BaseController {
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
-		return $this->renderView('command.record', array(
+		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
 				'entity' => $entity,
 				'isAdded' => true,
 				'form' => $binder,));

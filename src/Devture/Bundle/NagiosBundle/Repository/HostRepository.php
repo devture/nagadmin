@@ -3,6 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Devture\Bundle\SharedBundle\Model\BaseModel;
 use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Event\Events;
@@ -17,15 +18,16 @@ class HostRepository extends BaseMongoRepository {
 		parent::__construct($db);
 	}
 
-	public function getModelClass() {
+	protected function getModelClass() {
 		return '\\Devture\Bundle\\NagiosBundle\\Model\\Host';
 	}
 
-	public function getCollectionName() {
+	protected function getCollectionName() {
 		return 'host';
 	}
 
-	public function delete(Host $object) {
+	public function delete(BaseModel $object) {
+		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_HOST_DELETE, new ModelEvent($object));
 		parent::delete($object);
 	}

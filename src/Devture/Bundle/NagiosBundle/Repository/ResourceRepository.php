@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
+
 use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Resource;
@@ -8,11 +9,11 @@ class ResourceRepository extends BaseMongoRepository {
 
 	const RESOURCE_SINGLETON_ID = 'resource';
 
-	public function getModelClass() {
+	protected function getModelClass() {
 		return '\\Devture\Bundle\\NagiosBundle\\Model\\Resource';
 	}
 
-	public function getCollectionName() {
+	protected function getCollectionName() {
 		return 'resource';
 	}
 

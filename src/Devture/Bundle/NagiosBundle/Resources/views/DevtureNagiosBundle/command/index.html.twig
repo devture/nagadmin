@@ -1,4 +1,4 @@
-{% extends app['devture_nagios.views']['layout'] %}
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
 	<a class="btn pull-right" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
@@ -23,5 +23,5 @@
 
 	<div class="clear top-spaced-minor"></div>
 
-	{% include app['devture_nagios.views']['command.list'] with {'items': items} %}
+	{% include 'DevtureNagiosBundle/command/list.html.twig' with {'items': items} %}
 {% endblock %}

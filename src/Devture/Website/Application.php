@@ -32,12 +32,6 @@ class Application extends \Silex\Application {
 
 		$app['app_base_path'] = $this->basePath;
 
-		$app->register(new \Silex\Provider\MonologServiceProvider(), array(
-				'monolog.logfile' => $this->basePath . '/log/app.log',
-				'monolog.name' => 'app',
-				'monolog.level' => 300 // = Logger::WARNING
-		));
-
 		$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
 		$app->register(new \Silex\Provider\TwigServiceProvider(), array(

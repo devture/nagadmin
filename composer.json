@@ -8,25 +8,23 @@
 	"repositories": [ { "type": "composer", "url": "http://packages.devture.com/" } ],
 	"require": {
 		"php": ">=5.3.0",
-		"silex/silex": "dev-master",
-		"twig/twig": "dev-master",
-		"monolog/monolog": "1.0.*",
+		"silex/silex": "1.0.*@dev",
+		"twig/twig": "1.12.*",
 		"symfony/twig-bridge": "2.1.*",
 		"symfony/console": "2.1.*",
 		"symfony/config": "2.1.*",
 		"symfony/finder": "2.1.*",
 		"symfony/process": "2.1.*",
-		"swiftmailer/swiftmailer": "dev-master",
-		"devture/silex-provider-mongodb": "dev-master",
-		"devture/silex-provider-config": "dev-master",
-		"devture/silex-shared-bundle": "dev-master",
-		"devture/sms-sender": "dev-master"
+		"swiftmailer/swiftmailer": "4.3.*",
+		"devture/silex-provider-mongodb": "@dev",
+		"devture/silex-provider-config": "@dev",
+		"devture/silex-shared-bundle": "1.1.*",
+		"devture/sms-sender": "@dev"
 	},
 	"autoload": {
 		"psr-0": {
-			"Devture\\Website": "src/",
-			"Devture\\Bundle\\NagiosBundle": "src/"
+			"Devture\\Website\\": "src/",
+			"Devture\\Bundle\\NagiosBundle\\": "src/"
 		}
-	},
-	"minimum-stability": "dev"
+	}
 }
