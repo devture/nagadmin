@@ -39,13 +39,13 @@ class ControllersProvider implements ControllerProviderInterface {
 		$controllers->post('/contact/delete/{id}/{token}', 'devture_nagios.controller.contact.management:deleteAction')
 			->bind($namespace . '.contact.delete');
 
-		$controllers->get('/host/manage', 'devture_nagios.controller.contact.management:indexAction')
+		$controllers->get('/host/manage', 'devture_nagios.controller.host.management:indexAction')
 			->bind($namespace . '.host.manage');
-		$controllers->match('/host/add', 'devture_nagios.controller.contact.management:addAction')
+		$controllers->match('/host/add', 'devture_nagios.controller.host.management:addAction')
 			->method('GET|POST')->bind($namespace . '.host.add');
-		$controllers->match('/host/edit/{id}', 'devture_nagios.controller.contact.management:editAction')
+		$controllers->match('/host/edit/{id}', 'devture_nagios.controller.host.management:editAction')
 			->method('GET|POST')->bind($namespace . '.host.edit');
-		$controllers->post('/host/delete/{id}/{token}', 'devture_nagios.controller.contact.management:deleteAction')
+		$controllers->post('/host/delete/{id}/{token}', 'devture_nagios.controller.host.management:deleteAction')
 			->bind($namespace . '.host.delete');
 
 		$controllers->get('/service/manage', 'devture_nagios.controller.service.management:indexAction')
