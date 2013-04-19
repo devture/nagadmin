@@ -82,6 +82,8 @@ class ServiceValidator extends BaseValidator {
 						$violations->add('arguments', 'Argument value `%value%` contains a ! character, which has a special meaning to Nagios and cannot be used.', array(
 							'%value%' => $argumentValue,
 						));
+					} else if (strpos($argumentValue, "\n") !== false) {
+						$violations->add('arguments', 'Arguments cannot contain new lines.');
 					}
 				}
 			}

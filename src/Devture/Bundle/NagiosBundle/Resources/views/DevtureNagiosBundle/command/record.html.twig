@@ -26,6 +26,7 @@
 				<label class="control-label">Identifier</label>
 				<div class="controls">
 					<input type="text" name="name" id="name"
+						class="input-xlarge"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
@@ -36,6 +37,7 @@
 				<label class="control-label">Title</label>
 				<div class="controls">
 					<input type="text" name="title" id="title"
+						class="input-xlarge"
 						required="required"
 						value="{{ entity.title }}" />
 					{{ render_form_violations(form, 'title') }}

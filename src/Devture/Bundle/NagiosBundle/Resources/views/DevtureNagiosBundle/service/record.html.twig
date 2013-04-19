@@ -6,11 +6,12 @@
 	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset>
+		<fieldset class="compact">
 			<div class="control-group">
 				<label class="control-label">Identifier</label>
 				<div class="controls">
 					<input type="text" name="name" id="name"
+						class="input-xlarge"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
@@ -54,9 +55,10 @@
 									{% set command_argument = entity.getArgumentById(argument.id) %}
 									<strong>{{ argument.description }}</strong>:
 									<br />
-									<input type="text" name="arguments[{{ argument.id }}][value]"
-										value="{{ command_argument is not none ? command_argument.value : argument.defaultValue }}"
-										style="width: 400px;" />
+									<textarea name="arguments[{{ argument.id }}][value]"
+										class="input-xxlarge"
+										style="height: 20px;"
+										>{{ command_argument is not none ? command_argument.value : argument.defaultValue }}</textarea>
 								</div>
 							</div>
 						{% endfor %}

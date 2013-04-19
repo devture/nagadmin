@@ -52,7 +52,7 @@ class ServiceFormBinder extends SetterRequestBinder {
 				}
 				$argument = new ServiceCommandArgument();
 				$argument->setId($argumentId);
-				$argument->setValue(isset($argumentData['value']) ? $argumentData['value'] : '');
+				$argument->setValue(isset($argumentData['value']) ? trim($argumentData['value']) : '');
 				$entity->addArgument($argument);
 			}
 		}

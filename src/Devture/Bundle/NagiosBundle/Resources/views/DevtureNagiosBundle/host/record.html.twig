@@ -11,6 +11,7 @@
 				<label class="control-label">Name</label>
 				<div class="controls">
 					<input type="text" name="name" id="name"
+						class="input-xlarge"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
@@ -21,6 +22,7 @@
 				<label class="control-label">Address</label>
 				<div class="controls">
 					<input type="text" name="address" id="address"
+						class="input-xlarge"
 						required="required"
 						value="{{ entity.address }}" />
 					<p class="help-block">

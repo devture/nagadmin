@@ -32,7 +32,7 @@
 		<hr />
 
 		<div class="pull-left">
-			&copy; 2012{{ ""|date('Y') != 2012 ? '-' ~ ""|date('Y') : '' }}
+			&copy; 2012 - {{ none|date('Y') }}
 			<a href="http://devture.com/" target="_blank" title="Devture Ltd - developing your future">Devture Ltd</a>.
 		</div>
 	</div>
@@ -45,9 +45,9 @@
 
 <script type="text/javascript">
 {% block js %}
-	$.each($('input, textarea'), function () {
+	$.each($('textarea'), function () {
 		if (!$(this).hasClass('js-skip-autoresize')) {
-			$(this).autoResize({"extraSpace": 20});
+			$(this).autoResize({"extraSpace": 10});
 		}
 	});
 	$('.js-chosen-select').chosen();

@@ -71,9 +71,9 @@ ul.validation-errors li {
 .form-horizontal .controls { margin-left: 160px; }
 .form-horizontal .form-actions { padding-left: 160px; }
 
-fieldset.compact > .control-group > .control-label, .control-group.compact > .control-label { width: 80px; }
-fieldset.compact > .control-group > .controls, .control-group.compact > .controls { margin-left: 100px; }
-fieldset.compact > .control-group > .form-actions, .form-actions.compact { padding-left: 100px; }
+fieldset.compact > .control-group > .control-label, .control-group.compact > .control-label { width: 100px; }
+fieldset.compact > .control-group > .controls, .control-group.compact > .controls { margin-left: 120px; }
+fieldset.compact > .control-group > .form-actions, .form-actions.compact { padding-left: 120px; }
 
 .form-horizontal .control-label {
     font-weight: bold;
