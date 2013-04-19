@@ -21,6 +21,10 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 
 		/* @var $service Service */
 		foreach ($this->repository->findAll() as $service) {
+			if (!$service->isEnabled()) {
+				continue;
+			}
+
 			$contactNames = array_map(function (Contact $contact) {
 				return $contact->getName();
 			}, $service->getContacts());

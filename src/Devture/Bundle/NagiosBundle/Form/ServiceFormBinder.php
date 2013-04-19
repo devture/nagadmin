@@ -26,12 +26,14 @@ class ServiceFormBinder extends SetterRequestBinder {
 
 	protected function doBindRequest(Service $entity, Request $request, array $options = array()) {
 		$whitelisted = array(
-				'name',
-				'maxCheckAttempts',
-				'checkInterval', 'retryInterval',
-				'notificationInterval',
+			'name',
+			'maxCheckAttempts',
+			'checkInterval', 'retryInterval',
+			'notificationInterval',
 		);
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
+
+		$entity->setEnabled($request->request->get('enabled') === '1');
 
 		try {
 			$host = $this->hostRepository->find($request->request->get('hostId'));

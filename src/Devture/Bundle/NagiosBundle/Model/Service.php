@@ -41,6 +41,14 @@ class Service extends BaseModel {
 		return $this->getAttribute('name');
 	}
 
+	public function setEnabled($value) {
+		$this->setAttribute('enabled', (bool) $value);
+	}
+
+	public function isEnabled() {
+		return $this->getAttribute('enabled', true);
+	}
+
 	public function setMaxCheckAttempts($value) {
 		$this->setAttribute('maxCheckAttempts', is_numeric($value) ? (int)$value : $value);
 	}

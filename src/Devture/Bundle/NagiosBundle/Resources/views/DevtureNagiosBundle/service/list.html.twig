@@ -12,7 +12,7 @@
 		<tbody>
 		{% for entity in items %}
 			{% set link = path('devture_nagios.service.edit', {'id': entity.id, 'next': app.request.uri}) %}
-			<tr>
+			<tr class="{{ entity.enabled ? '' : 'warning' }}">
 				<td>
 					<a href="{{ link }}" class="display-block">
 						{{ entity.host.name }}
@@ -21,6 +21,10 @@
 				<td>
 					<a href="{{ link }}" class="display-block">
 						{{ entity.name }}
+
+						{% if not entity.enabled %}
+						<strong>(disabled)</strong>
+						{% endif %}
 					</a>
 				</td>
 				<td>

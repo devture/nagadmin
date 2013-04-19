@@ -31,6 +31,10 @@ class AutoServiceDepsConfigurationExporter implements ConfigurationExporterInter
 
 			/* @var $service Service */
 			foreach ($services as $service) {
+				if (!$service->isEnabled()) {
+					continue;
+				}
+
 				if ($this->isMasterService($service)) {
 					$masterServices[] = $service;
 				} else {

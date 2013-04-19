@@ -35,6 +35,21 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label">Status</label>
+				<div class="controls">
+					<label class="radio inline">
+						<input type="radio" name="enabled" value="1" {{ entity.enabled ? 'checked="checked"' : '' }} />
+						Enabled
+					</label>
+
+					<label class="radio inline">
+						<input type="radio" name="enabled" value="0" {{ not entity.enabled ? 'checked="checked"' : '' }} />
+						Disabled
+					</label>
+				</div>
+			</div>
+
+			<div class="control-group">
 				<label class="control-label"><i class="icon-cog"></i> Command</label>
 				<div class="controls">
 					<fieldset>
