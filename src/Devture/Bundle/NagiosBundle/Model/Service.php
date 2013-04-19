@@ -141,7 +141,11 @@ class Service extends BaseModel {
 	}
 
 	public function getContacts() {
-		return $this->contacts;
+		$contacts = $this->contacts;
+		usort($contacts, function (Contact $a, Contact $b) {
+			return strcmp($a->getName(), $b->getName());
+		});
+		return $contacts;
 	}
 
 }
