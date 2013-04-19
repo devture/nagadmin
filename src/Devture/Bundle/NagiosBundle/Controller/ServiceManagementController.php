@@ -26,12 +26,12 @@ class ServiceManagementController extends BaseController {
 		$items = array();
 		foreach ($hosts as $host) {
 			if ($selectedHost === null || $selectedHost === $host) {
-				foreach ($this->getNs('service.repository')->findByHost($host) as $service) {
-					$items[] = $service;
-				}
+				$items[] = array(
+					'host' => $host,
+					'services' => $this->getNs('service.repository')->findByHost($host),
+				);
 			}
 		}
-
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
 		$commands = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('title' => 1)));

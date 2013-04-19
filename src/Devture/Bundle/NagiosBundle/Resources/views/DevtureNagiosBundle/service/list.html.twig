@@ -1,7 +1,7 @@
 {% if items|length == 0 %}
 	No services found.
 {% else %}
-	<table class="table table-bordered table-striped">
+	<table class="table table-bordered table-striped table-condensed">
 		<thead>
 			<tr>
 				<th><i class="icon-th-large"></i> Host</th>
@@ -13,12 +13,12 @@
 		{% for entity in items %}
 			{% set link = path('devture_nagios.service.edit', {'id': entity.id, 'next': app.request.uri}) %}
 			<tr class="{{ entity.enabled ? '' : 'warning' }}">
-				<td>
+				<td style="width: 130px;">
 					<a href="{{ link }}" class="display-block">
 						{{ entity.host.name }}
 					</a>
 				</td>
-				<td>
+				<td style="width: 230px;">
 					<a href="{{ link }}" class="display-block">
 						{{ entity.name }}
 

@@ -21,7 +21,10 @@
 
 	<div class="top-spaced-minor"></div>
 
-	{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': items} %}
+	{% for item in items %}
+		<h3>{{ item.host.name }}</h3>
+		{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': item.services} %}
+	{% endfor %}
 {% endblock %}
 
 {% block js %}
