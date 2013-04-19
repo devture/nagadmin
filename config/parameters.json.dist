@@ -2,7 +2,11 @@
 	"is_debug": false,
 	"is_proxy_data_trusted": false,
 	"project_name": "name-here",
+	"db_name": "nagadmin",
+	"nagios_frontend_link": "http://link-to-your-nagios-frontend/",
+
 	"SharedBundle.token_salt": "salt here",
+
 	"NagiosBundle.deployment_handler.path": "/etc/nagios/nagadmin-generated/",
 	"NagiosBundle.deployment_handler.post_deployment_command": "sudo systemctl restart nagios",
 	"NagiosBundle.defaults.service.max_check_attempts": 5,
@@ -20,6 +24,5 @@
 	"NagiosBundle.notifications.sms.sender_id": "nagios",
 	"NagiosBundle.notifications.sms.gateway_config.username": "username",
 	"NagiosBundle.notifications.sms.gateway_config.password": "password",
-	"NagiosBundle.auto_service_dependency.master_service_regexes": ["/^ping$/i", "/host-?alive/i"],
-	"db_name": "nagadmin"
+	"NagiosBundle.auto_service_dependency.master_service_regexes": ["/^ping$/i", "/host-?alive/i"]
 }

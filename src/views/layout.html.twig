@@ -18,6 +18,14 @@
 				<a class="brand" href="{{ path('homepage') }}">
 					{{ get_project_name() }}
 				</a>
+				{% if app.config.nagios_frontend_link is not none %}
+					<div class="pull-right">
+						<a class="btn btn-mini" style="margin: 3px;" target="_blank" href="{{ app.config.nagios_frontend_link }}">
+							<i class="icon-share-alt"></i>
+							Nagios frontend
+						</a>
+					</div>
+				{% endif %}
 			</div>
 			<div style="clear: both; border-top: 1px solid #ededed;"></div>
 			{% include "menu_bar.html.twig" %}

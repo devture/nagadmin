@@ -5,6 +5,7 @@
 	"mongo": {
 		"db_name": "%db_name%"
 	},
+	"nagios_frontend_link": "%nagios_frontend_link%",
 	"SharedBundle": {
 		"token.validity_time": 7200,
 		"token.salt": "%SharedBundle.token_salt%",
