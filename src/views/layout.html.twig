@@ -45,11 +45,8 @@
 
 <script type="text/javascript">
 {% block js %}
-	$.each($('textarea'), function () {
-		if (!$(this).hasClass('js-skip-autoresize')) {
-			$(this).autoResize({"extraSpace": 10});
-		}
-	});
+	$('textarea').autoResize({"extraSpace": 10});
+
 	$('.js-chosen-select').chosen();
 {% endblock %}
 </script>
