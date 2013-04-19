@@ -12,7 +12,7 @@ class ConfigurationCollector {
 	}
 
 	/**
-	 * @return multiple:ConfigurationFile
+	 * @return ConfigurationFile[]
 	 */
 	public function collect() {
 		$files = array();

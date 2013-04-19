@@ -73,7 +73,7 @@ class ContactManagementController extends BaseController {
 			}
 			return $this->json(array('ok' => true));
 		}
-		return $this->json(array());
+		return $this->json(array('ok' => false));
 	}
 
 }

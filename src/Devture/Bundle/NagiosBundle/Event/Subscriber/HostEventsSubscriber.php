@@ -10,7 +10,7 @@ class HostEventsSubscriber extends ContainerAwareSubscriber {
 
 	public static function getSubscribedEvents() {
 		return array(
-				Events::BEFORE_HOST_DELETE => 'onBeforeHostDelete',
+			Events::BEFORE_HOST_DELETE => 'onBeforeHostDelete',
 		);
 	}
 

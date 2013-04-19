@@ -10,7 +10,7 @@ class TimePeriodEventsSubscriber extends ContainerAwareSubscriber {
 
 	public static function getSubscribedEvents() {
 		return array(
-				Events::BEFORE_TIME_PERIOD_DELETE => 'onBeforeTimePeriodDelete',
+			Events::BEFORE_TIME_PERIOD_DELETE => 'onBeforeTimePeriodDelete',
 		);
 	}
 

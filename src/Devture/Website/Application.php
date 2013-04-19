@@ -1,5 +1,6 @@
 <?php
 namespace Devture\Website;
+
 class Application extends \Silex\Application {
 
 	protected $basePath;
@@ -37,11 +38,13 @@ class Application extends \Silex\Application {
 		$app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
 		$app->register(new \Silex\Provider\TwigServiceProvider(), array(
-				'twig.options' => array(
-						'cache' => $this->basePath . '/cache/twig',
-						'auto_reload' => $this['debug'],
-						'strict_variables' => true),
-				'twig.path' => array($this->basePath . '/src/views'),));
+			'twig.options' => array(
+				'cache' => $this->basePath . '/cache/twig',
+				'auto_reload' => $this['debug'],
+				'strict_variables' => true
+			),
+			'twig.path' => array($this->basePath . '/src/views'),
+		));
 
 		$app->register(new \Silex\Provider\SwiftmailerServiceProvider());
 

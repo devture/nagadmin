@@ -11,7 +11,7 @@ class ContactEventsSubscriber extends ContainerAwareSubscriber {
 
 	public static function getSubscribedEvents() {
 		return array(
-				Events::BEFORE_CONTACT_DELETE => 'onBeforeContactDelete',
+			Events::BEFORE_CONTACT_DELETE => 'onBeforeContactDelete',
 		);
 	}
 

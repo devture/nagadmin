@@ -11,7 +11,7 @@ class CommandEventsSubscriber extends ContainerAwareSubscriber {
 
 	public static function getSubscribedEvents() {
 		return array(
-				Events::BEFORE_COMMAND_DELETE => 'onBeforeCommandDelete',
+			Events::BEFORE_COMMAND_DELETE => 'onBeforeCommandDelete',
 		);
 	}
 
