@@ -125,7 +125,9 @@ class Service extends BaseModel {
 	}
 
 	public function addContact(Contact $contact) {
-		$this->contacts[] = $contact;
+		if (!in_array($contact, $this->contacts)) {
+			$this->contacts[] = $contact;
+		}
 	}
 
 	public function removeContact(Contact $contact) {
