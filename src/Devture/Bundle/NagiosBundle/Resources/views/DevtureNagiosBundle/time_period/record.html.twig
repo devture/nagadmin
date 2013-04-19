@@ -112,7 +112,7 @@ february -1                         00:00-24:00
 			$lastEditor = $('.js-rule-editor').last(),
 			lastNumber = $lastEditor.length === 1 ? $lastEditor.data('number') : 0;
 		html = html.replace(/__NUMBER__/g, lastNumber + 1);
-		$(html).appendTo($('#js-rules-container')).find('input[type=text]').first().focus();
+		$($.parseHTML(html)).appendTo($('#js-rules-container')).find('input[type=text]').first().focus();
 	});
 
 	$('#js-rules-container').on('click', '.js-button-remove-rule', function (ev) {
