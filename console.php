@@ -1,6 +1,7 @@
 <?php
 $app = require 'src/bootstrap.php';
-require 'src/setup_console.php';
+
+$app['console'] = new \Symfony\Component\Console\Application();
 
 $app->boot();
 
