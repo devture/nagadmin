@@ -99,7 +99,7 @@ No (read above).
 
 Does this provide a frontend where I can view the status of my services (like the default Nagios CGI)?
 ------------------------------------------------------------------------------------------------------
-No. Nagadmin is meant for the system administrator to configure services and deploy a configuration to be used by Nagios.
+No. Nagadmin is meant for the system administrator - to configure services and deploy a configuration to be used by Nagios.
 For a frontend, check out `Thruk <http://thruk.org/>`_ or the Nagios CGI interface.
 
 
@@ -131,7 +131,7 @@ Can I install the web-configurator on another machine (not the one running Nagio
 Yes, but that's slightly more complicated.
 
 1. You need to install Nagios on the machine that runs the web-configurator
-(the `nagios` executable is needed to verify that the generated configuration files)
+(the `nagios` executable is needed to verify the generated configuration files)
 
 2. You need to setup a post-deployment command to move the locally generated files
 to the actual Nagios machine and reload/restart the remote Nagios daemon.
@@ -176,15 +176,17 @@ services on the same host.
 This allows you to easily define an "important" service, which all other services depend on.
 It makes up for the missing "Host checks and notifications" feature mentioned above.
 
+When such an important/parent service is down, individual notifications for all of its children will be suppressed.
+
 
 Service escalations are not supported
 -------------------------------------
-That's considered and advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
+That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
 
 
 Event handlers are not supported
 --------------------------------
-That's considered and advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
+That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
 
 
 Existing configuration files cannot be imported
