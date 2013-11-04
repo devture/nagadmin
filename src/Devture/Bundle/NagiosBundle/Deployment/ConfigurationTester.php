@@ -15,24 +15,6 @@ class ConfigurationTester {
 		$this->mainFileTemplatePath = $mainFileTemplatePath;
 	}
 
-	private function createMainConfigFile($path, array $configurationFiles, $checkResultPath) {
-		$mainConfigFile = new ConfigurationFile('nagios.cfg', ConfigurationFile::TYPE_CONFIGURATION_FILE);
-
-		$mainConfigFile->addVariable('check_result_path', $checkResultPath);
-		$mainConfigFile->addVariable('illegal_macro_output_chars', '`~$&|\'"<>');
-
-		foreach ($configurationFiles as $configurationFile) {
-			$type = $configurationFile->getType();
-			if ($type === ConfigurationFile::TYPE_CONFIGURATION_FILE) {
-				$mainConfigFile->addVariable('cfg_file', $path . '/' . $configurationFile->getPath());
-			} else if ($type === ConfigurationFile::TYPE_RESOURCE_FILE) {
-				$mainConfigFile->addVariable('resource_file', $path . '/' . $configurationFile->getPath());
-			}
-		}
-
-		return $mainConfigFile;
-	}
-
 	public function test(array $configurationFiles) {
 		$path = rtrim(sys_get_temp_dir(), '/') . '/' . uniqid('nagadmin-test');
 
@@ -41,7 +23,9 @@ class ConfigurationTester {
 		$checkResultPath = $path . '/checkresults';
 		mkdir($checkResultPath, 0777);
 
-		$configurationFiles[] = $this->createMainConfigFile($path, $configurationFiles, $checkResultPath);
+		$logFilePath = '/dev/null';
+
+		$configurationFiles[] = $this->createMainConfigFile($path, $configurationFiles, $checkResultPath, $logFilePath);
 
 		$this->writer->write($path, $configurationFiles);
 
@@ -60,10 +44,28 @@ class ConfigurationTester {
 		}
 
 		$this->writer->cleanup($path);
-		//$checkResultPath is inside the $path directory, so it will be cleaned up by the writer
 		rmdir($path);
 
 		return array($isValid, $checkOutput);
+	}
+
+	private function createMainConfigFile($path, array $configurationFiles, $checkResultPath, $logFilePath) {
+		$mainConfigFile = new ConfigurationFile('nagios.cfg', ConfigurationFile::TYPE_CONFIGURATION_FILE);
+
+		$mainConfigFile->addVariable('check_result_path', $checkResultPath);
+		$mainConfigFile->addVariable('log_file', $logFilePath);
+		$mainConfigFile->addVariable('illegal_macro_output_chars', '`~$&|\'"<>');
+
+		foreach ($configurationFiles as $configurationFile) {
+			$type = $configurationFile->getType();
+			if ($type === ConfigurationFile::TYPE_CONFIGURATION_FILE) {
+				$mainConfigFile->addVariable('cfg_file', $path . '/' . $configurationFile->getPath());
+			} else if ($type === ConfigurationFile::TYPE_RESOURCE_FILE) {
+				$mainConfigFile->addVariable('resource_file', $path . '/' . $configurationFile->getPath());
+			}
+		}
+
+		return $mainConfigFile;
 	}
 
 }

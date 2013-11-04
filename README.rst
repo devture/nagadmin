@@ -48,7 +48,7 @@ Here's everything you need to do to install it::
 
 	# Download the source code and go into the main directory
 
-	# Install the depenedencies with the help of composer
+	# Install the dependencies with the help of composer
 	composer update
 
 	# Make sure you have a running instance of MongoDB

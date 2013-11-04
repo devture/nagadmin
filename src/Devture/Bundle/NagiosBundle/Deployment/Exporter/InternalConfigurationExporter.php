@@ -52,7 +52,6 @@ class InternalConfigurationExporter implements ConfigurationExporterInterface {
 		$definition->addDirective('notifications_enabled', 1);
 		$definition->addDirective('event_handler_enabled', 1);
 		$definition->addDirective('flap_detection_enabled', 1);
-		$definition->addDirective('failure_prediction_enabled', 1);
 		$definition->addDirective('process_perf_data', 1);
 		$definition->addDirective('retain_nonstatus_information', 1);
 		$definition->addDirective('notification_period', 'nagadmin-24x7');
@@ -71,7 +70,6 @@ class InternalConfigurationExporter implements ConfigurationExporterInterface {
 		$definition->addDirective('notifications_enabled', 1);
 		$definition->addDirective('event_handler_enabled', 1);
 		$definition->addDirective('flap_detection_enabled', 1);
-		$definition->addDirective('failure_prediction_enabled', 1);
 		$definition->addDirective('process_perf_data', 1);
 		$definition->addDirective('retain_status_information', 1);
 		$definition->addDirective('retain_nonstatus_information', 1);
