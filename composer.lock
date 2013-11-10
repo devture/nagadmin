@@ -10,8 +10,14 @@
             "version": "1.0",
             "source": {
                 "type": "git",
-                "url": "git.devture.com:silex-provider-config.git",
-                "reference": "1.0"
+                "url": "https://github.com/spantaleev/silex-provider-config.git",
+                "reference": "bcbbd3f741af1794b9532f3bfceac2be0a726bc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spantaleev/silex-provider-config/zipball/bcbbd3f741af1794b9532f3bfceac2be0a726bc7",
+                "reference": "bcbbd3f741af1794b9532f3bfceac2be0a726bc7",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
@@ -22,6 +28,7 @@
                     "Devture\\SilexProvider\\Config\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -36,7 +43,7 @@
                 "config",
                 "silex"
             ],
-            "time": "2013-02-23 12:16:38"
+            "time": "2013-02-23 12:24:54"
         },
         {
             "name": "devture/silex-provider-doctrine-mongodb",
@@ -44,12 +51,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/spantaleev/silex-provider-doctrine-mongodb.git",
-                "reference": "1.0"
+                "reference": "437cbe6191fe815984caad6282719ac360ce80c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spantaleev/silex-provider-doctrine-mongodb/zipball/1.0",
-                "reference": "1.0",
+                "url": "https://api.github.com/repos/spantaleev/silex-provider-doctrine-mongodb/zipball/437cbe6191fe815984caad6282719ac360ce80c1",
+                "reference": "437cbe6191fe815984caad6282719ac360ce80c1",
                 "shasum": ""
             },
             "require": {
@@ -85,8 +92,8 @@
             "version": "1.1.9",
             "source": {
                 "type": "git",
-                "url": "git.devture.com:silex-shared-bundle.git",
-                "reference": "1.1.9"
+                "url": "git@gitlab.devture.com:devture-silex/silex-shared-bundle.git",
+                "reference": "5456f8dcfc3130be8f5ef47137e8ab09e4154725"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -188,7 +195,8 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -262,7 +270,8 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -326,9 +335,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -398,9 +408,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -416,7 +427,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -462,9 +473,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -482,7 +494,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -584,9 +596,10 @@
                     "homepage": "http://avalanche123.com"
                 },
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Kris Wallsmith",
@@ -614,12 +627,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Pimple.git",
-                "reference": "v1.0.2"
+                "reference": "ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/v1.0.2",
-                "reference": "v1.0.2",
+                "url": "https://api.github.com/repos/fabpot/Pimple/zipball/ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94",
+                "reference": "ae11e57e8c2bb414b2ff93396dbbfc0eb92feb94",
                 "shasum": ""
             },
             "require": {
@@ -659,13 +672,13 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/log",
-                "reference": "1.0.0"
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/php-fig/log/archive/1.0.0.zip",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
                 "shasum": ""
             },
             "type": "library",
@@ -694,16 +707,16 @@
         },
         {
             "name": "silex/silex",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fabpot/Silex.git",
-                "reference": "3b037f3ae61d1e0d728bbf18a51662d2b2c66e41"
+                "url": "https://github.com/silexphp/Silex.git",
+                "reference": "89d5ed3cbfebc83145c9c345e286fee190a271b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Silex/zipball/3b037f3ae61d1e0d728bbf18a51662d2b2c66e41",
-                "reference": "3b037f3ae61d1e0d728bbf18a51662d2b2c66e41",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/89d5ed3cbfebc83145c9c345e286fee190a271b7",
+                "reference": "89d5ed3cbfebc83145c9c345e286fee190a271b7",
                 "shasum": ""
             },
             "require": {
@@ -772,7 +785,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2013-07-04 06:25:40"
+            "time": "2013-10-30 08:45:28"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1422,16 +1435,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.14.1",
+            "version": "v1.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb"
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/8873d7593ad7c120004f177c0fd01459b383c9cb",
-                "reference": "8873d7593ad7c120004f177c0fd01459b383c9cb",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64",
                 "shasum": ""
             },
             "require": {
@@ -1467,7 +1480,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-10-15 19:17:38"
+            "time": "2013-10-30 08:20:53"
         }
     ],
     "packages-dev": [
