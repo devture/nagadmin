@@ -1,4 +1,5 @@
 vendor
 log
-cache
+cache/*
+!cache/.gitkeep
 config/parameters.json

@@ -46,12 +46,16 @@ Commands
 
 Here's everything you need to do to install it::
 
+	# Make sure you have a running instance of MongoDB
+	# and the php-pecl-mongodb extension installed
+
 	# Download the source code and go into the main directory
+
+	# Make the cache directory writable by the web server user
+	chown http:http cache
 
 	# Install the dependencies with the help of composer
 	composer update
-
-	# Make sure you have a running instance of MongoDB
 
 	# Copy the parameters file template and set it up according to your needs
 	cp config/parameters.json.dist config/parameters.json
