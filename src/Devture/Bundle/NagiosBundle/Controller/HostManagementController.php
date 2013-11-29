@@ -2,22 +2,20 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Command;
 
 class HostManagementController extends BaseController {
 
 	public function indexAction() {
-		$items = $this->getNs('host.repository')->findBy(array(), array('sort' => array('name' => 1)));
+		$items = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/host/index.html.twig', array('items' => $items));
 	}
 
 	private function getBaseViewData(Host $currentHost) {
 		$groupsMap = array();
-		$hosts = $this->getNs('host.repository')->findBy(array(), array());
+		$hosts = $this->getHostRepository()->findBy(array(), array());
 		$hosts[] = $currentHost;
 		foreach ($hosts as $host) {
 			foreach ($host->getGroups() as $groupName) {
@@ -27,21 +25,21 @@ class HostManagementController extends BaseController {
 		ksort($groupsMap);
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
-		$commands = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('title' => 1)));
+		$commands = $this->getCommandRepository()->findBy($findBy, array('sort' => array('title' => 1)));
 
 		$viewData = array();
 		$viewData['groups'] = array_keys($groupsMap);
-		$viewData['services'] = $this->getNs('service.repository')->findByHost($currentHost);
+		$viewData['services'] = $this->getServiceRepository()->findByHost($currentHost);
 		$viewData['commands'] = $commands;
 		return $viewData;
 	}
 
 	public function addAction(Request $request) {
-		$entity = $this->getNs('host.repository')->createModel(array());
+		$entity = $this->getHostRepository()->createModel(array());
 
-		$binder = $this->getNs('host.form_binder');
+		$binder = $this->getHostFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('host.repository')->add($entity);
+			$this->getHostRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
@@ -54,14 +52,14 @@ class HostManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
-			$entity = $this->getNs('host.repository')->find($id);
+			$entity = $this->getHostRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
 		}
 
-		$binder = $this->getNs('host.form_binder');
+		$binder = $this->getHostFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('host.repository')->update($entity);
+			$this->getHostRepository()->update($entity);
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
@@ -74,15 +72,22 @@ class HostManagementController extends BaseController {
 
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-host-' . $id;
-		if ($this->get('shared.csrf_token_generator')->isValid($intention, $token)) {
+		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getNs('host.repository')->delete($this->getNs('host.repository')->find($id));
+				$this->getHostRepository()->delete($this->getHostRepository()->find($id));
 			} catch (NotFound $e) {
 
 			}
 			return $this->json(array('ok' => true));
 		}
 		return $this->json(array('ok' => false));
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Form\HostFormBinder
+	 */
+	private function getHostFormBinder() {
+		return $this->getNs('host.form_binder');
 	}
 
 }

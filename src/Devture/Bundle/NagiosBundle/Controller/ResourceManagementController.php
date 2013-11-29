@@ -2,15 +2,14 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ResourceManagementController extends BaseController {
 
 	public function manageAction(Request $request) {
-		$entity = $this->getNs('resource.repository')->getResource();
+		$entity = $this->getResourceRepository()->getResource();
 
-		$binder = $this->getNs('resource.form_binder');
+		$binder = $this->getResourceFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getNs('resource.repository')->update($entity);
 			return $this->redirect($this->generateUrlNs('resource.manage'));
@@ -21,6 +20,13 @@ class ResourceManagementController extends BaseController {
 			'entity' => $entity,
 			'form' => $binder,
 		));
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Form\ResourceFormBinder
+	 */
+	private function getResourceFormBinder() {
+		return $this->getNs('resource.form_binder');
 	}
 
 }

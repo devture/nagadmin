@@ -2,16 +2,14 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException;
 
 class ConfigurationManagementController extends BaseController {
 
 	private function getTestedConfiguration() {
-		$files = $this->getNs('deployment.configuration_collector')->collect();
-		list($isValid, $checkOutput) = $this->getNs('deployment.configuration_tester')->test($files);
+		$files = $this->getDeploymentConfigurationCollector()->collect();
+		list($isValid, $checkOutput) = $this->getDeploymentConfigurationTester()->test($files);
 		return array($files, $isValid, $checkOutput);
 	}
 
@@ -22,7 +20,7 @@ class ConfigurationManagementController extends BaseController {
 	}
 
 	public function deployAction(Request $request) {
-		if (!$this->get('shared.csrf_token_generator')->isValid('deploy', $request->request->get('token'))) {
+		if (!$this->isValidCsrfToken('deploy', $request->request->get('token'))) {
 			return $this->abort(401);
 		}
 
@@ -35,7 +33,7 @@ class ConfigurationManagementController extends BaseController {
 
 		$viewData = array('error' => null);
 		try {
-			$this->getNs('deployment.handler')->deploy($files);
+			$this->getDeploymentHandler()->deploy($files);
 		} catch (DeploymentFailedException $e) {
 			$viewData['error'] = $e->getMessage();
 		}

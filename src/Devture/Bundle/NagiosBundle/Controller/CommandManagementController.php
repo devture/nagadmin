@@ -2,9 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Model\Command;
 
 class CommandManagementController extends BaseController {
@@ -14,17 +12,17 @@ class CommandManagementController extends BaseController {
 			return $this->abort(404);
 		}
 		$findBy = array('type' => $type);
-		$items = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('name' => 1)));
+		$items = $this->getCommandRepository()->findBy($findBy, array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/command/index.html.twig', array('items' => $items, 'type' => $type));
 	}
 
 	public function addAction(Request $request, $type) {
-		$entity = $this->getNs('command.repository')->createModel(array());
+		$entity = $this->getCommandRepository()->createModel(array());
 		$entity->setType($type);
 
-		$binder = $this->getNs('command.form_binder');
+		$binder = $this->getCommandFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('command.repository')->add($entity);
+			$this->getCommandRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
@@ -37,14 +35,14 @@ class CommandManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
-			$entity = $this->getNs('command.repository')->find($id);
+			$entity = $this->getCommandRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
 		}
 
-		$binder = $this->getNs('command.form_binder');
+		$binder = $this->getCommandFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('command.repository')->update($entity);
+			$this->getCommandRepository()->update($entity);
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
@@ -57,15 +55,22 @@ class CommandManagementController extends BaseController {
 
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-command-' . $id;
-		if ($this->get('shared.csrf_token_generator')->isValid($intention, $token)) {
+		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getNs('command.repository')->delete($this->getNs('command.repository')->find($id));
+				$this->getCommandRepository()->delete($this->getCommandRepository()->find($id));
 			} catch (NotFound $e) {
 
 			}
 			return $this->json(array('ok' => true));
 		}
 		return $this->json(array('ok' => false));
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Form\ServiceFormBinder
+	 */
+	private function getCommandFormBinder() {
+		return $this->getNs('command.form_binder');
 	}
 
 }

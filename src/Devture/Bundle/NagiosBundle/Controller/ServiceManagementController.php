@@ -2,9 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Model\Command;
 
 class ServiceManagementController extends BaseController {
@@ -14,27 +12,26 @@ class ServiceManagementController extends BaseController {
 		try {
 			$hostId = $request->query->get('hostId');
 			if ($hostId) {
-				$selectedHost = $this->getNs('host.repository')->find($hostId);
+				$selectedHost = $this->getHostRepository()->find($hostId);
 			}
 		} catch (NotFound $e) {
 
 		}
 
-		$hosts = $this->getNs('host.repository')->findBy(array(), array(
-				'sort' => array('name' => 1)));
+		$hosts = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 
 		$items = array();
 		foreach ($hosts as $host) {
 			if ($selectedHost === null || $selectedHost === $host) {
 				$items[] = array(
 					'host' => $host,
-					'services' => $this->getNs('service.repository')->findByHost($host),
+					'services' => $this->getServiceRepository()->findByHost($host),
 				);
 			}
 		}
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
-		$commands = $this->getNs('command.repository')->findBy($findBy, array('sort' => array('title' => 1)));
+		$commands = $this->getCommandRepository()->findBy($findBy, array('sort' => array('title' => 1)));
 
 		return $this->renderView('DevtureNagiosBundle/service/index.html.twig', array(
 			'items' => $items,
@@ -46,13 +43,13 @@ class ServiceManagementController extends BaseController {
 
 	private function getBaseViewData() {
 		$viewData = array();
-		$viewData['hosts'] = $this->getNs('host.repository')->findBy(array(), array('sort' => array('name' => 1)));
-		$viewData['contacts'] = $this->getNs('contact.repository')->findBy(array(), array('sort' => array('name' => 1)));
+		$viewData['hosts'] = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
+		$viewData['contacts'] = $this->getContactRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		return $viewData;
 	}
 
 	public function addAction(Request $request, $commandId) {
-		$entity = $this->getNs('service.repository')->createModel(array());
+		$entity = $this->getServiceRepository()->createModel(array());
 
 		$defaults = $this->getNs('service.defaults');
 
@@ -62,7 +59,7 @@ class ServiceManagementController extends BaseController {
 		$entity->setNotificationInterval($defaults['notification_interval']);
 
 		try {
-			$command = $this->getNs('command.repository')->find($commandId);
+			$command = $this->getCommandRepository()->find($commandId);
 			$entity->setCommand($command);
 			$entity->setName($command->getTitle());
 		} catch (NotFound $e) {
@@ -71,15 +68,15 @@ class ServiceManagementController extends BaseController {
 
 		if ($request->query->has('hostId')) {
 			try {
-				$entity->setHost($this->getNs('host.repository')->find($request->query->get('hostId')));
+				$entity->setHost($this->getHostRepository()->find($request->query->get('hostId')));
 			} catch (NotFound $e) {
 				return $this->abort(404);
 			}
 		}
 
-		$binder = $this->getNs('service.form_binder');
+		$binder = $this->getServiceFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('service.repository')->add($entity);
+			$this->getServiceRepository()->add($entity);
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
@@ -93,14 +90,14 @@ class ServiceManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
-			$entity = $this->getNs('service.repository')->find($id);
+			$entity = $this->getServiceRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
 		}
 
-		$binder = $this->getNs('service.form_binder');
+		$binder = $this->getServiceFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('service.repository')->update($entity);
+			$this->getServiceRepository()->update($entity);
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
@@ -114,15 +111,22 @@ class ServiceManagementController extends BaseController {
 
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-service-' . $id;
-		if ($this->get('shared.csrf_token_generator')->isValid($intention, $token)) {
+		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getNs('service.repository')->delete($this->getNs('service.repository')->find($id));
+				$this->getServiceRepository()->delete($this->getServiceRepository()->find($id));
 			} catch (NotFound $e) {
 
 			}
 			return $this->json(array('ok' => true));
 		}
 		return $this->json(array('ok' => false));
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Form\ServiceFormBinder
+	 */
+	private function getServiceFormBinder() {
+		return $this->getNs('service.form_binder');
 	}
 
 }

@@ -2,25 +2,23 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
-use Devture\Bundle\SharedBundle\Controller\BaseController;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 
 class ContactManagementController extends BaseController {
 
 	public function indexAction() {
-		$items = $this->getNs('contact.repository')->findBy(array(), array('sort' => array('name' => 1)));
+		$items = $this->getContactRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/contact/index.html.twig', array('items' => $items));
 	}
 
 	private function getBaseViewData() {
 		$viewData = array();
-		$viewData['timePeriods'] = $this->getNs('time_period.repository')->findBy(array(), array(
+		$viewData['timePeriods'] = $this->getTimePeriodRepository()->findBy(array(), array(
 			'sort' => array('title' => 1)
 		));
-		$viewData['notificationCommands'] = $this->getNs('command.repository')->findBy(array('type' => Command::TYPE_SERVICE_NOTIFICATION), array(
+		$viewData['notificationCommands'] = $this->getCommandRepository()->findBy(array('type' => Command::TYPE_SERVICE_NOTIFICATION), array(
 			'sort' => array('title' => 1)
 		));
 		$viewData['addressSlotsCount'] = Contact::ADDRESS_SLOTS_COUNT;
@@ -28,11 +26,11 @@ class ContactManagementController extends BaseController {
 	}
 
 	public function addAction(Request $request) {
-		$entity = $this->getNs('contact.repository')->createModel(array());
+		$entity = $this->getContactRepository()->createModel(array());
 
-		$binder = $this->getNs('contact.form_binder');
+		$binder = $this->getContactFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('contact.repository')->add($entity);
+			$this->getContactRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
 
@@ -45,14 +43,14 @@ class ContactManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
-			$entity = $this->getNs('contact.repository')->find($id);
+			$entity = $this->getContactRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
 		}
 
-		$binder = $this->getNs('contact.form_binder');
+		$binder = $this->getContactFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
-			$this->getNs('contact.repository')->update($entity);
+			$this->getContactRepository()->update($entity);
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
 
@@ -65,15 +63,22 @@ class ContactManagementController extends BaseController {
 
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-contact-' . $id;
-		if ($this->get('shared.csrf_token_generator')->isValid($intention, $token)) {
+		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getNs('contact.repository')->delete($this->getNs('contact.repository')->find($id));
+				$this->getContactRepository()->delete($this->getContactRepository()->find($id));
 			} catch (NotFound $e) {
 
 			}
 			return $this->json(array('ok' => true));
 		}
 		return $this->json(array('ok' => false));
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Form\ContactFormBinder
+	 */
+	private function getContactFormBinder() {
+		return $this->getNs('contact.form_binder');
 	}
 
 }
