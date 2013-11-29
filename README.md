@@ -1,7 +1,6 @@
-Nagadmin
-========
+# Nagadmin
 
-Nagadmin is a web-configurator for configuring a `Nagios <http://nagios.com/>`_ installation.
+Nagadmin is a web-configurator for configuring a [Nagios](http://nagios.com/) installation.
 
 It's not meant to support all Nagios features.
 It may force a certain workflow upon you, which may or may not be to your taste.
@@ -10,9 +9,11 @@ The reason it does this is to optimize for the common monitoring use-case and ma
 If your requirements are complicated, you may need to look into some other solutions.
 
 
+--------------------
 
-Why Nagadmin instead of X?
-==========================
+
+
+## Why Nagadmin instead of X?
 
 There are lots of web-configurator systems that aim to make Nagios installations easy to configure from the web.
 Editing Nagios configuration files may be inconvenient (requires terminal access),
@@ -26,28 +27,31 @@ None of the existing Nagios configurator systems seemed to achieve the goals of:
 	- giving you a good overview of the current configuration
 
 
-Installation
-============
-
-Server Prerequisites
 --------------------
 
-- Nagios
 
-- `MongoDB <http://www.mongodb.org/>`_ (for storing the configuration data)
+## Installation
 
-- PHP 5.3+ with the `php-mongo <http://www.mongodb.org/downloads>`_ extension
+### Server Prerequisites
 
-- `git <http://git-scm.com/>`_ and `composer <http://getcomposer.org/>`_
+- [Nagios](http://nagios.com/)
+
+- The Nagios plugins
+
+- [MongoDB](http://www.mongodb.org/) - for storing the configuration data
+
+- PHP 5.3+
+
+- The php-mongo/php-pecl-mongo extension - for connecting to MongoDB
+
+- [git](http://git-scm.com/) - for getting the source code
+
+- [composer](http://getcomposer.org/) - for installing PHP libraries
 
 
-Commands
---------
+### Commands
 
-Here's everything you need to do to install it::
-
-	# Make sure you have a running instance of MongoDB
-	# and the php-pecl-mongodb extension installed
+Here's everything you need to do to install it:
 
 	# Download the source code and go into the main directory
 
@@ -61,15 +65,15 @@ Here's everything you need to do to install it::
 	cp config/parameters.json.dist config/parameters.json
 	vim config/parameters.json
 
-	# Run the install command
-	php console.php install
-
 	# Create the initial database structure
 	cd src/Devture/Bundle/NagiosBundle/Resources/database
 	mongoimport -d nagadmin -c time_period --jsonArray < time_period.json
 	mongoimport -d nagadmin -c command --jsonArray < command.json
 	mongoimport -d nagadmin -c host --jsonArray < host.json
 	mongoimport -d nagadmin -c service --jsonArray < service.json
+
+	# Run the install command
+	php console.php install
 
 	# Fix permissions so that the `nagios` user can access this application's directory
 	# Running `php console.php` with the `nagios` user should not result in an error
@@ -91,47 +95,49 @@ Here's everything you need to do to install it::
 
 	# Also comment the resource_file directive and add a new one:
 	resource_file=/etc/nagios/nagadmin-generated/resource.cfg
+	
+
+--------------------
 
 
-FAQ
-===
+## FAQ
 
-Does this support all kinds of esoteric Nagios features?
---------------------------------------------------------
+### Does this support all kinds of esoteric Nagios features?
+
 No (read above).
 
 
-Does this provide a frontend where I can view the status of my services (like the default Nagios CGI)?
-------------------------------------------------------------------------------------------------------
+### Does this provide a frontend where I can view the status of my services (like the default Nagios CGI)?
+
 No. Nagadmin is meant for the system administrator - to configure services and deploy a configuration to be used by Nagios.
-For a frontend, check out `Thruk <http://thruk.org/>`_ or the Nagios CGI interface.
+For a frontend, check out [Thruk](http://thruk.org/) or the Nagios CGI interface.
 
 
-Can I import my existing Nagios configuration files and start managing them with Nagadmin?
-------------------------------------------------------------------------------------------
+### Can I import my existing Nagios configuration files and start managing them with Nagadmin?
+
 Not yet, but hopefully soon.
 That shouldn't stop you from giving Nagadmin a spin.
 
 
-What are the plans for Nagadmin's future?
------------------------------------------
+### What are the plans for Nagadmin's future?
+
 The source code will always be available.
 Developing additional features and complicating it much further is not the aim of this project.
 Community members are free to make improvements to the existing codebase.
 
 
-What is Nagadmin written in?
-----------------------------
-Nagadmin is written in `PHP <http://php.net/>`_ and uses the `Silex microframework <http://silex.sensiolabs.org/>`_.
+### What is Nagadmin written in?
+
+Nagadmin is written in [PHP](http://php.net/) and uses the [Silex microframework](http://silex.sensiolabs.org/).
 
 
-What are the system requirements?
----------------------------------
-You need Nagios 3.x to consume the generated configuration files and PHP 5.3+ to power the web-configurator.
+### What are the system requirements?
+
+You need Nagios 3.x or 4.x to consume the generated configuration files and PHP 5.3+ to power the web-configurator.
 
 
-Can I install the web-configurator on another machine (not the one running Nagios)?
------------------------------------------------------------------------------------
+### Can I install the web-configurator on another machine (not the one running Nagios)?
+
 Yes, but that's slightly more complicated.
 
 1. You need to install Nagios on the machine that runs the web-configurator
@@ -141,36 +147,38 @@ Yes, but that's slightly more complicated.
 to the actual Nagios machine and reload/restart the remote Nagios daemon.
 
 
-I'm not running Nagios, but a compatible system (Icinga, Shinken, Centreon). Can I use this?
---------------------------------------------------------------------------------------------
+### I'm not running Nagios, but a compatible system (Icinga, Shinken, Centreon). Can I use this?
+
 Probably. Give it a try. If it fails somewhere, tell us about it and we can work on a fix then.
 
 
+--------------------
 
-Limitations
-===========
+
+
+## Limitations
 
 Limitations listed below are either caused by features not being implemented (yet)
 or by conscious design decisions to omit them (and potentially replace them) with something else.
 
 
-Host checks and notifications are not supported
-------------------------------------------------
+### Host checks and notifications are not supported
+
 Because of this, all hosts are forced to an OK state (this allows service checks to run for them).
 
 
-Service groups are not supported
--------------------------------------------------------
+### Service groups are not supported
+
 They seem to be yet another thing that the administrator is asked to enter, complicating the workflow and not adding too much value.
 
 
-Defining templates for timeperiods/contacts/hosts/services is not supported
-----------------------------------------------------------------------------
+### Defining templates for timeperiods/contacts/hosts/services is not supported
+
 This keeps things simple, by removing the complex inheritance model.
 
 
-Service dependencies are not supported
--------------------------------------------------------------------------------------------------------------------------
+### Service dependencies are not supported
+
 That's an advanced feature.
 
 Nagadmin supports automatic service dependencies though.
@@ -183,18 +191,18 @@ It makes up for the missing "Host checks and notifications" feature mentioned ab
 When such an important/parent service is down, individual notifications for all of its children will be suppressed.
 
 
-Service escalations are not supported
--------------------------------------
+### Service escalations are not supported
+
 That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
 
 
-Event handlers are not supported
---------------------------------
+### Event handlers are not supported
+
 That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
 
 
-Existing configuration files cannot be imported
------------------------------------------------
+### Existing configuration files cannot be imported
+
 This is definitely something we wish to improve upon.
 It would make it much easier to get started with Nagadmin if you've been doing things manually until now,
 or to let you migrate from another system.
