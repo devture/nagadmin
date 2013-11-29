@@ -81,7 +81,7 @@ Here's everything you need to do to install it:
 	# Make sure the http user can execute the command defined in config/parameters.json
 	# as `NagiosBundle.deployment_handler.post_deployment_command`
 	# You may wish to run visudo and add some new rules:
-	http ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nagios
+	http ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nagios
 	Defaults:http   !requiretty
 
 	# Create the path defined in config/parameters.json as `NagiosBundle.deployment_handler.path` and fix its permissions

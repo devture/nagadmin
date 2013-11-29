@@ -9,7 +9,7 @@
 
 	"NagiosBundle.status_file_path": "/var/log/nagios/status.dat",
 	"NagiosBundle.deployment_handler.path": "/etc/nagios/nagadmin-generated/",
-	"NagiosBundle.deployment_handler.post_deployment_command": "sudo systemctl restart nagios",
+	"NagiosBundle.deployment_handler.post_deployment_command": "sudo /usr/sbin/systemctl reload nagios",
 	"NagiosBundle.defaults.service.max_check_attempts": 5,
 	"NagiosBundle.defaults.service.check_interval": 10,
 	"NagiosBundle.defaults.service.retry_interval": 1,
