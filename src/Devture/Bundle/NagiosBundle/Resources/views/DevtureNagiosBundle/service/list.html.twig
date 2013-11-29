@@ -1,9 +1,12 @@
+{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
 {% if items|length == 0 %}
 	No services found.
 {% else %}
 	<table class="table table-bordered table-striped table-condensed">
 		<thead>
 			<tr>
+				<th style="width: 50px;"></th>
 				<th><i class="icon-th-large"></i> Host</th>
 				<th><i class="icon-signal"></i> Service</th>
 				<th><i class="icon-user"></i> Users to Notify</th>
@@ -12,7 +15,14 @@
 		<tbody>
 		{% for entity in items %}
 			{% set link = path('devture_nagios.service.edit', {'id': entity.id, 'next': app.request.uri}) %}
+			{% set service_state = devture_nagios_get_service_state_human(entity) %}
+
 			<tr class="{{ entity.enabled ? '' : 'warning' }}">
+				<td>
+					<div class="text-center label {{ macros.service_label_class_from_state(service_state) }}" style="display: block;">
+						{{ service_state }}
+					</div>
+				</td>
 				<td style="width: 130px;">
 					<a href="{{ link }}" class="display-block">
 						{{ entity.host.name }}
@@ -30,7 +40,7 @@
 				<td>
 				{% for contact in entity.contacts %}
 					<span class="label label-nagadmin label-info"
-						style="background-color: {{ contact.name|colorize }};">{{ contact.name }}</span>
+						style="background-color: {{ contact.name|devture_nagios_colorize }};">{{ contact.name }}</span>
 				{% endfor %}
 				</td>
 			</tr>

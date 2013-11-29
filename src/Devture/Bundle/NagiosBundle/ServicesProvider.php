@@ -149,6 +149,8 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$this->registerInstallerServices($app);
 
+		$this->registerStatusServices($app);
+
 		$this->registerConsoleServices($app);
 
 		$this->registerControllers($app);
@@ -382,14 +384,26 @@ class ServicesProvider implements ServiceProviderInterface {
 			return $gateway;
 		});
 
-		$app['devture_nagios.twig.extension.colorize'] = function () {
-			return new Twig\ColorizeExtension();
+		$app['devture_nagios.twig.extension'] = function ($app) {
+			return new Twig\NagiosExtension($app);
 		};
 	}
 
 	private function registerInstallerServices(Application $app) {
 		$app['devture_nagios.install.installer'] = $app->share(function ($app) {
 			return new Install\Installer($app);
+		});
+	}
+
+	private function registerStatusServices(Application $app) {
+		$config = $this->config;
+
+		$app['devture_nagios.status.fetcher'] = $app->share(function () use ($config) {
+			return new Status\Fetcher($config['status_file_path']);
+		});
+
+		$app['devture_nagios.status.manager'] = $app->share(function ($app) {
+			return new Status\Manager($app['devture_nagios.status.fetcher']);
 		});
 	}
 
@@ -401,7 +415,7 @@ class ServicesProvider implements ServiceProviderInterface {
 		}
 
 		$app['twig.loader.filesystem']->addPath(dirname(__FILE__) . '/Resources/views/');
-		$app['twig']->addExtension($app['devture_nagios.twig.extension.colorize']);
+		$app['twig']->addExtension($app['devture_nagios.twig.extension']);
 	}
 
 }
