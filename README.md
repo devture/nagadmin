@@ -95,7 +95,15 @@ Here's everything you need to do to install it:
 
 	# Also comment the resource_file directive and add a new one:
 	resource_file=/etc/nagios/nagadmin-generated/resource.cfg
-	
+
+	# Set up your web server (see the resources/webserver directory for examples)
+
+	# Open the web interface for this tool, go to Deployment and hit the Deploy button.
+	# This is supposed to create the initial configuration in /etc/nagios/nagadmin-generated
+
+	# Restart Nagios
+	/usr/bin/systemctl restart nagios
+
 
 --------------------
 
@@ -107,13 +115,13 @@ Here's everything you need to do to install it:
 No (read above).
 
 
-### Does this provide a frontend where I can view the status of my services (like the default Nagios CGI)?
+### Does this provide a frontend where I can view the status of my services?
 
 No. Nagadmin is meant for the system administrator - to configure services and deploy a configuration to be used by Nagios.
 For a frontend, check out [Thruk](http://thruk.org/) or the Nagios CGI interface.
 
 
-### Can I import my existing Nagios configuration files and start managing them with Nagadmin?
+### Can I import my existing Nagios configuration files into Nagadmin?
 
 Not yet, but hopefully soon.
 That shouldn't stop you from giving Nagadmin a spin.
