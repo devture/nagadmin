@@ -149,7 +149,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$this->registerInstallerServices($app);
 
-		$this->registerStatusServices($app);
+		$this->registerInteractionServices($app);
 
 		$this->registerConsoleServices($app);
 
@@ -395,7 +395,7 @@ class ServicesProvider implements ServiceProviderInterface {
 		});
 	}
 
-	private function registerStatusServices(Application $app) {
+	private function registerInteractionServices(Application $app) {
 		$config = $this->config;
 
 		$app['devture_nagios.status.fetcher'] = $app->share(function () use ($config) {
@@ -404,6 +404,14 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.status.manager'] = $app->share(function ($app) {
 			return new Status\Manager($app['devture_nagios.status.fetcher']);
+		});
+
+		$app['devture_nagios.nagios_command.submitter'] = $app->share(function () use ($config) {
+			return new NagiosCommand\Submitter($config['command_file_path']);
+		});
+
+		$app['devture_nagios.nagios_command.manager'] = $app->share(function ($app) {
+			return new NagiosCommand\Manager($app['devture_nagios.nagios_command.submitter']);
 		});
 	}
 

@@ -123,6 +123,20 @@ class ServiceManagementController extends BaseController {
 		)));
 	}
 
+	public function scheduleCheckAction(Request $request, $id, $token) {
+		$intention = 'schedule-service-check-' . $id;
+		if ($this->isValidCsrfToken($intention, $token)) {
+			try {
+				$service = $this->getServiceRepository()->find($id);
+				$this->getNagiosCommandManager()->scheduleServiceCheck($service);
+			} catch (NotFound $e) {
+
+			}
+			return $this->json(array('ok' => true));
+		}
+		return $this->json(array('ok' => false));
+	}
+
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-service-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
@@ -142,6 +156,13 @@ class ServiceManagementController extends BaseController {
 	 */
 	private function getServiceFormBinder() {
 		return $this->getNs('service.form_binder');
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\NagiosCommand\Manager
+	 */
+	private function getNagiosCommandManager() {
+		return $this->getNs('nagios_command.manager');
 	}
 
 }

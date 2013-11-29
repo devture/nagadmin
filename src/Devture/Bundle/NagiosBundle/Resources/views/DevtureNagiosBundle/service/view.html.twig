@@ -52,7 +52,16 @@
 				</div>
 				<div class="control-group">
 					<label class="control-label"><i class="icon-chevron-right"></i> Next Check</label>
-					<div class="controls">
+					<div class="controls clearfix">
+						<div class="pull-right" style="width: 250px;">
+							<a class="btn pull-right" href="javascript://" id="js-btn-service-check-schedule">
+								<i class="icon-refresh"></i>
+								check now
+							</a>
+							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
+								<div class="bar" style="width: 0;"></div>
+							</div>
+						</div>
 						{{ status.nextCheckTime|date('Y-m-d, H:i:s') }}
 					</div>
 				</div>
@@ -109,4 +118,55 @@
 {% block js %}
 	{{ parent() }}
 
+	(function () {
+		var $button = $('#js-btn-service-check-schedule'),
+			$progress = $('#js-progress-service-check-schedule');
+
+		{#
+			Scheduling and performing a check takes time:
+				- Nagios polls for new command submissions every 1 second (at best)
+				- The check takes some time (< 1-2 seconds in most cases)
+				- Nagios updates the status file with results every 10 seconds (default value)
+			So we need to delay the user for a while, by showing fake progress messages.
+		#}
+		var waitingTime = 15000;
+
+		$button.click(function () {
+			if ($button.attr('disabled')) {
+				return;
+			}
+
+			$button.attr('disabled', true);
+			$button.text('scheduling a check..');
+
+			$.ajax({
+				"url": {{ path('devture_nagios.service.schedule_check', {'id': entity.id, 'token': csrf_token('schedule-service-check-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						$button.remove();
+						$progress.removeClass('hide');
+
+						var steps = 45,
+							stepTime = (waitingTime / steps);
+
+						for (var i = 1; i <= steps; ++i) {
+							(function (currentStep) {
+								window.setTimeout(function () {
+									if (currentStep === steps) {
+										window.location.reload();
+									}
+									$button.text(currentStep);
+									$progress.find('.bar').css('width', ((currentStep/steps) * 100) + '%');
+								}, (currentStep * stepTime));
+							})(i);
+						}
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		});
+	})();
 {% endblock %}

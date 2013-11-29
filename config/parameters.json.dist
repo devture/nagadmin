@@ -8,6 +8,7 @@
 	"SharedBundle.token_salt": "salt here",
 
 	"NagiosBundle.status_file_path": "/var/log/nagios/status.dat",
+	"NagiosBundle.command_file_path": "/var/spool/nagios/cmd/nagios.cmd",
 	"NagiosBundle.deployment_handler.path": "/etc/nagios/nagadmin-generated/",
 	"NagiosBundle.deployment_handler.post_deployment_command": "sudo /usr/sbin/systemctl reload nagios",
 	"NagiosBundle.defaults.service.max_check_attempts": 5,
