@@ -9,19 +9,18 @@
 				<th style="width: 50px;"></th>
 				<th><i class="icon-th-large"></i> Host</th>
 				<th><i class="icon-signal"></i> Service</th>
+				<th>Status</th>
 				<th><i class="icon-user"></i> Users to Notify</th>
 			</tr>
 		</thead>
 		<tbody>
 		{% for entity in items %}
 			{% set link = path('devture_nagios.service.edit', {'id': entity.id, 'next': app.request.uri}) %}
-			{% set service_state = devture_nagios_get_service_state_human(entity) %}
+			{% set status = devture_nagios_get_service_status(entity) %}
 
 			<tr class="{{ entity.enabled ? '' : 'warning' }}">
 				<td>
-					<div class="text-center label {{ macros.service_label_class_from_state(service_state) }}" style="display: block;">
-						{{ service_state }}
-					</div>
+					{{ macros.service_status(status) }}
 				</td>
 				<td style="width: 130px;">
 					<a href="{{ link }}" class="display-block">
@@ -36,6 +35,9 @@
 						<strong>(disabled)</strong>
 						{% endif %}
 					</a>
+				</td>
+				<td>
+					{{ status is none ? '-- There is no information about this service --' : status.pluginOutput }}
 				</td>
 				<td>
 				{% for contact in entity.contacts %}

@@ -1,6 +1,26 @@
 {% macro service_label_class_from_state(state) %}
 {% spaceless %}
-	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important', 'missing': ''} %}
-	{{ map[state] is defined ? map[state] : map['missing'] }}
+	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important'} %}
+	{{ map[state] }}
 {% endspaceless %}
+{% endmacro %}
+
+{% macro service_status(status) %}
+	{% if status is none %}
+		<div class="text-center label" style="display: block;">
+			missing
+		</div>
+	{% else %}
+		<div class="js-tooltip text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
+			style="display: block;"
+			title="{{ status.pluginOutput }}">
+		{% if status.currentState != status.lastHardState %}
+			&raquo;
+			{{ status.currentStateHuman }}
+			({{ status.currentAttempt }}/{{ status.maxAttempts }})
+		{% else %}
+			{{ status.currentStateHuman }}
+		{% endif %}
+		</div>
+	{% endif %}
 {% endmacro %}

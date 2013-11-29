@@ -21,15 +21,36 @@ class ServiceStatus extends Status {
 	}
 
 	public function getCurrentStateHuman() {
+		return $this->humanizeState($this->getCurrentState());
+	}
+
+	public function getLastHardState() {
+		return (int) $this->getDirective('last_hard_state');
+	}
+
+	public function getLastHardStateHuman() {
+		return $this->humanizeState($this->getLastHardState());
+	}
+
+	public function getCurrentAttempt() {
+		return (int) $this->getDirective('current_attempt');
+	}
+
+	public function getMaxAttempts() {
+		return (int) $this->getDirective('max_attempts');
+	}
+
+	public function getPluginOutput() {
+		return $this->getDirective('plugin_output');
+	}
+
+	private function humanizeState($state) {
 		$map = array(
-			self::STATUS_OK => 'ok',
-			self::STATUS_WARNING => 'warning',
-			self::STATUS_CRITICAL => 'critical',
-			self::STATUS_UNKNOWN => 'unknown',
+				self::STATUS_OK => 'ok',
+				self::STATUS_WARNING => 'warning',
+				self::STATUS_CRITICAL => 'critical',
+				self::STATUS_UNKNOWN => 'unknown',
 		);
-
-		$state = $this->getCurrentState();
-
 		if (!isset($map[$state])) {
 			throw new \InvalidArgumentException('Unknown state: ' . $state);
 		}

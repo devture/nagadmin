@@ -19,7 +19,7 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
-			'devture_nagios_get_service_state_human' => new \Twig_Function_Method($this, 'getServiceStateHuman'),
+			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
 		);
 	}
 
@@ -39,9 +39,8 @@ class NagiosExtension extends \Twig_Extension {
 		return $this->colors[$idx];
 	}
 
-	public function getServiceStateHuman(Service $service) {
-		$status = $this->getStatusManager()->getServiceStatus($service);
-		return ($status instanceof ServiceStatus ? $status->getCurrentStateHuman() : 'missing');
+	public function getServiceStatus(Service $service) {
+		return $this->getStatusManager()->getServiceStatus($service);
 	}
 
 	/**
