@@ -1,0 +1,112 @@
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+
+{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
+{% macro service_detailed_status(entity, status) %}
+	{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
+	{% set status = devture_nagios_get_service_status(entity) %}
+
+	{% if status is none %}
+		-- There is no information about this service --
+	{% else %}
+		<div class="form-horizontal">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label"><i class="icon-signal"></i> Status</label>
+					<div class="controls">
+						<div style="width: 100px; display: inline-block;">
+							{{ macros.service_status(status) }}
+						</div>
+						{% if status.checked %}
+							{% if status.currentState == status.lastHardState %}
+
+								since {{ status.lastHardStateChangeTime|date('Y-m-d, H:i:s') }}
+							{% else %}
+								changing since {{ status.lastStateChangeTime|date('Y-m-d, H:i:s') }}
+							{% endif %}
+
+							{% if status.currentStateHuman != 'ok' %}
+								(attempt {{ status.currentAttempt }}/{{ status.maxAttempts }})
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><i class="icon-flag"></i> Check Result</label>
+					<div class="controls clearfix">
+						{{ status.pluginOutput }}
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><i class="icon-tasks"></i> Performance data</label>
+					<div class="controls clearfix">
+						{{ status.performanceData }}
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><i class="icon-chevron-left"></i> Last Check</label>
+					<div class="controls">
+						{{ status.lastCheckTime == 0 ? 'Never' : status.lastCheckTime|date('Y-m-d, H:i:s') }}
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label"><i class="icon-chevron-right"></i> Next Check</label>
+					<div class="controls">
+						{{ status.nextCheckTime|date('Y-m-d, H:i:s') }}
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+{% block devture_nagios_content %}
+	{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+
+	<div class="form-horizontal">
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label"><i class="icon-th-large"></i> Host</label>
+				<div class="controls">
+					<a href="{{ path('devture_nagios.host.edit', {'id': entity.host.id}) }}">
+						{{ entity.host.name }}
+					</a>
+					({{ entity.host.address }})
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-signal"></i> Service</label>
+				<div class="controls clearfix">
+					{{ entity.name }}
+					{% if not entity.enabled %}
+						<strong>(disabled)</strong>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"><i class="icon-user"></i> Users to notify</label>
+				<div class="controls clearfix">
+				{% for contact in entity.contacts %}
+					<span class="label label-nagadmin label-info"
+						style="background-color: {{ contact.name|devture_nagios_colorize }};">{{ contact.name }}</span>
+				{% endfor %}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Status</label>
+				<div class="controls">
+					{{ _self.service_detailed_status(entity) }}
+				</div>
+			</div>
+		</fieldset>
+	</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+{% endblock %}

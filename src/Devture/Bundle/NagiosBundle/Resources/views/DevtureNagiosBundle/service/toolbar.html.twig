@@ -1,0 +1,8 @@
+ <ul class="nav nav-tabs">
+	<li class="{{ currentSection == 'status' ? 'active' : '' }}">
+		<a href="{{ path('devture_nagios.service.view', {'id': entity.id}) }}">Service Status</a>
+	</li>
+	<li class="{{ currentSection == 'edit' ? 'active' : '' }}">
+		<a href="{{ path('devture_nagios.service.edit', {'id': entity.id}) }}">Edit Service Details</a>
+	</li>
+</ul>

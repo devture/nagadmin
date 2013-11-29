@@ -54,6 +54,8 @@ class ControllersProvider implements ControllerProviderInterface {
 			->method('GET|POST')->bind($namespace . '.service.add');
 		$controllers->match('/service/edit/{id}', 'devture_nagios.controller.service.management:editAction')
 			->method('GET|POST')->bind($namespace . '.service.edit');
+		$controllers->get('/service/view/{id}', 'devture_nagios.controller.service.management:viewAction')
+			->bind($namespace . '.service.view');
 		$controllers->post('/service/delete/{id}/{token}', 'devture_nagios.controller.service.management:deleteAction')
 			->bind($namespace . '.service.delete');
 

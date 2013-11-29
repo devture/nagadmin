@@ -1,6 +1,10 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
+	{% if isAdded %}
+		{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}
+	{% endif %}
+
 	{{ render_form_violations(form, '__other__') }}
 
 	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">

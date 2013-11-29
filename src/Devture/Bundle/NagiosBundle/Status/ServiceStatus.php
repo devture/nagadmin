@@ -44,6 +44,30 @@ class ServiceStatus extends Status {
 		return $this->getDirective('plugin_output');
 	}
 
+	public function getPerformanceData() {
+		return $this->getDirective('performance_data');
+	}
+
+	public function getLastCheckTime() {
+		return (int) $this->getDirective('last_check');
+	}
+
+	public function getNextCheckTime() {
+		return (int) $this->getDirective('next_check');
+	}
+
+	public function getLastStateChangeTime() {
+		return (int) $this->getDirective('last_state_change');
+	}
+
+	public function getLastHardStateChangeTime() {
+		return (int) $this->getDirective('last_hard_state_change');
+	}
+
+	public function isChecked() {
+		return ((int) $this->getDirective('has_been_checked') === 1);
+	}
+
 	private function humanizeState($state) {
 		$map = array(
 				self::STATUS_OK => 'ok',

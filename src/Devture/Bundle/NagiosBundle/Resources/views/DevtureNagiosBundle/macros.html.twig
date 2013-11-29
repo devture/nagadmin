@@ -11,16 +11,22 @@
 			missing
 		</div>
 	{% else %}
-		<div class="js-tooltip text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
-			style="display: block;"
-			title="{{ status.pluginOutput }}">
-		{% if status.currentState != status.lastHardState %}
-			&raquo;
-			{{ status.currentStateHuman }}
-			({{ status.currentAttempt }}/{{ status.maxAttempts }})
+		{% if status.checked %}
+			<div class="js-tooltip text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
+				style="display: block;"
+				title="{{ status.pluginOutput }}">
+			{% if status.currentState != status.lastHardState %}
+				&raquo;
+				{{ status.currentStateHuman }}
+				({{ status.currentAttempt }}/{{ status.maxAttempts }})
+			{% else %}
+				{{ status.currentStateHuman }}
+			{% endif %}
+			</div>
 		{% else %}
-			{{ status.currentStateHuman }}
+			<div class="text-center label" style="display: block;">
+				pending
+			</div>
 		{% endif %}
-		</div>
 	{% endif %}
 {% endmacro %}

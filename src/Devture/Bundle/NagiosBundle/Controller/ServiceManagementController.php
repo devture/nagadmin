@@ -111,6 +111,18 @@ class ServiceManagementController extends BaseController {
 		)));
 	}
 
+	public function viewAction(Request $request, $id) {
+		try {
+			$entity = $this->getServiceRepository()->find($id);
+		} catch (NotFound $e) {
+			return $this->abort(404);
+		}
+
+		return $this->renderView('DevtureNagiosBundle/service/view.html.twig', array_merge($this->getBaseViewData(), array(
+			'entity' => $entity,
+		)));
+	}
+
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-service-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
