@@ -66,6 +66,14 @@ class BaseController extends \Devture\Bundle\SharedBundle\Controller\BaseControl
 		return $this->getNs('deployment.handler');
 	}
 
+	protected function tryDeployConfiguration() {
+		$files = $this->getDeploymentConfigurationCollector()->collect();
+		list($isValid, $_checkOutput) = $this->getDeploymentConfigurationTester()->test($files);
+		if ($isValid) {
+			$this->getDeploymentHandler()->deploy($files);
+		}
+	}
+
 	protected function isValidCsrfToken($intention, $token) {
 		return $this->getCsrfTokenGenerator()->isValid($intention, $token);
 	}

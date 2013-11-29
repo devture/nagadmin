@@ -77,6 +77,7 @@ class ServiceManagementController extends BaseController {
 		$binder = $this->getServiceFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getServiceRepository()->add($entity);
+			$this->tryDeployConfiguration();
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
@@ -98,6 +99,7 @@ class ServiceManagementController extends BaseController {
 		$binder = $this->getServiceFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getServiceRepository()->update($entity);
+			$this->tryDeployConfiguration();
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
 			return $this->redirect($next);
 		}
@@ -114,6 +116,7 @@ class ServiceManagementController extends BaseController {
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
 				$this->getServiceRepository()->delete($this->getServiceRepository()->find($id));
+				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
 			}
