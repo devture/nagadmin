@@ -2,6 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Twig;
 
 use Devture\Bundle\NagiosBundle\Model\Service;
+use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Status\ServiceStatus;
 
 class NagiosExtension extends \Twig_Extension {
@@ -30,6 +31,7 @@ class NagiosExtension extends \Twig_Extension {
 	public function getFilters() {
 		return array(
 			'devture_nagios_colorize' => new \Twig_Filter_Method($this, 'colorize'),
+			'devture_nagios_contact_avatar_url' => new \Twig_Filter_Method($this, 'getContactAvatarUrl'),
 		);
 	}
 
@@ -41,6 +43,12 @@ class NagiosExtension extends \Twig_Extension {
 		$idx = $sum % count($this->colors);
 
 		return $this->colors[$idx];
+	}
+
+	public function getContactAvatarUrl(Contact $contact, $size) {
+		$identifier = trim(strtolower($this->getContactIdentifier($contact)));
+		$hash = md5($identifier);
+		return 'https://secure.gravatar.com/avatar/' . $hash . '?s=' . $size . '&d=wavatar';
 	}
 
 	public function getInfoStatus() {
@@ -70,6 +78,13 @@ class NagiosExtension extends \Twig_Extension {
 	 */
 	private function getStatusManager() {
 		return $this->container['devture_nagios.status.manager'];
+	}
+
+	private function getContactIdentifier(Contact $contact) {
+		if ($contact->getEmail()) {
+			return $contact->getEmail();
+		}
+		return implode(', ', $contact->getAddresses());
 	}
 
 }

@@ -103,8 +103,13 @@
 				<label class="control-label"><i class="icon-user"></i> Users to notify</label>
 				<div class="controls clearfix">
 				{% for contact in entity.contacts %}
-					<span class="label label-nagadmin label-info"
-						style="background-color: {{ contact.name|devture_nagios_colorize }};">{{ contact.name }}</span>
+					<a
+						class="well well-small"
+						style="display: inline-block; padding: 2px 5px;"
+						href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}">
+						{{ macros.contact_badge(contact, 32) }}
+						{{ contact.name }}
+					</a>
 				{% endfor %}
 				</div>
 			</div>

@@ -53,8 +53,7 @@
 				</td>
 				<td>
 				{% for contact in entity.contacts %}
-					<span class="label label-nagadmin label-info"
-						style="background-color: {{ contact.name|devture_nagios_colorize }};">{{ contact.name }}</span>
+					{{ macros.contact_badge(contact, 24) }}
 				{% endfor %}
 				</td>
 			</tr>
