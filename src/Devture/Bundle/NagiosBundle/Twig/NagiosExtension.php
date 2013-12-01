@@ -46,9 +46,19 @@ class NagiosExtension extends \Twig_Extension {
 	}
 
 	public function getContactAvatarUrl(Contact $contact, $size) {
-		$identifier = trim(strtolower($this->getContactIdentifier($contact)));
+		//Force the default image for gravatars based on non-email values.
+		//This is to avoid a collision of the hash based on address fields with some
+		//random internet user's email address (who might have a photo for an avatar)
+		if ($contact->getEmail()) {
+			$identifier = $contact->getEmail();
+			$forceDefault = false;
+		} else {
+			$identifier = implode(', ', $contact->getAddresses());
+			$forceDefault = true; //not an email, so force
+		}
+		$identifier = trim(strtolower($identifier));
 		$hash = md5($identifier);
-		return 'https://secure.gravatar.com/avatar/' . $hash . '?s=' . $size . '&d=wavatar';
+		return 'https://secure.gravatar.com/avatar/' . $hash . '?s=' . $size . '&d=wavatar' . ($forceDefault ? '&f=y' : '');
 	}
 
 	public function getInfoStatus() {
@@ -78,13 +88,6 @@ class NagiosExtension extends \Twig_Extension {
 	 */
 	private function getStatusManager() {
 		return $this->container['devture_nagios.status.manager'];
-	}
-
-	private function getContactIdentifier(Contact $contact) {
-		if ($contact->getEmail()) {
-			return $contact->getEmail();
-		}
-		return implode(', ', $contact->getAddresses());
 	}
 
 }
