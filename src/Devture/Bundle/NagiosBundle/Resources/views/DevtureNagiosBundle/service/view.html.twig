@@ -21,9 +21,9 @@
 						{% if status.checked %}
 							{% if status.currentState == status.lastHardState %}
 
-								since {{ status.lastHardStateChangeTime|date('Y-m-d, H:i:s') }}
+								since {{ macros.relative_time(status.lastHardStateChangeTime) }} ago
 							{% else %}
-								changing since {{ status.lastStateChangeTime|date('Y-m-d, H:i:s') }}
+								changing since {{ macros.relative_time(status.lastStateChangeTime) }} ago
 							{% endif %}
 
 							{% if status.currentStateHuman != 'ok' %}
@@ -47,7 +47,11 @@
 				<div class="control-group">
 					<label class="control-label"><i class="icon-chevron-left"></i> Last Check</label>
 					<div class="controls">
-						{{ status.lastCheckTime == 0 ? 'Never' : status.lastCheckTime|date('Y-m-d, H:i:s') }}
+						{% if status.lastCheckTime == 0 %}
+							Never
+						{% else %}
+							{{ macros.relative_time(status.lastCheckTime) }} ago
+						{% endif %}
 					</div>
 				</div>
 				<div class="control-group">
@@ -62,7 +66,7 @@
 								<div class="bar" style="width: 0;"></div>
 							</div>
 						</div>
-						{{ status.nextCheckTime|date('Y-m-d, H:i:s') }}
+						in {{ macros.relative_time(status.nextCheckTime) }}
 					</div>
 				</div>
 			</fieldset>

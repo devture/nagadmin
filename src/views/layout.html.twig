@@ -30,7 +30,7 @@
 						{% else %}
 							<span class="js-tooltip"
 								data-placement="bottom"
-								title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('Y-m-d, H:i:s') }}"
+								title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
 								>Nagios {{ info_status.currentVersion }}</span>:
 
 							<a href="{{ path('devture_nagios.service.manage') }}"
@@ -80,6 +80,7 @@
 <script type="text/javascript" src="{{ static_url('/js/jquery-2.0.0.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.autoresize.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/chosen/chosen.jquery.min.js') }}"></script>
 
 <script type="text/javascript">
@@ -89,6 +90,8 @@
 	$('.js-chosen-select').chosen();
 
 	$('.js-tooltip').tooltip();
+
+	$('.js-relative-time').relativeTime().tooltip();
 {% endblock %}
 </script>
 
