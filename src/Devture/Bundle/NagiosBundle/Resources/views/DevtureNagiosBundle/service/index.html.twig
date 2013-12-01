@@ -14,17 +14,26 @@
 
 	<div class="top-spaced-minor"></div>
 
+	<div id="js-services-list-container">
 	{% for item in items %}
 		<div class="clearfix">
 			<div class="pull-right">
 				{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': item.host} %}
+				<a class="btn btn-small js-btn-recheck-all-services"
+					href="javascript://"
+					data-host-id="{{ item.host.id }}"
+					data-token="{{ csrf_token('recheck-host-services-' ~ item.host.id) }}">
+					<i class="icon-refresh"></i>
+					Recheck all
+				</a>
 			</div>
 			<a href="{{ path('devture_nagios.host.edit', {'id': item.host.id}) }}">
-				<h3 style="margin: 0; padding: 0;">{{ item.host.name }}</h3>
+				<h3 style="margin: 0; padding: 0; display: inline-block;">{{ item.host.name }}</h3>
 			</a>
 		</div>
 		{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': item.services} %}
 	{% endfor %}
+	</div>
 {% endblock %}
 
 {% block js %}
@@ -32,5 +41,38 @@
 
 	$('#js-host-filter-select').change(function () {
 		$(this).closest('form').submit();
+	});
+
+	$('#js-services-list-container').on('click', '.js-btn-recheck-all-services', function () {
+		var $button = $(this);
+
+		if ($button.hasClass('disabled')) {
+			return;
+		}
+		$button.addClass('disabled');
+
+		var url = {{ path('devture_nagios.host.recheck_all_services', {'id': '__HOST_ID__', 'token': '__TOKEN__'})|json_encode|raw }};
+		url = url.replace('__HOST_ID__', $(this).data('host-id'));
+		url = url.replace('__TOKEN__', $(this).data('token'));
+
+		$.ajax({
+			"url": url,
+			"type": "POST",
+			"dataType": "json",
+			"success": function (response) {
+				if (response.ok) {
+					var originalHtml = $button.html();
+
+					$button.text('Checks scheduled');
+
+					window.setTimeout(function () {
+						$button.html(originalHtml);
+						$button.removeClass('disabled');
+					}, 3000);
+				} else {
+					alert("There was a problem. Refresh and retry.");
+				}
+			}
+		});
 	});
 {% endblock %}

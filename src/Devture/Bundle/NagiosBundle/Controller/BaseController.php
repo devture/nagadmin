@@ -66,6 +66,13 @@ class BaseController extends \Devture\Bundle\SharedBundle\Controller\BaseControl
 		return $this->getNs('deployment.handler');
 	}
 
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\NagiosCommand\Manager
+	 */
+	protected function getNagiosCommandManager() {
+		return $this->getNs('nagios_command.manager');
+	}
+
 	protected function tryDeployConfiguration() {
 		$files = $this->getDeploymentConfigurationCollector()->collect();
 		list($isValid, $_checkOutput) = $this->getDeploymentConfigurationTester()->test($files);

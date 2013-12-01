@@ -45,6 +45,8 @@ class ControllersProvider implements ControllerProviderInterface {
 			->method('GET|POST')->bind($namespace . '.host.add');
 		$controllers->match('/host/edit/{id}', 'devture_nagios.controller.host.management:editAction')
 			->method('GET|POST')->bind($namespace . '.host.edit');
+		$controllers->post('/host/recheck-all-services/{id}/{token}', 'devture_nagios.controller.host.management:recheckAllServicesAction')
+			->bind($namespace . '.host.recheck_all_services');
 		$controllers->post('/host/delete/{id}/{token}', 'devture_nagios.controller.host.management:deleteAction')
 			->bind($namespace . '.host.delete');
 

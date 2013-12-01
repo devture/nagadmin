@@ -158,11 +158,4 @@ class ServiceManagementController extends BaseController {
 		return $this->getNs('service.form_binder');
 	}
 
-	/**
-	 * @return \Devture\Bundle\NagiosBundle\NagiosCommand\Manager
-	 */
-	private function getNagiosCommandManager() {
-		return $this->getNs('nagios_command.manager');
-	}
-
 }
