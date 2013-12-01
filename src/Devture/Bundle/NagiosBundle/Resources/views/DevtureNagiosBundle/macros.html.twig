@@ -12,9 +12,8 @@
 		</div>
 	{% else %}
 		{% if status.checked %}
-			<div class="js-tooltip text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
-				style="display: block;"
-				title="{{ status.pluginOutput }}">
+			<div class="text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
+				style="display: block;">
 			{% if status.currentState != status.lastHardState %}
 				&raquo;
 				{{ status.currentStateHuman }}
