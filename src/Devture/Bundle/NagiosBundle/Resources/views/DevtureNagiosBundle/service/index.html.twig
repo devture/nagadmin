@@ -19,11 +19,9 @@
 			<div class="pull-right">
 				{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': item.host} %}
 			</div>
-			<h3>
-				<a href="{{ path('devture_nagios.host.edit', {'id': item.host.id}) }}">
-					{{ item.host.name }}
-				</a>
-			</h3>
+			<a href="{{ path('devture_nagios.host.edit', {'id': item.host.id}) }}">
+				<h3 style="margin: 0; padding: 0;">{{ item.host.name }}</h3>
+			</a>
 		</div>
 		{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': item.services} %}
 	{% endfor %}
