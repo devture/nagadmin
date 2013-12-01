@@ -11,6 +11,11 @@
 </head>
 <body>
 
+{% set info_status = devture_nagios_get_info_status() %}
+{% set program_status = devture_nagios_get_program_status() %}
+{% set ok_services_count = devture_nagios_get_ok_services_count() %}
+{% set failing_services_count = devture_nagios_get_failing_services_count() %}
+
 <div id="wrapper">
 	<div class="site-navbar">
 		<div class="site-navbar-inner">
@@ -20,6 +25,25 @@
 				</a>
 				{% if app.config.nagios_frontend_link is not none %}
 					<div class="pull-right">
+						{% if program_status is none or info_status is none %}
+							<span class="label label-important">Nagios DOWN</span>
+						{% else %}
+							<span class="js-tooltip"
+								data-placement="bottom"
+								title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('Y-m-d, H:i:s') }}"
+								>Nagios {{ info_status.currentVersion }}</span>:
+
+							<a href="{{ path('devture_nagios.service.manage') }}"
+								class="label label-success {{ failing_services_count == 0 ? 'label-nagadmin-success-unobstrusive' : '' }}">
+								{{ ok_services_count }} ok
+							</a>
+
+							<a href="{{ path('devture_nagios.service.manage') }}"
+								class="label label-important {{ failing_services_count == 0 ? 'label-nagadmin-important-unobstrusive' : '' }}">
+								{{ failing_services_count }} failing
+							</a>
+						{% endif %}
+
 						<a class="btn btn-mini" style="margin: 3px;" target="_blank" href="{{ app.config.nagios_frontend_link }}">
 							<i class="icon-share-alt"></i>
 							Nagios frontend
@@ -33,6 +57,13 @@
 	</div>
 
 	<div id="content">
+		{% if program_status is none or info_status is none %}
+			<p class="alert alert-error">
+				<i class="icon-exclamation-sign"></i>
+				Nagios does not appear to be running or the status file path is not configured correctly.
+			</p>
+		{% endif %}
+
 		{% block content %}{% endblock %}
 	</div>
 

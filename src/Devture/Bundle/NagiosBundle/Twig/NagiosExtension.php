@@ -19,7 +19,11 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
+			'devture_nagios_get_info_status' => new \Twig_Function_Method($this, 'getInfoStatus'),
+			'devture_nagios_get_program_status' => new \Twig_Function_Method($this, 'getProgramStatus'),
 			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
+			'devture_nagios_get_ok_services_count' => new \Twig_Function_Method($this, 'getOkServicesCount'),
+			'devture_nagios_get_failing_services_count' => new \Twig_Function_Method($this, 'getFailingServicesCount'),
 		);
 	}
 
@@ -39,8 +43,26 @@ class NagiosExtension extends \Twig_Extension {
 		return $this->colors[$idx];
 	}
 
+	public function getInfoStatus() {
+		return $this->getStatusManager()->getInfoStatus();
+	}
+
+	public function getProgramStatus() {
+		return $this->getStatusManager()->getProgramStatus();
+	}
+
 	public function getServiceStatus(Service $service) {
 		return $this->getStatusManager()->getServiceStatus($service);
+	}
+
+	public function getOkServicesCount() {
+		return count(array_filter($this->getStatusManager()->getServicesStatus(), function (ServiceStatus $status) {
+			return ($status->getLastHardState() === ServiceStatus::STATUS_OK);
+		}));
+	}
+
+	public function getFailingServicesCount() {
+		return (count($this->getStatusManager()->getServicesStatus()) - $this->getOkServicesCount());
 	}
 
 	/**

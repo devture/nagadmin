@@ -2,6 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Status;
 
 use Devture\Bundle\NagiosBundle\Exception\ParseException;
+use Devture\Bundle\NagiosBundle\Exception\StatusFileMissingException;
 
 class Fetcher {
 
@@ -14,14 +15,18 @@ class Fetcher {
 		$this->statusFilePath = $statusFilePath;
 	}
 
+	/**
+	 * @throws StatusFileMissingException
+	 * @return \Devture\Bundle\NagiosBundle\Status\Status[]
+	 */
 	public function fetch() {
 		if (!file_exists($this->statusFilePath)) {
-			throw new \InvalidArgumentException('Cannot find status file: ' . $this->statusFilePath);
+			throw new StatusFileMissingException(sprintf('Cannot find status file at `%s`', $this->statusFilePath));
 		}
 		return $this->parse(file_get_contents($this->statusFilePath));
 	}
 
-	public function parse($contents) {
+	private function parse($contents) {
 		$lines = explode("\n", $contents);
 		$state = self::STATE_FREE;
 		$lastDefinitionType = null;
@@ -58,9 +63,12 @@ class Fetcher {
 				}
 
 				if ($line === '}') {
-					//Ignore other definition types - we only care about this for now.
 					if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
 						$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
+					} else if ($lastDefinitionType === Status::TYPE_PROGRAM_STATUS) {
+						$objects[] = new ProgramStatus($lastDefinitionType, $lastDefinitionDirectives);
+					} else if ($lastDefinitionType === Status::TYPE_INFO) {
+						$objects[] = new InfoStatus($lastDefinitionType, $lastDefinitionDirectives);
 					}
 					$state = self::STATE_FREE;
 					continue;

@@ -3,6 +3,8 @@ namespace Devture\Bundle\NagiosBundle\Status;
 
 abstract class Status {
 
+	const TYPE_INFO = 'info';
+	const TYPE_PROGRAM_STATUS = 'programstatus';
 	const TYPE_SERVICE_STATUS = 'servicestatus';
 
 	private $type;
