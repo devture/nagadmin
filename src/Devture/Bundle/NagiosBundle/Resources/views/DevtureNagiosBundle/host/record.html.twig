@@ -52,11 +52,7 @@
 			<div class="control-group">
 				<label class="control-label"><i class="icon-signal"></i> Services</label>
 				<div class="controls">
-					<div class="clearfix">
-						<div class="btn-group pull-right">
-							{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': entity} %}
-						</div>
-					</div>
+					{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': entity} %}
 
 					<div class="top-spaced-minor"></div>
 

@@ -1,28 +1,30 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<div class="clearfix">
-		<div class="pull-left">
-			<form method="get" name="hostFilter" action="{{ path('devture_nagios.service.manage') }}">
-				<select class="js-chosen-select" id="js-host-filter-select" name="hostId">
-					<option value="">-- All hosts --</option>
-					{% for host in hosts %}
-					<option value="{{ host.id }}"
-						{{ selectedHost is not none and selectedHost == host ? 'selected="selected"' : '' }}
-						>{{ host.name }}</option>
-					{% endfor %}
-				</select>
-			</form>
-		</div>
-		<div class="btn-group pull-right">
-			{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': selectedHost} %}
-		</div>
-	</div>
+	<form method="get" name="hostFilter" action="{{ path('devture_nagios.service.manage') }}">
+		<select class="js-chosen-select" id="js-host-filter-select" name="hostId">
+			<option value="">-- All hosts --</option>
+			{% for host in hosts %}
+			<option value="{{ host.id }}"
+				{{ selectedHost is not none and selectedHost == host ? 'selected="selected"' : '' }}
+				>{{ host.name }}</option>
+			{% endfor %}
+		</select>
+	</form>
 
 	<div class="top-spaced-minor"></div>
 
 	{% for item in items %}
-		<h3>{{ item.host.name }}</h3>
+		<div class="clearfix">
+			<div class="pull-right">
+				{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': item.host} %}
+			</div>
+			<h3>
+				<a href="{{ path('devture_nagios.host.edit', {'id': item.host.id}) }}">
+					{{ item.host.name }}
+				</a>
+			</h3>
+		</div>
 		{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': item.services} %}
 	{% endfor %}
 {% endblock %}
