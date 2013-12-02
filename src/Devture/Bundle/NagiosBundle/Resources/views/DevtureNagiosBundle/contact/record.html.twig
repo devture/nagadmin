@@ -1,5 +1,7 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
+{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
 {% macro render_command_picker(field_name, commands, selected_command) %}
 	<select name="{{ field_name }}" id="{{ field_name }}" class="js-chosen-select js-command-chooser" required="required">
 		<option value="">-- Pick one --</option>
@@ -39,6 +41,16 @@
 						value="{{ entity.email }}" />
 					<span class="help-inline">(ends up in the $CONTACTEMAIL$ macro)</span>
 					{{ render_form_violations(form, 'email') }}
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Avatar</label>
+				<div class="controls">
+					{% if isAdded %}
+						{{ macros.contact_badge(entity, 48) }}
+					{% endif %}
+					Contacts get their own <a target="_blank" href="http://gravatar.com/">Gravatar</a> based on their email address or other address values.
 				</div>
 			</div>
 

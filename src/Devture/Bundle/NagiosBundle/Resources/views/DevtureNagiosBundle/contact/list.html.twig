@@ -1,9 +1,12 @@
+{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
 {% if items|length == 0 %}
 	No items found.
 {% else %}
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
+				<th style="width: 30px;"></th>
 				<th>Identifier</th>
 				<th>Addresses</th>
 				<th>Notifications Period</th>
@@ -13,6 +16,11 @@
 		{% for entity in items %}
 			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
 			<tr>
+				<td>
+					<a href="{{ link }}" class="display-block">
+						{{ macros.contact_badge(entity, 24) }}
+					</a>
+				</td>
 				<td>
 					<a href="{{ link }}" class="display-block">
 						{{ entity.name }}
