@@ -40,6 +40,8 @@
 					{% if status is none %}
 						-
 					{% else %}
+						{% set is_stale = (status.nextCheckTime < (none|date('U') - 60)) %}
+
 						{% if status.lastCheckTime == 0 %}
 							Never
 						{% else %}

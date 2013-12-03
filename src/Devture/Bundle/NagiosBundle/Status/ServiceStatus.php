@@ -70,10 +70,10 @@ class ServiceStatus extends Status {
 
 	private function humanizeState($state) {
 		$map = array(
-				self::STATUS_OK => 'ok',
-				self::STATUS_WARNING => 'warning',
-				self::STATUS_CRITICAL => 'critical',
-				self::STATUS_UNKNOWN => 'unknown',
+			self::STATUS_OK => 'ok',
+			self::STATUS_WARNING => 'warning',
+			self::STATUS_CRITICAL => 'critical',
+			self::STATUS_UNKNOWN => 'unknown',
 		);
 		if (!isset($map[$state])) {
 			throw new \InvalidArgumentException('Unknown state: ' . $state);

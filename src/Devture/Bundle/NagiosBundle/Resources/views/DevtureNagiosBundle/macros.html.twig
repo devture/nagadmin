@@ -40,7 +40,9 @@
 {% endmacro %}
 
 {% macro relative_time(timestamp) %}
+{% spaceless %}
 	<time class="js-relative-time" data-time="{{ timestamp|date('c') }}">
 		{{ timestamp|date('d F, Y') }}
 	</time>
+{% endspaceless %}
 {% endmacro %}
