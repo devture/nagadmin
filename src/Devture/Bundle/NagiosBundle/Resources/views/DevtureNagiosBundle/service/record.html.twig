@@ -65,6 +65,7 @@
 								</a>
 								<pre class="top-spaced-minor" style="padding: 2px;"
 									><code>{{ entity.command.line }}</code></pre>
+								{{ render_form_violations(form, 'command') }}
 							</div>
 						</div>
 						{% for argument in entity.command.arguments %}

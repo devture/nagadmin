@@ -1,14 +1,13 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Validator;
 
-use Devture\Bundle\NagiosBundle\Model\CommandArgument;
-
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;
 use Devture\Bundle\SharedBundle\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Command;
+use Devture\Bundle\NagiosBundle\Model\CommandArgument;
 
 class ServiceValidator extends BaseValidator {
 
@@ -67,7 +66,7 @@ class ServiceValidator extends BaseValidator {
 		}
 
 		$command = $entity->getCommand();
-		if (!($command instanceof Command)) {
+		if (!($command instanceof Command) || $command->getType() !== Command::TYPE_SERVICE_CHECK) {
 			$violations->add('command', 'Invalid command.');
 		} else {
 			$requiredArgumentIds = array_map(function (CommandArgument $arg) { return $arg->getId(); }, $command->getArguments());

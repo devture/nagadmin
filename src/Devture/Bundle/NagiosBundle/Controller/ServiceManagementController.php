@@ -59,7 +59,13 @@ class ServiceManagementController extends BaseController {
 		$entity->setNotificationInterval($defaults['notification_interval']);
 
 		try {
+			/* @var $command Command*/
 			$command = $this->getCommandRepository()->find($commandId);
+
+			if ($command->getType() !== Command::TYPE_SERVICE_CHECK) {
+				throw new NotFound('Only service check commands are allowed.');
+			}
+
 			$entity->setCommand($command);
 			$entity->setName($command->getTitle());
 		} catch (NotFound $e) {
