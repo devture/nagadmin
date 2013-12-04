@@ -61,6 +61,12 @@ comploader.register("relative-time", {
 	]
 });
 
+comploader.register("jquery.autoresize", {
+	"scripts": [
+		"{{ static_url('/js/jquery.autoresize.js') }}"
+	]
+});
+
 comploader.register("nagadminApp", {
 	"requires": ["angular"],
 	"scripts": [

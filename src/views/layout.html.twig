@@ -74,7 +74,6 @@
 
 <script type="text/javascript" src="{{ static_url('/js/jquery-2.0.0.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ static_url('/js/jquery.autoresize.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
 
 <script type="text/javascript">
@@ -83,8 +82,6 @@
 
 <script type="text/javascript">
 {% block js %}
-	$('textarea').autoResize({"extraSpace": 10});
-
 	$('.js-tooltip').tooltip();
 
 	$(function () {
@@ -99,6 +96,13 @@
 		if ($relativeTimes.length > 0) {
 			comploader.load("relative-time", function () {
 				$relativeTimes.relativeTime().tooltip();
+			});
+		}
+
+		var $textareas = $('textarea');
+		if ($textareas.length > 0) {
+			comploader.load("jquery.autoresize", function () {
+				$textareas.autoResize({"extraSpace": 10});
 			});
 		}
 	});
