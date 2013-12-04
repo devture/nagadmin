@@ -45,6 +45,15 @@
 	});
 })();
 
+comploader.register("chosen", {
+	"stylesheets": [
+		"{{ static_url('/js/chosen/chosen.css') }}"
+	],
+	"scripts": [
+		"{{ static_url('/js/chosen/chosen.jquery.min.js') }}"
+	]
+});
+
 comploader.register("nagadminApp", {
 	"requires": ["angular"],
 	"scripts": [

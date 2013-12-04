@@ -6,7 +6,6 @@
 	<title>{{ get_project_name() }}</title>
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/bootstrap.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/style.css') }}" />
-	<link type="text/css" rel="stylesheet" href="{{ static_url('/js/chosen/chosen.css') }}" />
 	{% endblock %}
 </head>
 <body>
@@ -77,7 +76,6 @@
 <script type="text/javascript" src="{{ static_url('/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.autoresize.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
-<script type="text/javascript" src="{{ static_url('/js/chosen/chosen.jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
 
 <script type="text/javascript">
@@ -88,7 +86,14 @@
 {% block js %}
 	$('textarea').autoResize({"extraSpace": 10});
 
-	$('.js-chosen-select').chosen();
+	$(function () {
+		var $chosenSelects = $('.js-chosen-select');
+		if ($chosenSelects.length > 0) {
+			comploader.load("chosen", function () {
+				$chosenSelects.chosen();
+			});
+		}
+	});
 
 	$('.js-tooltip').tooltip();
 
