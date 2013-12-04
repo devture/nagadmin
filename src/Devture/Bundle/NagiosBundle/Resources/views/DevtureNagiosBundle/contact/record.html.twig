@@ -48,7 +48,9 @@
 				<label class="control-label">Avatar</label>
 				<div class="controls">
 					{% if isAdded %}
-						{{ macros.contact_badge(entity, 48) }}
+						<div ng-app-lazy="nagadminApp" ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
+							<contact entity='contact_{{ entity.id }}' size="48"></contact>
+						</div>
 					{% endif %}
 					Contacts get their own <a target="_blank" href="http://gravatar.com/">Gravatar</a> based on their email address or other address values.
 				</div>

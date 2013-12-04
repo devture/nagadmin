@@ -7,7 +7,6 @@ use Devture\Bundle\NagiosBundle\Status\ServiceStatus;
 
 class NagiosExtension extends \Twig_Extension {
 
-	private $colors = array('#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888',);
 	private $container;
 
 	public function __construct(\Pimple $container) {
@@ -31,34 +30,16 @@ class NagiosExtension extends \Twig_Extension {
 	public function getFilters() {
 		return array(
 			'devture_nagios_colorize' => new \Twig_Filter_Method($this, 'colorize'),
-			'devture_nagios_contact_avatar_url' => new \Twig_Filter_Method($this, 'getContactAvatarUrl'),
+			'contact_api_model_export' => new \Twig_Filter_Method($this, 'exportContactApiModel'),
 		);
 	}
 
 	public function colorize($value) {
-		$value = (string)$value;
-
-		$sum = hexdec(substr(hash('crc32', $value), 0, 2));
-
-		$idx = $sum % count($this->colors);
-
-		return $this->colors[$idx];
+		return $this->getColorizer()->colorize($value);
 	}
 
-	public function getContactAvatarUrl(Contact $contact, $size) {
-		//Force the default image for gravatars based on non-email values.
-		//This is to avoid a collision of the hash based on address fields with some
-		//random internet user's email address (who might have a photo for an avatar)
-		if ($contact->getEmail()) {
-			$identifier = $contact->getEmail();
-			$forceDefault = false;
-		} else {
-			$identifier = implode(', ', $contact->getAddresses());
-			$forceDefault = true; //not an email, so force
-		}
-		$identifier = trim(strtolower($identifier));
-		$hash = md5($identifier);
-		return 'https://secure.gravatar.com/avatar/' . $hash . '?s=' . $size . '&d=wavatar' . ($forceDefault ? '&f=y' : '');
+	public function exportContactApiModel(Contact $contact) {
+		return $this->getContactApiModelBridge()->export($contact);
 	}
 
 	public function getInfoStatus() {
@@ -88,6 +69,20 @@ class NagiosExtension extends \Twig_Extension {
 	 */
 	private function getStatusManager() {
 		return $this->container['devture_nagios.status.manager'];
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Helper\Colorizer
+	 */
+	private function getColorizer() {
+		return $this->container['devture_nagios.helper.colorizer'];
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge
+	 */
+	private function getContactApiModelBridge() {
+		return $this->container['devture_nagios.contact.api_model_bridge'];
 	}
 
 }

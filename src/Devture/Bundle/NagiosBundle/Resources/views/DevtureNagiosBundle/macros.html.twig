@@ -30,15 +30,6 @@
 	{% endif %}
 {% endmacro %}
 
-{% macro contact_badge(contact, size) %}
-	<img
-		src="{{ contact|devture_nagios_contact_avatar_url(size) }}"
-		alt="{{ contact.name }}"
-		class="js-tooltip img-rounded"
-		style="border: 3px solid {{ contact.name|devture_nagios_colorize }};"
-		title="{{ contact.name }}" />
-{% endmacro %}
-
 {% macro relative_time(timestamp) %}
 {% spaceless %}
 	<time class="js-relative-time" data-time="{{ timestamp|date('c') }}">

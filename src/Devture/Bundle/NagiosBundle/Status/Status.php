@@ -23,4 +23,8 @@ abstract class Status {
 		return (isset($this->directives[$name]) ? $this->directives[$name] : $defaultValue);
 	}
 
+	public function getDirectives() {
+		return $this->directives;
+	}
+
 }

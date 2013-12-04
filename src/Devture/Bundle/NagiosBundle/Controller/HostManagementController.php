@@ -70,24 +70,6 @@ class HostManagementController extends BaseController {
 		)));
 	}
 
-	public function recheckAllServicesAction(Request $request, $id, $token) {
-		$intention = 'recheck-host-services-' . $id;
-		if ($this->isValidCsrfToken($intention, $token)) {
-			try {
-				$host = $this->getHostRepository()->find($id);
-				$commandManager = $this->getNagiosCommandManager();
-
-				foreach ($this->getServiceRepository()->findByHost($host) as $service) {
-					$commandManager->scheduleServiceCheck($service);
-				}
-			} catch (NotFound $e) {
-
-			}
-			return $this->json(array('ok' => true));
-		}
-		return $this->json(array('ok' => false));
-	}
-
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-host-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {

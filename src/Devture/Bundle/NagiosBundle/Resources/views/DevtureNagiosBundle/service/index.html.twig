@@ -1,78 +1,18 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<form method="get" name="hostFilter" action="{{ path('devture_nagios.service.manage') }}">
-		<select class="js-chosen-select" id="js-host-filter-select" name="hostId">
+	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
+		<select class="js-chosen-select" name="hostId" ng-model="selectedHostId">
 			<option value="">-- All hosts --</option>
 			{% for host in hosts %}
-			<option value="{{ host.id }}"
-				{{ selectedHost is not none and selectedHost == host ? 'selected="selected"' : '' }}
-				>{{ host.name }}</option>
+			<option value="{{ host.id }}">{{ host.name }}</option>
 			{% endfor %}
 		</select>
-	</form>
 
-	<div class="top-spaced-minor"></div>
+		<div class="top-spaced-minor"></div>
 
-	<div id="js-services-list-container">
-	{% for item in items %}
-		<div class="clearfix">
-			<div class="pull-right">
-				{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': item.host} %}
-				<a class="btn btn-small js-btn-recheck-all-services"
-					href="javascript://"
-					data-host-id="{{ item.host.id }}"
-					data-token="{{ csrf_token('recheck-host-services-' ~ item.host.id) }}">
-					<i class="icon-refresh"></i>
-					Recheck all
-				</a>
-			</div>
-			<a href="{{ path('devture_nagios.host.edit', {'id': item.host.id}) }}">
-				<h3 style="margin: 0; padding: 0; display: inline-block;">{{ item.host.name }}</h3>
-			</a>
-		</div>
-		{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': item.services} %}
-	{% endfor %}
+		<div ng-if="filteredHosts.length == 0">Loading..</div>
+
+		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo" />
 	</div>
-{% endblock %}
-
-{% block js %}
-	{{ parent() }}
-
-	$('#js-host-filter-select').change(function () {
-		$(this).closest('form').submit();
-	});
-
-	$('#js-services-list-container').on('click', '.js-btn-recheck-all-services', function () {
-		var $button = $(this);
-
-		if ($button.hasClass('disabled')) {
-			return;
-		}
-		$button.addClass('disabled');
-
-		var url = {{ path('devture_nagios.host.recheck_all_services', {'id': '__HOST_ID__', 'token': '__TOKEN__'})|json_encode|raw }};
-		url = url.replace('__HOST_ID__', $(this).data('host-id'));
-		url = url.replace('__TOKEN__', $(this).data('token'));
-
-		$.ajax({
-			"url": url,
-			"type": "POST",
-			"dataType": "json",
-			"success": function (response) {
-				if (response.ok) {
-					var originalHtml = $button.html();
-
-					$button.text('Checks scheduled');
-
-					window.setTimeout(function () {
-						$button.html(originalHtml);
-						$button.removeClass('disabled');
-					}, 3000);
-				} else {
-					alert("There was a problem. Refresh and retry.");
-				}
-			}
-		});
-	});
 {% endblock %}

@@ -8,36 +8,10 @@ use Devture\Bundle\NagiosBundle\Model\Command;
 class ServiceManagementController extends BaseController {
 
 	public function indexAction(Request $request) {
-		$selectedHost = null;
-		try {
-			$hostId = $request->query->get('hostId');
-			if ($hostId) {
-				$selectedHost = $this->getHostRepository()->find($hostId);
-			}
-		} catch (NotFound $e) {
-
-		}
-
 		$hosts = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 
-		$items = array();
-		foreach ($hosts as $host) {
-			if ($selectedHost === null || $selectedHost === $host) {
-				$items[] = array(
-					'host' => $host,
-					'services' => $this->getServiceRepository()->findByHost($host),
-				);
-			}
-		}
-
-		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
-		$commands = $this->getCommandRepository()->findBy($findBy, array('sort' => array('title' => 1)));
-
 		return $this->renderView('DevtureNagiosBundle/service/index.html.twig', array(
-			'items' => $items,
-			'commands' => $commands,
 			'hosts' => $hosts,
-			'selectedHost' => $selectedHost,
 		));
 	}
 

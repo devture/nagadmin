@@ -78,6 +78,11 @@
 <script type="text/javascript" src="{{ static_url('/js/jquery.autoresize.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/chosen/chosen.jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
+
+<script type="text/javascript">
+	{% include 'comploader_components.js.twig' %}
+</script>
 
 <script type="text/javascript">
 {% block js %}
@@ -88,6 +93,26 @@
 	$('.js-tooltip').tooltip();
 
 	$('.js-relative-time').relativeTime().tooltip();
+
+	(function () {
+		var lazyNgAppLoad = function () {
+			$('[ng-app-lazy]').each(function () {
+				var $appRoot = $(this),
+					appName = $appRoot.attr('ng-app-lazy');
+
+				if ($appRoot.data('bootstrapped')) {
+					return;
+				}
+				$appRoot.data('bootstrapped', true);
+
+				comploader.load(appName, function () {
+					angular.bootstrap($appRoot, [appName]);
+				});
+			});
+		};
+
+		$(lazyNgAppLoad);
+	})();
 {% endblock %}
 </script>
 

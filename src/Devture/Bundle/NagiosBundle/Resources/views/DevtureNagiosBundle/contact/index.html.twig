@@ -10,5 +10,7 @@
 
 	<div class="top-spaced-minor"></div>
 
-	{% include 'DevtureNagiosBundle/contact/list.html.twig' with {'items': items} %}
+	<div ng-app-lazy="nagadminApp">
+		{% include 'DevtureNagiosBundle/contact/list.html.twig' with {'items': items} %}
+	</div>
 {% endblock %}

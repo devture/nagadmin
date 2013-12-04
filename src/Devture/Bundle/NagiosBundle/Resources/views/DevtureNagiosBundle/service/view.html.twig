@@ -83,7 +83,7 @@
 {% block devture_nagios_content %}
 	{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
 
-	<div class="form-horizontal">
+	<div class="form-horizontal" ng-app-lazy="nagadminApp">
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label"><i class="icon-th-large"></i> Host</label>
@@ -112,8 +112,9 @@
 					<a
 						class="well well-small"
 						style="display: inline-block; padding: 2px 5px;"
-						href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}">
-						{{ macros.contact_badge(contact, 32) }}
+						href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
+						ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
+						<contact entity='contact_{{ contact.id }}' size="24"></contact>
 						{{ contact.name }}
 					</a>
 				{% endfor %}

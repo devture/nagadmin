@@ -17,8 +17,9 @@
 			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="display-block">
-						{{ macros.contact_badge(entity, 24) }}
+					<a href="{{ link }}" class="display-block"
+						ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
+						<contact entity='contact_{{ entity.id }}' size="24"></contact>
 					</a>
 				</td>
 				<td>

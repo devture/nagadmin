@@ -1,0 +1,23 @@
+<span ng-switch="entity">
+	<span ng-switch-when="null" class="text-center label" style="display: block;">
+		missing
+	</span>
+	<span ng-switch-default ng-switch="entity.has_been_checked">
+		<span ng-switch-when="0" class="text-center label" style="display: block;">
+			pending
+		</span>
+		<span ng-switch-when="1"
+			class="text-center label {{ entity.current_state | humanize_state | state_label_class }}"
+			style="display: block;"
+			ng-switch="entity.last_hard_state == entity.current_state">
+			<span ng-switch-when="true">
+				{{ entity.current_state | humanize_state }}
+			</span>
+			<span ng-switch-when="false">
+				&raquo;
+				{{ entity.current_state | humanize_state }}
+				({{ entity.current_attempt }}/{{ entity.max_attempts }})
+			</span>
+		</span>
+	</span>
+</span>

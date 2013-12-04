@@ -1,0 +1,55 @@
+(function () {
+	var apiUrlRegistry = {
+		"host": {
+			"edit": {{ path('devture_nagios.host.edit', {'id': '__ID__'})|json_encode|raw }},
+			"info": {{ path('devture_nagios.api.host.info', {'id': '__ID__'})|json_encode|raw }},
+			"infoAll": {{ path('devture_nagios.api.host.info')|json_encode|raw }},
+			"recheckAllServices": {{ path('devture_nagios.api.host.recheck_all_services', {'id': '__ID__', 'token': '__TOKEN__'})|json_encode|raw }}
+		},
+		"command": {
+			"list": {{ path('devture_nagios.api.command.list', {'type': '__TYPE__'})|json_encode|raw }}
+		},
+		"service": {
+			"add": {{ path('devture_nagios.service.add', {'commandId': '__COMMAND_ID__', 'hostId': '__HOST_ID__'})|json_encode|raw }},
+			"view": {{ path('devture_nagios.service.view', {'id': '__ID__'})|json_encode|raw }}
+		}
+	};
+
+	var templatePathRegistry = {
+		"common": {
+			"relativeTime": "{{ static_url('/angular/templates/common/relative-time.html') }}"
+		},
+		"host": {
+			"info": "{{ static_url('/angular/templates/host/info.html') }}"
+		},
+		"service": {
+			"listTable": "{{ static_url('/angular/templates/service/list-table.html') }}",
+			"addNewButton": "{{ static_url('/angular/templates/service/add-new-button.html') }}",
+			"statusBadge": "{{ static_url('/angular/templates/service/status-badge.html') }}"
+		},
+		"contact": {
+			"badge": "{{ static_url('/angular/templates/contact/badge.html') }}"
+		}
+	};
+
+	comploader.register("angular", {
+		"scripts": [
+			"{{ static_url('/js/angular.min.js') }}"
+		],
+		"init": function () {
+			var environment = angular.module("nagadmin.environment", []);
+			environment.value("apiUrlRegistry", apiUrlRegistry);
+			environment.value("templatePathRegistry", templatePathRegistry);
+			environment.value("csrfToken", {{ csrf_token('nagadmin')|json_encode|raw }});
+		}
+	});
+})();
+
+comploader.register("nagadminApp", {
+	"requires": ["angular"],
+	"scripts": [
+		"{{ static_url('/angular/services.js') }}",
+		"{{ static_url('/angular/directives.js') }}",
+		"{{ static_url('/angular/filters.js') }}"
+	]
+});

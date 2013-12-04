@@ -7,6 +7,7 @@ $app['twig']->addExtension(new StaticFileStamperExtension($webroot));
 $app['twig']->addGlobal('layout', 'layout.html.twig');
 
 $app->mount('/', $app['devture_nagios.controllers_provider.management']);
+$app->mount('/api', $app['devture_nagios.controllers_provider.api']);
 
 $app->get('/', function () use ($app) {
 	return $app['twig']->render('index.html.twig');

@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Devture\Component\SmsSender\Message;
+use Devture\Bundle\NagiosBundle\ApiModelBridge\ServiceBridge;
 
 class ServicesProvider implements ServiceProviderInterface {
 
@@ -21,6 +22,8 @@ class ServicesProvider implements ServiceProviderInterface {
 		$config = $this->config;
 
 		$app['devture_nagios.bundle_path'] = dirname(__FILE__);
+
+		$app['devture_nagios.colors'] = array('#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888',);
 
 		$app['devture_nagios.event_dispatcher'] = $app->share(function ($app) {
 			$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
@@ -141,6 +144,14 @@ class ServicesProvider implements ServiceProviderInterface {
 			return $binder;
 		};
 
+		$app['devture_nagios.helper.colorizer'] = $app->share(function ($app) {
+			return new Helper\Colorizer($app['devture_nagios.colors']);
+		});
+
+		$app['devture_nagios.twig.extension'] = function ($app) {
+			return new Twig\NagiosExtension($app);
+		};
+
 		$this->registerDeploymentServices($app);
 
 		$this->registerEmailServices($app);
@@ -150,6 +161,8 @@ class ServicesProvider implements ServiceProviderInterface {
 		$this->registerInstallerServices($app);
 
 		$this->registerInteractionServices($app);
+
+		$this->registerApiModelBridgeServices($app);
 
 		$this->registerConsoleServices($app);
 
@@ -205,12 +218,19 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Controller\Provider\ControllersProvider();
 		});
 
+		$app['devture_nagios.controllers_provider.api'] = $app->share(function () {
+			return new Controller\Provider\ApiControllersProvider();
+		});
+
 		$app['devture_nagios.controller.time_period.management'] = function ($app) {
 			return new Controller\TimePeriodManagementController($app, 'devture_nagios');
 		};
 
 		$app['devture_nagios.controller.command.management'] = function ($app) {
 			return new Controller\CommandManagementController($app, 'devture_nagios');
+		};
+		$app['devture_nagios.controller.command.api'] = function ($app) {
+			return new Controller\Api\CommandApiController($app, 'devture_nagios');
 		};
 
 		$app['devture_nagios.controller.contact.management'] = function ($app) {
@@ -219,6 +239,9 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.controller.host.management'] = function ($app) {
 			return new Controller\HostManagementController($app, 'devture_nagios');
+		};
+		$app['devture_nagios.controller.host.api'] = function ($app) {
+			return new Controller\Api\HostApiController($app, 'devture_nagios');
 		};
 
 		$app['devture_nagios.controller.service.management'] = function ($app) {
@@ -383,10 +406,6 @@ class ServicesProvider implements ServiceProviderInterface {
 			}
 			return $gateway;
 		});
-
-		$app['devture_nagios.twig.extension'] = function ($app) {
-			return new Twig\NagiosExtension($app);
-		};
 	}
 
 	private function registerInstallerServices(Application $app) {
@@ -412,6 +431,45 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.nagios_command.manager'] = $app->share(function ($app) {
 			return new NagiosCommand\Manager($app['devture_nagios.nagios_command.submitter']);
+		});
+	}
+
+	private function registerApiModelBridgeServices(Application $app) {
+		$app['devture_nagios.contact.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\ContactBridge($app['devture_nagios.helper.colorizer']);
+		});
+
+		$app['devture_nagios.host.api_model_bridge'] = $app->share(function () {
+			return new ApiModelBridge\HostBridge();
+		});
+
+		$app['devture_nagios.host_info.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\HostInfoBridge(
+				$app['devture_nagios.host.api_model_bridge'],
+				$app['devture_nagios.service_info.api_model_bridge']
+			);
+		});
+
+		$app['devture_nagios.service.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\ServiceBridge(
+				$app['devture_nagios.host.api_model_bridge'],
+				$app['devture_nagios.contact.api_model_bridge']
+			);
+		});
+
+		$app['devture_nagios.service_status.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\ServiceStatusBridge();
+		});
+
+		$app['devture_nagios.service_info.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\ServiceInfoBridge(
+				$app['devture_nagios.service.api_model_bridge'],
+				$app['devture_nagios.service_status.api_model_bridge']
+			);
+		});
+
+		$app['devture_nagios.command.api_model_bridge'] = $app->share(function () {
+			return new ApiModelBridge\CommandBridge();
 		});
 	}
 

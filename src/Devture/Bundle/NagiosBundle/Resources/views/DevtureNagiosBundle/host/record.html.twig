@@ -52,11 +52,11 @@
 			<div class="control-group">
 				<label class="control-label"><i class="icon-signal"></i> Services</label>
 				<div class="controls">
-					{% include 'DevtureNagiosBundle/service/add_new_picker.html.twig' with {'commands': commands, 'selectedHost': entity} %}
-
-					<div class="top-spaced-minor"></div>
-
-					{% include 'DevtureNagiosBundle/service/list.html.twig' with {'items': services} %}
+					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
+						<div ng-controller="HostInfoCtrl">
+							<host-info entity="hostInfo" ng-if="hostInfo != null" />
+						</div>
+					</div>
 				</div>
 			</div>
 			{% endif %}

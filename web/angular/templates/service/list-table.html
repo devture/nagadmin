@@ -1,0 +1,53 @@
+<table class="table table-bordered table-striped table-condensed">
+<thead>
+	<tr>
+		<th style="width: 50px;"></th>
+		<th><i class="icon-th-large"></i> Host</th>
+		<th><i class="icon-signal"></i> Service</th>
+		<th>Checked</th>
+		<th>Status</th>
+		<th style="min-width: 140px;"><i class="icon-user"></i> Notify</th>
+	</tr>
+</thead>
+<tbody>
+	<tr ng-repeat="serviceInfo in servicesInfo" ng-class="{warning: !serviceInfo.service.enabled}">
+		<td>
+			<service-status-badge entity="serviceInfo.status" />
+		</td>
+		<td style="width: 130px;">
+			{{ host.name }}
+		</td>
+		<td style="width: 210px;">
+			<a href="{{ serviceInfo.service | url_service_view }}" class="display-block">
+				{{ serviceInfo.service.name }}
+
+				<strong ng-hide="serviceInfo.service.enabled">(disabled)</strong>
+			</a>
+		</td>
+		<td nowrap="nowrap">
+			<span class="help-inline" ng-switch="serviceInfo.status">
+				<span ng-switch-when="null">-</span>
+				<span ng-switch-default>
+					<span ng-switch="serviceInfo.status.last_check">
+						<span ng-switch-when="0">Never</span>
+						<span ng-switch-default>
+							<relative-time timestamp="serviceInfo.status.last_check"></relative-time> ago
+						</span>
+					</span>
+				</span>
+			</span>
+		</td>
+		<td ng-switch="serviceInfo.status">
+			<div ng-switch-when="null">
+				-- There is no information about this service --
+			</div>
+			<div ng-switch-default>
+				{{ serviceInfo.status.plugin_output }}
+			</div>
+		</td>
+		<td>
+			<contact ng-repeat="contact in serviceInfo.service.contacts" entity="contact" size="24" />
+		</td>
+	</tr>
+</tbody>
+</table>

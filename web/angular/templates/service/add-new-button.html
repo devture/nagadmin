@@ -5,14 +5,10 @@
 		<span class="caret"></span>
 	</a>
 	<ul class="dropdown-menu" role="menu" style="min-width: 0;">
-	{% set base_params = selectedHost is none ? {} : {'hostId': selectedHost.id ~ ''} %}
-	{% set base_params = base_params|merge({'next': app.request.uri}) %}
-	{% for command in commands %}
-		<li>
-			<a href="{{ path('devture_nagios.service.add', base_params|merge({'commandId': command.id})) }}">
+		<li ng-repeat="command in commands | orderBy:'title'">
+			<a href="{{ command | url_service_add:host }}">
 				{{ command.title }}
 			</a>
 		</li>
-	{% endfor %}
 	</ul>
 </div>
