@@ -41,6 +41,7 @@
 			environment.value("apiUrlRegistry", apiUrlRegistry);
 			environment.value("templatePathRegistry", templatePathRegistry);
 			environment.value("csrfToken", {{ csrf_token('nagadmin')|json_encode|raw }});
+			environment.value("comploader", comploader);
 		}
 	});
 })();
@@ -51,6 +52,12 @@ comploader.register("chosen", {
 	],
 	"scripts": [
 		"{{ static_url('/js/chosen/chosen.jquery.min.js') }}"
+	]
+});
+
+comploader.register("relative-time", {
+	"scripts": [
+		"{{ static_url('/js/jquery.relative-time.js') }}"
 	]
 });
 

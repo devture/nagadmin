@@ -75,7 +75,6 @@
 <script type="text/javascript" src="{{ static_url('/js/jquery-2.0.0.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.autoresize.js') }}"></script>
-<script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
 
 <script type="text/javascript">
@@ -86,6 +85,8 @@
 {% block js %}
 	$('textarea').autoResize({"extraSpace": 10});
 
+	$('.js-tooltip').tooltip();
+
 	$(function () {
 		var $chosenSelects = $('.js-chosen-select');
 		if ($chosenSelects.length > 0) {
@@ -93,11 +94,14 @@
 				$chosenSelects.chosen();
 			});
 		}
+
+		var $relativeTimes = $('.js-relative-time');
+		if ($relativeTimes.length > 0) {
+			comploader.load("relative-time", function () {
+				$relativeTimes.relativeTime().tooltip();
+			});
+		}
 	});
-
-	$('.js-tooltip').tooltip();
-
-	$('.js-relative-time').relativeTime().tooltip();
 
 	(function () {
 		var lazyNgAppLoad = function () {

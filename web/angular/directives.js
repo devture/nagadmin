@@ -88,7 +88,7 @@ nagadminApp.directive('serviceAddNewButton', function (ServiceCheckCommand, temp
 	};
 });
 
-nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry) {
+nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, comploader) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -99,26 +99,24 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry) 
 			var timeoutId = null;
 
 			$timeout(function () {
-				var $timeElement = $element.find('time');
+				comploader.load("relative-time", function () {
+					var $timeElement = $element.find('time');
 
-				$timeElement.relativeTime().tooltip();
+					$timeElement.relativeTime().tooltip();
 
-				var update = function () {
-					$timeElement.relativeTime();
-				};
+					var scheduleUpdate = function () {
+						timeoutId = $timeout(function () {
+							$timeElement.relativeTime();
+							scheduleUpdate();
+						}, 15000);
+					};
 
-				var scheduleUpdate = function () {
-					timeoutId = $timeout(function () {
-						update();
-						scheduleUpdate();
-					}, 15000);
-				};
-
-				scheduleUpdate();
-
-				$element.on('$destroy', function () {
-					$timeout.cancel(timeoutId);
+					scheduleUpdate();
 				});
+			});
+
+			$element.on('$destroy', function () {
+				$timeout.cancel(timeoutId);
 			});
 		}
 	};
