@@ -202,10 +202,13 @@ nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avata
 nagadminApp.directive('hrefTo', function ($filter) {
 	return {
 		"restrict": "A",
-		"link": function ($scope, $element, attrs) {
-			var object = $scope[attrs.hrefTo],
-				filter = $filter(attrs.hrefVia);
-			$element.attr('href', filter(object));
+		"scope": {
+			"hrefTo": "=hrefTo",
+			"hrefVia": "=hrefVia"
+		},
+		"link": function ($scope, $element) {
+			var filter = $filter($scope.hrefVia);
+			$element.attr('href', filter($scope.hrefTo));
 		}
 	};
 });
