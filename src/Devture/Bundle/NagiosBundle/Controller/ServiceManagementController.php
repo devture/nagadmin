@@ -8,11 +8,7 @@ use Devture\Bundle\NagiosBundle\Model\Command;
 class ServiceManagementController extends BaseController {
 
 	public function indexAction(Request $request) {
-		$hosts = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
-
-		return $this->renderView('DevtureNagiosBundle/service/index.html.twig', array(
-			'hosts' => $hosts,
-		));
+		return $this->renderView('DevtureNagiosBundle/service/index.html.twig');
 	}
 
 	private function getBaseViewData() {

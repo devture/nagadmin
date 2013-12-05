@@ -111,13 +111,12 @@ nagadminApp.factory('HostInfoUpdaterFactory', function ($timeout, HostInfo) {
 });
 
 nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
-	var hostsInfo = [];
-
+	$scope.hostsInfo = [];
 	$scope.filteredHostsInfo = [];
 	$scope.selectedHostId = '';
 
 	var getFilteredHostsInfo = function () {
-		return jQuery.grep(hostsInfo, function (hostInfo, _idx) {
+		return jQuery.grep($scope.hostsInfo, function (hostInfo, _idx) {
 			if (!$scope.selectedHostId) {
 				return true;
 			}
@@ -126,7 +125,7 @@ nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
 	};
 
 	HostInfo.findAll().success(function (infoObjectsList) {
-		hostsInfo = infoObjectsList;
+		$scope.hostsInfo = infoObjectsList;
 		$scope.filteredHostsInfo = getFilteredHostsInfo();
 
 		$scope.$watch('selectedHostId', function (newVal, oldVal) {
