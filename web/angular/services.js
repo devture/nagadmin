@@ -15,7 +15,7 @@ nagadminApp.factory('ServiceCheckCommand', function ($http, apiUrlRegistry) {
 	return {
 		"findAll": function () {
 			var url = apiUrlRegistry.command.list.replace('__TYPE__', 'serviceCheck');
-			return $http.get(url);
+			return $http.get(url, {"cache": true});
 		}
 	};
 });
@@ -111,16 +111,13 @@ nagadminApp.factory('HostInfoUpdaterFactory', function ($timeout, HostInfo) {
 });
 
 nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
-	$scope.hostsInfo = [];
+	var hostsInfo = [];
+
 	$scope.filteredHostsInfo = [];
 	$scope.selectedHostId = '';
 
-	HostInfo.findAll().success(function (infoObjectsList) {
-		$scope.hostsInfo = infoObjectsList;
-	});
-
 	var getFilteredHostsInfo = function () {
-		return jQuery.grep($scope.hostsInfo, function (hostInfo, idx) {
+		return jQuery.grep(hostsInfo, function (hostInfo, _idx) {
 			if (!$scope.selectedHostId) {
 				return true;
 			}
@@ -128,11 +125,15 @@ nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
 		});
 	};
 
-	$scope.$watch('hostsInfo', function () {
+	HostInfo.findAll().success(function (infoObjectsList) {
+		hostsInfo = infoObjectsList;
 		$scope.filteredHostsInfo = getFilteredHostsInfo();
-	});
-	$scope.$watch('selectedHostId', function () {
-		$scope.filteredHostsInfo = getFilteredHostsInfo();
+
+		$scope.$watch('selectedHostId', function (newVal, oldVal) {
+			if (newVal !== oldVal) {
+				$scope.filteredHostsInfo = getFilteredHostsInfo();
+			}
+		});
 	});
 });
 

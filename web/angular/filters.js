@@ -5,15 +5,15 @@ nagadminApp.filter('avatar_url', function () {
 });
 
 nagadminApp.filter('humanize_state', function () {
+	var map = {'0': 'ok', '1': 'warning', '2': 'critical', '3': 'unknown'};
 	return function (state) {
-		var map = {'0': 'ok', '1': 'warning', '2': 'critical', '3': 'unknown'};
 		return (typeof(map[state]) === 'undefined' ? 'unknown' : map[state]);
 	};
 });
 
 nagadminApp.filter('state_label_class', function () {
+	var map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important'};
 	return function (state) {
-		var map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important'};
 		return map[state];
 	};
 });

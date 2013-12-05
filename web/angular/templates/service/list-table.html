@@ -10,18 +10,18 @@
 	</tr>
 </thead>
 <tbody>
-	<tr ng-repeat="serviceInfo in servicesInfo" ng-class="{warning: !serviceInfo.service.enabled}">
+	<tr ng-repeat="serviceInfo in servicesInfo" ng-init="service = serviceInfo.service" ng-class="{warning: !service.enabled}">
 		<td>
 			<service-status-badge entity="serviceInfo.status" />
 		</td>
 		<td style="width: 130px;">
 			{{ host.name }}
 		</td>
-		<td style="width: 210px;">
-			<a href="{{ serviceInfo.service | url_service_view }}" class="display-block">
-				{{ serviceInfo.service.name }}
+		<td style="width: 210px;" ng-init="s">
+			<a href-to="service" href-via="url_service_view" class="display-block">
+				{{ service.name }}
 
-				<strong ng-hide="serviceInfo.service.enabled">(disabled)</strong>
+				<strong ng-hide="service.enabled">(disabled)</strong>
 			</a>
 		</td>
 		<td nowrap="nowrap">
@@ -46,7 +46,7 @@
 			</div>
 		</td>
 		<td>
-			<contact ng-repeat="contact in serviceInfo.service.contacts" entity="contact" size="24" />
+			<contact ng-repeat="contact in service.contacts" entity="contact" size="24" />
 		</td>
 	</tr>
 </tbody>

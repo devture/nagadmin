@@ -7,15 +7,15 @@
 			pending
 		</span>
 		<span ng-switch-when="1"
-			class="text-center label {{ entity.current_state | humanize_state | state_label_class }}"
+			class="text-center label {{ currentStateLabelClass }}"
 			style="display: block;"
 			ng-switch="entity.last_hard_state == entity.current_state">
 			<span ng-switch-when="true">
-				{{ entity.current_state | humanize_state }}
+				{{ currentStateHuman }}
 			</span>
 			<span ng-switch-when="false">
 				&raquo;
-				{{ entity.current_state | humanize_state }}
+				{{ currentStateHuman }}
 				({{ entity.current_attempt }}/{{ entity.max_attempts }})
 			</span>
 		</span>

@@ -1,10 +1,16 @@
 <div class="dropdown" style="display: inline-block;">
-	<a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+	<a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#" ng-click="expand()">
 		<i class="icon-plus"></i>
 		Add service
 		<span class="caret"></span>
 	</a>
-	<ul class="dropdown-menu" role="menu" style="min-width: 0;">
+
+	<ul ng-if="expanded" class="dropdown-menu" role="menu" style="min-width: 0;">
+		<li ng-if="commands.length == 0">
+			<a href="javascript://">
+				Loading..
+			</a>
+		</li>
 		<li ng-repeat="command in commands | orderBy:'title'">
 			<a href="{{ command | url_service_add:host }}">
 				{{ command.title }}

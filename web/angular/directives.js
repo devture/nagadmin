@@ -1,4 +1,4 @@
-nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, ServiceCheckScheduler, templatePathRegistry) {
+nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, ServiceCheckScheduler, templatePathRegistry, url_host_editFilter) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -18,6 +18,8 @@ nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, Se
 			};
 
 			var updater = HostInfoUpdaterFactory.create($scope.entity, onUpdateStart, onUpdateEnd);
+
+			$scope.hostEditUrl = url_host_editFilter($scope.entity.host);
 
 			$scope.recheckAll = function () {
 				isRecheckAllRunning = true;
@@ -61,13 +63,19 @@ nagadminApp.directive('serviceListTable', function (templatePathRegistry) {
 	};
 });
 
-nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry) {
+nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, humanize_stateFilter, state_label_classFilter) {
 	return {
 		"restrict": "E",
 		"scope": {
 			"entity": "=entity"
 		},
-		"templateUrl": templatePathRegistry.service.statusBadge
+		"templateUrl": templatePathRegistry.service.statusBadge,
+		"link": function ($scope) {
+			if ($scope.entity !== null) {
+				$scope.currentStateHuman = humanize_stateFilter($scope.entity.current_state);
+				$scope.currentStateLabelClass = state_label_classFilter($scope.currentStateHuman);
+			}
+		}
 	};
 });
 
@@ -78,12 +86,16 @@ nagadminApp.directive('serviceAddNewButton', function (ServiceCheckCommand, temp
 			"host": "=host"
 		},
 		"templateUrl": templatePathRegistry.service.addNewButton,
-		"controller": function ($scope) {
+		"link": function ($scope) {
 			$scope.commands = [];
+			$scope.expanded = false;
 
-			ServiceCheckCommand.findAll().success(function (commands) {
-				$scope.commands = commands;
-			});
+			$scope.expand = function () {
+				$scope.expanded = true;
+				ServiceCheckCommand.findAll().success(function (commands) {
+					$scope.commands = commands;
+				});
+			};
 		}
 	};
 });
@@ -95,7 +107,9 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 			"timestamp": "=timestamp"
 		},
 		"templateUrl": templatePathRegistry.common.relativeTime,
-		"link": function (scope, $element) {
+		"link": function ($scope, $element) {
+			$scope.jsTimestamp = ($scope.timestamp * 1000);
+
 			var timeoutId = null;
 
 			$timeout(function () {
@@ -113,7 +127,7 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 
 					scheduleUpdate();
 				});
-			});
+			}, 0, false);
 
 			$element.on('$destroy', function () {
 				$timeout.cancel(timeoutId);
@@ -122,7 +136,7 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 	};
 });
 
-nagadminApp.directive('contact', function ($timeout, templatePathRegistry) {
+nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avatar_urlFilter) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -131,9 +145,21 @@ nagadminApp.directive('contact', function ($timeout, templatePathRegistry) {
 		},
 		"templateUrl": templatePathRegistry.contact.badge,
 		"link": function ($scope, $element) {
+			$scope.avatarUrl = avatar_urlFilter($scope.entity.avatar_url, $scope.size);
 			$timeout(function () {
 				$element.find('img').tooltip();
-			});
+			}, 0, false);
+		}
+	};
+});
+
+nagadminApp.directive('hrefTo', function ($filter) {
+	return {
+		"restrict": "A",
+		"link": function ($scope, $element, attrs) {
+			var object = $scope[attrs.hrefTo],
+				filter = $filter(attrs.hrefVia);
+			$element.attr('href', filter(object));
 		}
 	};
 });
