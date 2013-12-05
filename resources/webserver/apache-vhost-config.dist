@@ -1,32 +1,3 @@
-# Choose on the of the setups below
-
-# For running in an /admin/ "directory", alongside the Nagios CGI frontend
-<VirtualHost *:80>
-	ServerName nagios.COMPANY.com
-
-	DocumentRoot /usr/share/nagios/html
-
-	ErrorLog logs/nagios.COMPANY.com-error_log
-	CustomLog logs/nagios.COMPANY.com-access_log combined
-
-	Alias /admin /srv/http/nagios.COMPANY.com/web
-
-	<Directory /srv/http/nagios.COMPANY.com/web>
-		Options -MultiViews
-
-		RewriteEngine on
-		RewriteBase /admin/
-		RewriteCond %{REQUEST_FILENAME} !-f
-		RewriteRule ^ index.php [L]
-
-		AuthType Digest
-		AuthName "nagadmin"
-		AuthUserFile /etc/httpd/htdigest-nagadmin
-		Require valid-user
-	</Directory>
-</VirtualHost>
-
-# For running standalone, on its own vhost
 <VirtualHost *:80>
 	ServerName nagadmin.COMPANY.com
 
@@ -47,5 +18,8 @@
 		AuthUserFile /etc/httpd/htdigest-nagadmin
 		Require valid-user
 	</Directory>
+	<Location ~ "^/(angular|js|css)/">
+		Header set Cache-Control "max-age=2592000, public"
+		SetOutputFilter DEFLATE
+	</Location>
 </VirtualHost>
-
