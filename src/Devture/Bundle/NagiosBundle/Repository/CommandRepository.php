@@ -26,6 +26,10 @@ class CommandRepository extends BaseMongoRepository {
 		return 'command';
 	}
 
+	public function findAllByType($type) {
+		return $this->findBy(array('type' => $type), array());
+	}
+
 	public function delete(BaseModel $object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_COMMAND_DELETE, new ModelEvent($object));
