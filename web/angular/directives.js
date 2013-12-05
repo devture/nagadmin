@@ -122,7 +122,7 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 						timeoutId = $timeout(function () {
 							$timeElement.relativeTime();
 							scheduleUpdate();
-						}, 15000);
+						}, 15000, false);
 					};
 
 					scheduleUpdate();
