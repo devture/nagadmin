@@ -10,7 +10,7 @@
 	</tr>
 </thead>
 <tbody>
-	<tr ng-repeat="serviceInfo in servicesInfo" ng-init="service = serviceInfo.service" ng-class="{warning: !service.enabled}">
+	<tr ng-repeat="serviceInfo in servicesInfo track by serviceInfo.id" ng-init="service = serviceInfo.service" ng-class="{warning: !service.enabled}">
 		<td>
 			<service-status-badge entity="serviceInfo.status" />
 		</td>
