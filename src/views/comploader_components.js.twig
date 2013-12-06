@@ -4,7 +4,7 @@
 			"edit": {{ path('devture_nagios.host.edit', {'id': '__ID__'})|json_encode|raw }},
 			"info": {{ path('devture_nagios.api.host.info', {'id': '__ID__'})|json_encode|raw }},
 			"infoAll": {{ path('devture_nagios.api.host.info')|json_encode|raw }},
-			"recheckAllServices": {{ path('devture_nagios.api.host.recheck_all_services', {'id': '__ID__', 'token': '__TOKEN__'})|json_encode|raw }}
+			"recheckServices": {{ path('devture_nagios.api.host.recheck_services', {'id': '__ID__', 'recheckType': '__RECHECK_TYPE__', 'token': '__TOKEN__'})|json_encode|raw }}
 		},
 		"command": {
 			"list": {{ path('devture_nagios.api.command.list', {'type': '__TYPE__'})|json_encode|raw }}
@@ -20,7 +20,8 @@
 			"relativeTime": "{{ static_url('/angular/templates/common/relative-time.html') }}"
 		},
 		"host": {
-			"info": "{{ static_url('/angular/templates/host/info.html') }}"
+			"info": "{{ static_url('/angular/templates/host/info.html') }}",
+			"recheckButton": "{{ static_url('/angular/templates/host/recheck-button.html') }}"
 		},
 		"service": {
 			"listTable": "{{ static_url('/angular/templates/service/list-table.html') }}",

@@ -1,0 +1,20 @@
+<div class="dropdown" style="display: inline-block;">
+	<a class="btn btn-small dropdown-toggle" ng-class="{disabled: isRechecking()}" data-toggle="dropdown" href="#">
+		<i class="icon-refresh" ng-class="{'spin-animate': isRechecking()}"></i>
+		Recheck
+		<span class="caret"></span>
+	</a>
+
+	<ul class="dropdown-menu" role="menu" style="min-width: 0;">
+		<li>
+			<a href="javascript://" ng-click="recheck('failing')">
+				Recheck failing
+			</a>
+		</li>
+		<li>
+			<a href="javascript://" ng-click="recheck('all')">
+				Recheck all
+			</a>
+		</li>
+	</ul>
+</div>

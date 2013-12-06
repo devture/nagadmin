@@ -7,6 +7,7 @@ use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\HostInfo;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\ServiceInfo;
+use Devture\Bundle\NagiosBundle\Status\ServiceStatus;
 
 class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseController {
 
@@ -43,20 +44,24 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 		return $this->json($result);
 	}
 
-	public function recheckAllServicesAction(Request $request, $id, $token) {
+	public function recheckServicesAction(Request $request, $id, $recheckType, $token) {
 		$intention = 'nagadmin';
 		if ($this->isValidCsrfToken($intention, $token)) {
+			$scheduledCount = 0;
 			try {
 				$host = $this->getHostRepository()->find($id);
 				$commandManager = $this->getNagiosCommandManager();
 
 				foreach ($this->getServiceRepository()->findByHost($host) as $service) {
-					$commandManager->scheduleServiceCheck($service);
+					if ($this->shouldRecheckService($service, $recheckType)) {
+						$scheduledCount += 1;
+						$commandManager->scheduleServiceCheck($service);
+					}
 				}
 			} catch (NotFound $e) {
 
 			}
-			return $this->json(array('ok' => true));
+			return $this->json(array('ok' => true, 'scheduledCount' => $scheduledCount));
 		}
 		return $this->json(array('ok' => false));
 	}
@@ -70,6 +75,25 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 		}, $services);
 
 		return new HostInfo($host, $servicesInfo);
+	}
+
+	private function shouldRecheckService(Service $service, $recheckType) {
+		if ($recheckType === 'all') {
+			return true;
+		}
+
+		if ($recheckType === 'failing') {
+			$status = $this->getStatusManager()->getServiceStatus($service);
+			if ($status === null) {
+				return false;
+			}
+			if (!$status->isChecked()) {
+				return true;
+			}
+			return ($status->getCurrentState() !== ServiceStatus::STATUS_OK);
+		}
+
+		throw new \InvalidArgumentException('Unknown recheck type: ' . $recheckType);
 	}
 
 	/**

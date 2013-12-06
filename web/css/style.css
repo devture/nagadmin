@@ -121,3 +121,27 @@ fieldset.compact > .control-group > .form-actions, .form-actions.compact { paddi
 
 /* Fix the "x" button on Chosen multiple-selects (12px -> 16px) */
 .chzn-container-multi .chzn-choices .search-choice .search-choice-close { width: 16px !important; }
+
+.spin-animate {
+	-webkit-animation-name: spin-animate;
+	-webkit-animation-duration: 2500ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	animation-name: spin-animate;
+	animation-duration: 2500ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@-moz-keyframes spin-animate {
+	from { -moz-transform: rotate(0deg); }
+	to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin-animate {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin-animate {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}

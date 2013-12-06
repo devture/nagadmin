@@ -1,17 +1,7 @@
 <div class="clearfix">
 	<div class="pull-right">
 		<service-add-new-button host="entity.host"></service-add-new-button>
-
-		<a class="btn btn-small" ng-class="{disabled: isRechecking()}" ng-click="recheckAll()">
-			<span ng-if="isRechecking()">
-				Rechecking..
-			</span>
-
-			<span ng-if="!isRechecking()">
-				<i class="icon-refresh"></i>
-				Recheck all
-			</span>
-		</a>
+		<host-recheck-button host="entity.host" rechecking="isBeingRechecked" on-dirty="updateHostInfo"></host-recheck-button>
 	</div>
 	<a href="{{ hostEditUrl }}">
 		<h3 style="margin: 0; padding: 0; display: inline-block;">{{ entity.host.name }}</h3>

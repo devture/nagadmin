@@ -1,4 +1,4 @@
-nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, ServiceCheckScheduler, templatePathRegistry, url_host_editFilter) {
+nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePathRegistry, url_host_editFilter) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -6,41 +6,21 @@ nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, Se
 		},
 		"templateUrl": templatePathRegistry.host.info,
 		"link": function ($scope, $element) {
-			var isBeingRechecked = false;
-			var isRecheckAllRunning = false;
-
 			var onUpdateStart = function () {
-				isBeingRechecked = true;
+				$scope.isBeingRechecked = true;
 			};
 
 			var onUpdateEnd = function () {
-				isBeingRechecked = false;
+				$scope.isBeingRechecked = false;
 			};
 
 			var updater = HostInfoUpdaterFactory.create($scope.entity, onUpdateStart, onUpdateEnd);
 
+			$scope.isBeingRechecked = false;
 			$scope.hostEditUrl = url_host_editFilter($scope.entity.host);
 
-			$scope.recheckAll = function () {
-				isRecheckAllRunning = true;
-
-				ServiceCheckScheduler.scheduleAllOnHost($scope.entity.host).success(function () {
-					//It could take up to `status_update_interval` seconds for the scheduled checks to propagate
-					//to the status file. We should do a few updates at intervals.
-					jQuery.each([6, 14, 30], function (_idx, seconds) {
-						$timeout(function () {
-							updater.update();
-						}, seconds * 1000);
-					});
-
-					$timeout(function () {
-						isRecheckAllRunning = false;
-					}, 10 * 1000);
-				});
-			};
-
-			$scope.isRechecking = function () {
-				return (isBeingRechecked || isRecheckAllRunning);
+			$scope.updateHostInfo = function () {
+				updater.update();
 			};
 
 			$element.on('$destroy', function () {
@@ -48,6 +28,53 @@ nagadminApp.directive('hostInfo', function ($timeout, HostInfoUpdaterFactory, Se
 			});
 
 			updater.start();
+		}
+	};
+});
+
+nagadminApp.directive('hostRecheckButton', function ($timeout, ServiceCheckScheduler, templatePathRegistry) {
+	return {
+		"restrict": "E",
+		"scope": {
+			"host": "=host",
+			"rechecking": "=rechecking",
+			"onDirty": "=onDirty"
+		},
+		"templateUrl": templatePathRegistry.host.recheckButton,
+		"link": function ($scope) {
+			var isRecheckRunning = false;
+
+			$scope.recheck = function (recheckType) {
+				isRecheckRunning = true;
+
+				ServiceCheckScheduler.scheduleOnHost($scope.host, recheckType).success(function (data) {
+					if (data.scheduledCount === 0) {
+						//Intentional delay, to make sure we indicate that rechecking takes place
+						//(in case the API returns too fast and makes the button appear to not do anything).
+						$timeout(function () {
+							isRecheckRunning = false;
+						}, 1000);
+						return;
+					}
+
+					//It could take up to `status_update_interval` seconds for the scheduled checks to propagate
+					//to the status file. We should do a few updates at intervals.
+					jQuery.each([6, 14, 30], function (idx, seconds) {
+						$timeout(function () {
+							$scope.onDirty();
+
+							if (idx === 1) {
+								//Stop the recheck indication after 14 seconds (in the middle).
+								isRecheckRunning = false;
+							}
+						}, seconds * 1000);
+					});
+				});
+			};
+
+			$scope.isRechecking = function () {
+				return ($scope.rechecking || isRecheckRunning);
+			};
 		}
 	};
 });

@@ -22,9 +22,10 @@ nagadminApp.factory('ServiceCheckCommand', function ($http, apiUrlRegistry) {
 
 nagadminApp.factory('ServiceCheckScheduler', function ($http, apiUrlRegistry, csrfToken) {
 	return {
-		"scheduleAllOnHost": function (host) {
-			var url = apiUrlRegistry.host.recheckAllServices;
+		"scheduleOnHost": function (host, recheckType) {
+			var url = apiUrlRegistry.host.recheckServices;
 			url = url.replace('__ID__', host.id);
+			url = url.replace('__RECHECK_TYPE__', recheckType);
 			url = url.replace('__TOKEN__', csrfToken);
 			return $http.post(url);
 		}
