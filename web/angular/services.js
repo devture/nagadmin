@@ -71,8 +71,9 @@ nagadminApp.factory('HostInfoUpdaterFactory', function ($timeout, HostInfo) {
 			this.onUpdateStart();
 
 			HostInfo.find(this.hostInfo.host.id).success(function (hostInfo) {
-				self.updatingNow = false;
 				self._sync(hostInfo);
+			}).finally(function () {
+				self.updatingNow = false;
 				self.onUpdateEnd();
 			});
 		},

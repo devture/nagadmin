@@ -32,7 +32,7 @@ nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePath
 	};
 });
 
-nagadminApp.directive('hostRecheckButton', function ($timeout, ServiceCheckScheduler, templatePathRegistry) {
+nagadminApp.directive('hostRecheckButton', function ($timeout, $window, ServiceCheckScheduler, templatePathRegistry) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -48,6 +48,12 @@ nagadminApp.directive('hostRecheckButton', function ($timeout, ServiceCheckSched
 				isRecheckRunning = true;
 
 				ServiceCheckScheduler.scheduleOnHost($scope.host, recheckType).success(function (data) {
+					if (data.unauthorized) {
+						$window.alert('Unauthorized. Reload the page and try again.');
+						isRecheckRunning = false;
+						return;
+					}
+
 					if (data.scheduledCount === 0) {
 						//Intentional delay, to make sure we indicate that rechecking takes place
 						//(in case the API returns too fast and makes the button appear to not do anything).
@@ -69,6 +75,8 @@ nagadminApp.directive('hostRecheckButton', function ($timeout, ServiceCheckSched
 							}
 						}, seconds * 1000);
 					});
+				}).error(function () {
+					isRecheckRunning = false;
 				});
 			};
 

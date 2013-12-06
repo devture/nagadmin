@@ -63,7 +63,7 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 			}
 			return $this->json(array('ok' => true, 'scheduledCount' => $scheduledCount));
 		}
-		return $this->json(array('ok' => false));
+		return $this->json(array('ok' => false, 'unauthorized' => true));
 	}
 
 	private function createHostInfo(Host $host) {
