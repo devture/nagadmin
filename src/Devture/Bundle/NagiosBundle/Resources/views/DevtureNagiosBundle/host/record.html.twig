@@ -54,7 +54,7 @@
 				<div class="controls">
 					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
 						<div ng-controller="HostInfoCtrl">
-							<host-info entity="hostInfo" ng-if="hostInfo != null" />
+							<host-info entity="hostInfo" ng-if="hostInfo != null"></host-info>
 						</div>
 					</div>
 				</div>
