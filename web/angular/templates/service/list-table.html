@@ -12,7 +12,7 @@
 <tbody>
 	<tr ng-repeat="serviceInfo in servicesInfo track by serviceInfo.id" ng-init="service = serviceInfo.service" ng-class="{warning: !service.enabled}">
 		<td>
-			<service-status-badge entity="serviceInfo.status" />
+			<service-status-badge entity="serviceInfo.status"></service-status-badge>
 		</td>
 		<td style="width: 130px;">
 			{{ host.name }}

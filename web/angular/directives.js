@@ -106,10 +106,12 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 		},
 		"templateUrl": templatePathRegistry.service.statusBadge,
 		"link": function ($scope) {
-			if ($scope.entity !== null) {
-				$scope.currentStateHuman = humanize_stateFilter($scope.entity.current_state);
-				$scope.currentStateLabelClass = state_label_classFilter($scope.currentStateHuman);
-			}
+			$scope.$watch('entity.current_state', function (currentState) {
+				if (currentState !== null) {
+					$scope.currentStateHuman = humanize_stateFilter(currentState);
+					$scope.currentStateLabelClass = state_label_classFilter($scope.currentStateHuman);
+				}
+			});
 		}
 	};
 });
