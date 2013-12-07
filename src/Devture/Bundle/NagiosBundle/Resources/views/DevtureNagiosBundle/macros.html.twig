@@ -1,6 +1,6 @@
 {% macro service_label_class_from_state(state) %}
 {% spaceless %}
-	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important'} %}
+	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-important', 'unknown': ''} %}
 	{{ map[state] }}
 {% endspaceless %}
 {% endmacro %}
