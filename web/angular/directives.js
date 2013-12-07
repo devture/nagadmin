@@ -143,7 +143,7 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 		"scope": {
 			"timestamp": "=timestamp"
 		},
-		"templateUrl": templatePathRegistry.common.relativeTime,
+		"template": '<time data-time="{{ timestamp }}">&laquo; calculating time &raquo;</time>',
 		"link": function ($scope, $element) {
 			var $timeElement = $element.find('time');
 			var timeoutId = null;
@@ -229,7 +229,7 @@ nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avata
 			"entity": "=entity",
 			"size": "=size"
 		},
-		"templateUrl": templatePathRegistry.contact.badge,
+		"template": '<img ng-src="{{ avatarUrl }}" class="img-rounded" style="border: 3px solid {{ entity.color }};" title="{{ entity.name }}" />',
 		"link": function ($scope, $element) {
 			$scope.avatarUrl = avatar_urlFilter($scope.entity.avatar_url, $scope.size);
 			$timeout(function () {
