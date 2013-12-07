@@ -37,7 +37,9 @@ $.fn.relativeTime = function () {
 	};
 
 	var process = function () {
-		var date = new Date($(this).data('time'));
+		//Intentionally using .attr('data-time'), instead of .data('time').
+		//jQuery caches data attributes and future changes coming from outside jQuery are not detected.
+		var date = new Date(parseInt($(this).attr('data-time'), 10));
 
 		$(this).text(relative(date, new Date()));
 

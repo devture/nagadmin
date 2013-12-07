@@ -25,13 +25,13 @@
 			</a>
 		</td>
 		<td nowrap="nowrap">
-			<span class="help-inline" ng-switch="serviceInfo.status">
-				<span ng-switch-when="null">-</span>
-				<span ng-switch-default>
-					<span ng-switch="serviceInfo.status.last_check">
-						<span ng-switch-when="0">Never</span>
-						<span ng-switch-default>
-							<relative-time timestamp="serviceInfo.status.last_check"></relative-time> ago
+			<span class="help-inline" ng-switch="serviceInfo.status == null">
+				<span ng-switch-when="true">-</span>
+				<span ng-switch-when="false">
+					<span ng-switch="serviceInfo.status.last_check == 0">
+						<span ng-switch-when="true">Never</span>
+						<span ng-switch-when="false">
+							<relative-time timestamp="serviceInfo.status.last_check * 1000"></relative-time> ago
 						</span>
 					</span>
 				</span>

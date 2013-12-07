@@ -145,26 +145,29 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 		},
 		"templateUrl": templatePathRegistry.common.relativeTime,
 		"link": function ($scope, $element) {
-			$scope.jsTimestamp = ($scope.timestamp * 1000);
-
+			var $timeElement = $element.find('time');
 			var timeoutId = null;
 
-			$timeout(function () {
-				comploader.load("relative-time", function () {
-					var $timeElement = $element.find('time');
+			//Handles initial & change transformations
+			$scope.$watch('timestamp', function (timestamp) {
+				if (timestamp) {
+					comploader.load("relative-time", function () {
+						$timeout(function () {
+							$timeElement.relativeTime().tooltip();
+						}, 0, false);
+					});
+				}
+			});
 
-					$timeElement.relativeTime().tooltip();
-
-					var scheduleUpdate = function () {
-						timeoutId = $timeout(function () {
-							$timeElement.relativeTime();
-							scheduleUpdate();
-						}, 15000, false);
-					};
-
+			//Periodically update relative time text
+			var scheduleUpdate = function () {
+				timeoutId = $timeout(function () {
+					$timeElement.relativeTime();
 					scheduleUpdate();
-				});
-			}, 0, false);
+				}, 15000, false);
+			};
+
+			scheduleUpdate();
 
 			$element.on('$destroy', function () {
 				$timeout.cancel(timeoutId);
