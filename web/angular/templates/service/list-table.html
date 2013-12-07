@@ -46,7 +46,9 @@
 			</div>
 		</td>
 		<td>
-			<contact ng-repeat="contact in service.contacts" entity="contact" size="24" />
+			<span ng-repeat="contact in service.contacts">
+				<contact entity="contact" size="24"></contact>
+			</span>
 		</td>
 	</tr>
 </tbody>
