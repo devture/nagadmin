@@ -50,7 +50,7 @@ nagadminApp.factory('HostInfoUpdaterFactory', function ($timeout, HostInfo) {
 						self.update();
 					}
 					scheduleUpdate();
-				}, 10000);
+				}, 10000, false);
 			};
 
 			scheduleUpdate();
