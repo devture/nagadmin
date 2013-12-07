@@ -56,12 +56,6 @@ class Fetcher {
 			}
 
 			if ($state === self::STATE_DEFINITION) {
-				if (preg_match('/^(.+?)=(.*)$/', $line, $matches)) {
-					list($_fullMatch, $directiveName, $directiveValue) = $matches;
-					$lastDefinitionDirectives[$directiveName] = $directiveValue;
-					continue;
-				}
-
 				if ($line === '}') {
 					if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
 						$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
@@ -74,7 +68,12 @@ class Fetcher {
 					continue;
 				}
 
-				throw new ParseException('Unexpected line during definition state: ' . $line);
+				$parts = explode('=', $line, 2);
+				if (!isset($parts[1])) {
+					throw new ParseException('Unexpected line during definition state: ' . $line);
+				}
+
+				$lastDefinitionDirectives[$parts[0]] = $parts[1];
 			}
 		}
 
