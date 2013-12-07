@@ -32,7 +32,7 @@
 
 {% macro relative_time(timestamp) %}
 {% spaceless %}
-	<time class="js-relative-time" data-time="{{ timestamp|date('c') }}">
+	<time class="js-relative-time" data-time="{{ timestamp * 1000 }}">
 		{{ timestamp|date('d F, Y') }}
 	</time>
 {% endspaceless %}
