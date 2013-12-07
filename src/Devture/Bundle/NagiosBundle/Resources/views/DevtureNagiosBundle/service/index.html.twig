@@ -10,11 +10,17 @@
 			Using ng-show, instead of ng-if here, because otherwise the `selectedHostId` variable
 			won't be available in the controller for watching at all.
 		-->
-		<div ng-show="hostsInfo.length != 0">
+		<div class="clearfix" ng-show="hostsInfo.length != 0">
 			<select chosen-select chosen-data-source="hostsInfo" ng-model="selectedHostId" style="display: none;">
 				<option value="">-- All hosts --</option>
 				<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
 			</select>
+
+			<div class="pull-right">
+				<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
+			</div>
+
+			<hr />
 		</div>
 
 		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo"></host-info>

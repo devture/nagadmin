@@ -3,7 +3,6 @@ namespace Devture\Bundle\NagiosBundle\Twig;
 
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Contact;
-use Devture\Bundle\NagiosBundle\Status\ServiceStatus;
 
 class NagiosExtension extends \Twig_Extension {
 
@@ -22,8 +21,6 @@ class NagiosExtension extends \Twig_Extension {
 			'devture_nagios_get_info_status' => new \Twig_Function_Method($this, 'getInfoStatus'),
 			'devture_nagios_get_program_status' => new \Twig_Function_Method($this, 'getProgramStatus'),
 			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
-			'devture_nagios_get_ok_services_count' => new \Twig_Function_Method($this, 'getOkServicesCount'),
-			'devture_nagios_get_failing_services_count' => new \Twig_Function_Method($this, 'getFailingServicesCount'),
 		);
 	}
 
@@ -52,16 +49,6 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function getServiceStatus(Service $service) {
 		return $this->getStatusManager()->getServiceStatus($service);
-	}
-
-	public function getOkServicesCount() {
-		return count(array_filter($this->getStatusManager()->getServicesStatus(), function (ServiceStatus $status) {
-			return ($status->getLastHardState() === ServiceStatus::STATUS_OK);
-		}));
-	}
-
-	public function getFailingServicesCount() {
-		return (count($this->getStatusManager()->getServicesStatus()) - $this->getOkServicesCount());
 	}
 
 	/**

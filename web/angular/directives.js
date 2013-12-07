@@ -32,6 +32,59 @@ nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePath
 	};
 });
 
+nagadminApp.directive('hostsInfoSummary', function () {
+	var templateHtml = '';
+	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobstrusive">{{ ok }} ok</span>';
+	templateHtml += ' ';
+	templateHtml += '<span class="label label-important label-nagadmin-status label-nagadmin-important-unobstrusive">{{ failing }} failing</span>';
+
+	return {
+		"restrict": "E",
+		"scope": {
+			"hostsInfo": "=hostsInfo"
+		},
+		"template": templateHtml,
+		"link": function ($scope) {
+			//We either need to deep-watch 'hostsInfo' and do the for-loops counting then,
+			//or just do the counting on every $digest and have a simpler listener.
+			//The latter was picked, as deep-watching 'hostsInfo' was *considered* slower (not benchmarked!).
+			//We only deep-watch the much simple status object now.
+
+			var watcher = function ($scope) {
+				var hostsInfo = (angular.isArray($scope.hostsInfo) ? $scope.hostsInfo : []);
+				var totalCount = 0, okCount = 0;
+
+				for (var hostIdx in hostsInfo) {
+					var hostInfo = hostsInfo[hostIdx];
+					for (var serviceIdx in hostInfo.servicesInfo) {
+						var status = hostInfo.servicesInfo[serviceIdx].status;
+
+						if (status === null) {
+							//Don't count unknown services at all
+							continue;
+						}
+
+						totalCount += 1;
+
+						if (status.current_state == 0) {
+							okCount += 1;
+						}
+					}
+				}
+
+				return {"ok": okCount, "failing": (totalCount - okCount)};
+			};
+
+			$scope.$watch(watcher, function (status) {
+				if (status) {
+					$scope.ok = status.ok;
+					$scope.failing = status.failing;
+				}
+			}, true);
+		}
+	};
+});
+
 nagadminApp.directive('hostRecheckButton', function ($timeout, $window, ServiceCheckScheduler, templatePathRegistry) {
 	return {
 		"restrict": "E",

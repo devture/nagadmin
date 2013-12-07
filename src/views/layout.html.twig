@@ -12,8 +12,6 @@
 
 {% set info_status = devture_nagios_get_info_status() %}
 {% set program_status = devture_nagios_get_program_status() %}
-{% set ok_services_count = devture_nagios_get_ok_services_count() %}
-{% set failing_services_count = devture_nagios_get_failing_services_count() %}
 
 <div id="wrapper">
 	<div class="site-navbar">
@@ -32,17 +30,8 @@
 							<span class="js-tooltip"
 								data-placement="bottom"
 								title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
-								>Nagios {{ info_status.currentVersion }}</span>:
+								>Nagios {{ info_status.currentVersion }}</span>
 						{% endif %}
-						<a href="{{ path('devture_nagios.service.manage') }}"
-							class="label label-success {{ failing_services_count == 0 ? 'label-nagadmin-success-unobstrusive' : '' }}">
-							{{ ok_services_count }} ok
-						</a>
-
-						<a href="{{ path('devture_nagios.service.manage') }}"
-							class="label label-important {{ failing_services_count == 0 ? 'label-nagadmin-important-unobstrusive' : '' }}">
-							{{ failing_services_count }} failing
-						</a>
 					{% endif %}
 				</div>
 			</div>
