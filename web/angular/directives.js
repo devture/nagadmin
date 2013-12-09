@@ -201,11 +201,15 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 			var $timeElement = $element.find('time');
 			var timeoutId = null;
 
-			//Handles initial & change transformations
-			$scope.$watch('timestamp', function (timestamp) {
-				if (timestamp) {
+			//Handles initialization & change transformations
+			$scope.$watch('timestamp', function (timestampNew, timestampOld) {
+				if (timestampNew) {
 					comploader.load("relative-time", function () {
 						$timeout(function () {
+							if (timestampNew !== timestampOld) {
+								//Reinitialization. Remove the old tooltip first.
+								$timeElement.tooltip('destroy')
+							}
 							$timeElement.relativeTime().tooltip();
 						}, 0, false);
 					});

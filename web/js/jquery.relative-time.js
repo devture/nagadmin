@@ -42,10 +42,7 @@ $.fn.relativeTime = function () {
 		var date = new Date(parseInt($(this).attr('data-time'), 10));
 
 		$(this).text(relative(date, new Date()));
-
-		if (!$(this).attr('title')) {
-			$(this).attr('title', date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
-		}
+		$(this).attr('title', date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
 	};
 
 	$(this).each(process);
