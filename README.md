@@ -104,6 +104,9 @@ Here's everything you need to do to install it:
 	# Restart Nagios
 	/usr/bin/systemctl restart nagios
 
+	# Run the check command to see if things are running correctly
+	php console.php check:status
+
 
 --------------------
 
