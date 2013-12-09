@@ -1,8 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Install;
 
-use Devture\Bundle\NagiosBundle\Model\TimePeriod;
-
 class Installer {
 
 	private $container;
@@ -11,15 +9,11 @@ class Installer {
 		$this->container = $container;
 	}
 
-	public function get($serviceId) {
-		return $this->container[$serviceId];
-	}
-
 	public function install() {
-		$resource = $this->get('devture_nagios.resource.repository')->getResource();
+		$resource = $this->getResourceRepository()->getResource();
 		$resource->setVariable('$USER1$', $this->detectNagiosPluginsPath());
-		$resource->setVariable('$USER2$', $this->get('app_base_path'));
-		$this->get('devture_nagios.resource.repository')->update($resource);
+		$resource->setVariable('$USER2$', $this->getAppBasePath());
+		$this->getResourceRepository()->update($resource);
 	}
 
 	private function detectNagiosPluginsPath() {
@@ -36,6 +30,17 @@ class Installer {
 		}
 
 		return '/dev/null';
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Repository\ResourceRepository
+	 */
+	private function getResourceRepository() {
+		return $this->container['devture_nagios.resource.repository'];
+	}
+
+	private function getAppBasePath() {
+		return $this->container['app_base_path'];
 	}
 
 }
