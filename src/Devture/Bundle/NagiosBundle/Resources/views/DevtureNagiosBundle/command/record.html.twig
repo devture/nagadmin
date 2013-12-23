@@ -3,14 +3,14 @@
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}
 
-	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+	<form name="record-form" id="record-form" method="post" action="">
 		{{ form_csrf_token(form) }}
 
 		<fieldset>
-			<div class="control-group">
-				<label class="control-label">Type</label>
-				<div class="controls">
-					<select name="type" id="type">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Type</label>
+				<div class="col-lg-6">
+					<select name="type" id="type" class="form-control">
 						<option
 							value="serviceCheck" {{ entity.type == 'serviceCheck' ? 'selected="selected"' : '' }}
 							data-has-arguments="1">Check</option>
@@ -22,34 +22,34 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Identifier</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Identifier</label>
+				<div class="col-lg-6">
 					<input type="text" name="name" id="name"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Title</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Title</label>
+				<div class="col-lg-6">
 					<input type="text" name="title" id="title"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.title }}" />
 					{{ render_form_violations(form, 'title') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-cog"></i> Command</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-cog"></i> Command</label>
+				<div class="col-lg-10">
 					<textarea name="line" id="line"
 						required="required"
-						style="width: 750px;"
+						class="form-control"
 						>{{ entity.line }}</textarea>
 					<p class="help-block">
 						The command can contain
@@ -62,9 +62,9 @@
 				</div>
 			</div>
 
-			<div class="control-group hide" id="js-control-group-arguments">
-				<label class="control-label"><i class="icon-wrench"></i> Arguments</label>
-				<div class="controls">
+			<div class="form-group hide" id="js-control-group-arguments">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-wrench"></i> Arguments</label>
+				<div class="col-lg-offset-2">
 					{% for parameter in entity.arguments %}
 					<div class="js-parameter-definition" data-number="{{ loop.index }}">
 						{% include 'DevtureNagiosBundle/command/argument.html.twig' with {'entity': parameter, 'ident': loop.index} %}
@@ -80,7 +80,7 @@
 				</div>
 			</div>
 
-			<div class="form-actions">
+			<div class="row col-lg-offset-2 col-xs-offset-0">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

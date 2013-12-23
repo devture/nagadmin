@@ -7,24 +7,24 @@
 
 	{{ render_form_violations(form, '__other__') }}
 
-	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+	<form name="record-form" id="record-form" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset class="compact">
-			<div class="control-group">
-				<label class="control-label">Identifier</label>
-				<div class="controls">
+		<fieldset>
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Identifier</label>
+				<div class="col-lg-10">
 					<input type="text" name="name" id="name"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-th-large"></i> Host</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
+				<div class="col-lg-10">
 					{% set selected_host = entity.host %}
 					<select name="hostId" class="span4 js-chosen-select">
 						<option value="">-- Pick one --</option>
@@ -38,28 +38,28 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Status</label>
-				<div class="controls">
-					<label class="radio inline">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Status</label>
+				<div class="col-lg-10">
+					<label class="radio-inline">
 						<input type="radio" name="enabled" value="1" {{ entity.enabled ? 'checked="checked"' : '' }} />
 						Enabled
 					</label>
 
-					<label class="radio inline">
+					<label class="radio-inline">
 						<input type="radio" name="enabled" value="0" {{ not entity.enabled ? 'checked="checked"' : '' }} />
 						Disabled
 					</label>
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-cog"></i> Command</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-cog"></i> Command</label>
+				<div class="col-lg-10">
 					<fieldset>
-						<div class="control-group">
-							<label class="control-label">Command</label>
-							<div class="controls">
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">Command</label>
+							<div class="col-lg-10">
 								<a href="{{ path('devture_nagios.command.edit', {'id': entity.command.id}) }}">
 									{{ entity.command.name }} / {{ entity.command.title }}
 								</a>
@@ -69,14 +69,14 @@
 							</div>
 						</div>
 						{% for argument in entity.command.arguments %}
-							<div class="control-group {{ loop.last ? 'last' : '' }}">
-								<label class="control-label">$ARG{{ loop.index }}$</label>
-								<div class="controls">
+							<div class="form-grup row {{ loop.last ? 'last' : '' }}">
+								<label class="col-lg-2 control-label">$ARG{{ loop.index }}$</label>
+								<div class="col-lg-10">
 									{% set command_argument = entity.getArgumentById(argument.id) %}
 									<strong>{{ argument.description }}</strong>:
 									<br />
 									<textarea name="arguments[{{ argument.id }}][value]"
-										class="input-xxlarge"
+										class="form-control"
 										style="height: 20px;"
 										>{{ command_argument is not none ? command_argument.value : argument.defaultValue }}</textarea>
 								</div>
@@ -87,19 +87,19 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-check"></i> Checks</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-check"></i> Checks</label>
+				<div class="col-lg-10">
 					<fieldset>
-						<div class="control-group">
-							<label class="control-label">Check Interval</label>
-							<div class="controls">
-								<div class="input-append">
-									<input type="number" min="1" class="span1"
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">Check Interval</label>
+							<div class="col-lg-4">
+								<div class="input-group">
+									<input type="number" min="1" class="form-control"
 										name="checkInterval" id="checkInterval"
 										required="required"
 										value="{{ entity.checkInterval }}" />
-									<span class="add-on">minutes</span>
+									<span class="input-group-addon">minutes</span>
 								</div>
 								<p class="help-block">
 									How often to re-check the service when it's OK.
@@ -108,15 +108,15 @@
 							</div>
 						</div>
 
-						<div class="control-group">
-							<label class="control-label">Retry Interval</label>
-							<div class="controls">
-								<div class="input-append">
-									<input type="number" min="1" class="span1"
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">Retry Interval</label>
+							<div class="col-lg-4">
+								<div class="input-group">
+									<input type="number" min="1" class="form-control"
 										name="retryInterval" id="retryInterval"
 										required="required"
 										value="{{ entity.retryInterval }}" />
-									<span class="add-on">minutes</span>
+									<span class="input-group-addon">minutes</span>
 								</div>
 								<p class="help-block">
 									How often to re-check the service when it's starting to fail,
@@ -126,15 +126,15 @@
 							</div>
 						</div>
 
-						<div class="control-group">
-							<label class="control-label">Max Check Attempts</label>
-							<div class="controls">
-								<div class="input-append">
-									<input type="number" min="1" class="span1"
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">Max Check Attempts</label>
+							<div class="col-lg-4">
+								<div class="input-group">
+									<input type="number" min="1" class="form-control"
 										name="maxCheckAttempts" id="maxCheckAttempts"
 										required="required"
 										value="{{ entity.maxCheckAttempts }}" />
-									<span class="add-on">times</span>
+									<span class="input-group-addon">times</span>
 								</div>
 								<p class="help-block">
 									Number of Retry Checks to run, before failure is confirmed and notifications get sent.
@@ -146,19 +146,19 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-share"></i> Notifications</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-share"></i> Notifications</label>
+				<div class="col-lg-10">
 					<fieldset>
-						<div class="control-group">
-							<label class="control-label">Interval</label>
-							<div class="controls">
-								<div class="input-append">
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">Interval</label>
+							<div class="col-lg-4">
+								<div class="input-group">
 									<input type="number" name="notificationInterval" id="notificationInterval"
-										class="span1"
+										class="form-control"
 										required="required"
 										value="{{ entity.notificationInterval }}" />
-									<span class="add-on">minutes</span>
+									<span class="input-group-addon">minutes</span>
 								</div>
 								<p class="help-block">
 									How often to re-send notifications.
@@ -166,9 +166,9 @@
 								{{ render_form_violations(form, 'notificationInterval') }}
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label"><i class="icon-user"></i> People to Notify</label>
-							<div class="controls">
+						<div class="form-group row">
+							<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-user"></i> People to Notify</label>
+							<div class="col-lg-10">
 								<select name="contactsIds[]" id="contactsIds"
 									multiple="multiple" class="js-chosen-select"
 									data-placeholder="Choose some contacts.."
@@ -184,7 +184,7 @@
 				</div>
 			</div>
 
-			<div class="form-actions">
+			<div class="form-group row col-lg-offset-2">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

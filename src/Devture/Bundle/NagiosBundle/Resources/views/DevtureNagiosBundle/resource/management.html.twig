@@ -11,24 +11,24 @@
 	{{ render_form_violations(form, '__other__') }}
 	{{ render_form_violations(form, 'variables') }}
 
-	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+	<form name="record-form" id="record-form" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset class="compact">
+		<fieldset>
 			{% for i in range(1, userVariablesCount) %}
 				{% set variableName = '$USER' ~ i ~ '$' %}
-				<div class="control-group">
-					<label class="control-label">{{ variableName }}</label>
-					<div class="controls">
+				<div class="form-group row">
+					<label class="col-lg-2 control-label">{{ variableName }}</label>
+					<div class="col-lg-6">
 						<input type="text" name="variables[{{ variableName }}]"
 							value="{{ entity.getVariableByName(variableName) }}"
-							class="input-xxlarge" />
+							class="form-control" />
 					</div>
 				</div>
 			{% endfor %}
 		</fieldset>
 
-		<div class="form-actions compact">
+		<div class="col-lg-offset-2 col-xs-offset-0">
 			<button type="submit" class="btn btn-primary">
 				Save
 			</button>

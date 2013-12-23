@@ -36,7 +36,7 @@ nagadminApp.directive('hostsInfoSummary', function () {
 	var templateHtml = '';
 	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobstrusive">{{ ok }} ok</span>';
 	templateHtml += ' ';
-	templateHtml += '<span class="label label-important label-nagadmin-status label-nagadmin-important-unobstrusive">{{ failing }} failing</span>';
+	templateHtml += '<span class="label label-danger label-nagadmin-status label-nagadmin-important-unobstrusive">{{ failing }} failing</span>';
 
 	return {
 		"restrict": "E",

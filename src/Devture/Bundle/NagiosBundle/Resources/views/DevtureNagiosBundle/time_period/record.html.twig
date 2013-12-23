@@ -19,35 +19,35 @@ february -1                         00:00-24:00
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}
 
-	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+	<form name="record-form" id="record-form" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset class="compact">
-			<div class="control-group">
-				<label class="control-label">Identifier</label>
-				<div class="controls">
+		<fieldset>
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Identifier</label>
+				<div class="col-lg-6">
 					<input type="text" name="name" id="name"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Title</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Title</label>
+				<div class="col-lg-6">
 					<input type="text" name="title" id="title"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.title }}" />
 					{{ render_form_violations(form, 'title') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Rules</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Rules</label>
+				<div class="col-lg-10">
 					<div id="js-rules-container">
 					{% for rule in entity.rules %}
 						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': rule, 'number': loop.index} %}
@@ -71,7 +71,7 @@ february -1                         00:00-24:00
 				</div>
 			</div>
 
-			<div class="form-actions compact">
+			<div class="form-group col-lg-offset-2">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>
@@ -90,7 +90,7 @@ february -1                         00:00-24:00
 	{{ parent() }}
 
 	{% if isAdded %}
-	$('#form-delete-btn').bind('click', function () {
+	$('#form-delete-btn').on('click', function () {
 		if (confirm('Are you sure you want to delete this?')) {
 			$.ajax({
 				"url": {{ path('devture_nagios.time_period.delete', {'id': entity.id, 'token': csrf_token('delete-time-period-' ~ entity.id)})|json_encode|raw }},

@@ -8,10 +8,10 @@
 				<div class="controls fcentered">
 					<div class="fcentered alert alert-{{ isValid ? 'success' : 'error' }}">
 						{% if isValid %}
-							<i class="icon-thumbs-up"></i>
+							<i class="glyphicon glyphicon-thumbs-up"></i>
 							The configuration was checked and seems safe to deploy.
 						{% else %}
-							<i class="icon-thumbs-down"></i>
+							<i class="glyphicon glyphicon-thumbs-down"></i>
 							The configuration was checked and seems broken.
 						{% endif %}
 					</div>
@@ -20,7 +20,7 @@
 							id="js-deployment-form">
 							<input type="hidden" name="token" value="{{ csrf_token('deploy') }}" />
 							<button type="submit" class="btn btn-primary btn-large" id="js-deployment-button-submit">
-								<i class="icon-retweet icon-white"></i>
+								<i class="glyphicon glyphicon-retweet glyphicon glyphicon-white"></i>
 								Deploy the configuration now
 							</button>
 						</form>

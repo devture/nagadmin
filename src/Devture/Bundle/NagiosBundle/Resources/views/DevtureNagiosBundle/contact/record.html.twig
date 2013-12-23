@@ -3,7 +3,7 @@
 {% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
 
 {% macro render_command_picker(field_name, commands, selected_command) %}
-	<select name="{{ field_name }}" id="{{ field_name }}" class="js-chosen-select js-command-chooser" required="required">
+	<select name="{{ field_name }}" id="{{ field_name }}" class="form-control js-command-chooser" required="required">
 		<option value="">-- Pick one --</option>
 	{% for command in commands %}
 		<option value="{{ command.id }}"
@@ -18,35 +18,35 @@
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}
 
-	<form name="record-form" id="record-form" class="form-horizontal" method="post" action="">
+	<form name="record-form" id="record-form" method="post" action="">
 		{{ form_csrf_token(form) }}
 
-		<fieldset class="compact">
-			<div class="control-group">
-				<label class="control-label">Identifier</label>
-				<div class="controls">
+		<fieldset>
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Identifier</label>
+				<div class="col-lg-6">
 					<input type="text" name="name" id="name"
-						class="input-xlarge"
+						class="form-control"
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-envelope"></i> Email</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-envelope"></i> Email</label>
+				<div class="col-lg-6">
 					<input type="text" name="email" id="email"
-						class="input-xlarge"
+						class="form-control"
 						value="{{ entity.email }}" />
 					<span class="help-inline">(ends up in the $CONTACTEMAIL$ macro)</span>
 					{{ render_form_violations(form, 'email') }}
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Avatar</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Avatar</label>
+				<div class="col-lg-6">
 					{% if isAdded %}
 						<div ng-app-lazy="nagadminApp" ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
 							<contact entity='contact_{{ entity.id }}' size="48"></contact>
@@ -56,22 +56,22 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Addresses</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Addresses</label>
+				<div class="col-lg-6">
 					<p class="help-block">
 						You can enter some additional address values
 						if notification commands require them.
 					</p>
-					<fieldset class="compact top-spaced-minor">
+					<fieldset class="top-spaced-minor">
 					{% for _ in range(0, addressSlotsCount - 1) %}
 						{% set slot = loop.index %}
 						{% set address = entity.getAddressBySlot(slot) %}
-						<div class="control-group {{ loop.last ? 'last' : '' }}">
-							<label class="control-label">Address {{ slot }}</label>
-							<div class="controls">
+						<div class="form-group row {{ loop.last ? 'last' : '' }}">
+							<label class="col-lg-3 control-label">Address {{ slot }}</label>
+							<div class="col-lg-9">
 								<input type="text" name="addresses[{{ slot }}]"
-									value="{{ address }}" />
+									value="{{ address }}" class="form-control" />
 								<span class="help-inline">(ends up in the $CONTACTADDRESS{{ slot }}$ macro)</span>
 							</div>
 						</div>
@@ -81,22 +81,22 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label"><i class="icon-share"></i> Notifications</label>
-				<div class="controls">
-					<fieldset class="compact">
-						<div class="control-group">
-							<label class="control-label"><i class="icon-cog"></i> Command</label>
-							<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-share"></i> Notifications</label>
+				<div class="col-lg-6">
+					<fieldset>
+						<div class="form-group row">
+							<label class="col-lg-3 control-label"><i class="glyphicon glyphicon-cog"></i> Command</label>
+							<div class="col-lg-9">
 								{{ _self.render_command_picker('serviceNotificationCommandId', notificationCommands, entity.serviceNotificationCommand) }}
 								{{ render_form_violations(form, 'serviceNotificationCommand') }}
 							</div>
 						</div>
-						<div class="control-group">
-							<label class="control-label"><i class="icon-time"></i> Period</label>
-							<div class="controls">
+						<div class="form-group row">
+							<label class="col-lg-3 control-label"><i class="glyphicon glyphicon-time"></i> Period</label>
+							<div class="col-lg-9">
 								{% set selected_period = entity.timePeriod %}
-								<select name="timePeriodId" id="timePeriodId" class="js-chosen-select" required="required">
+								<select name="timePeriodId" id="timePeriodId" class="form-control" required="required">
 								{% for time_period in timePeriods %}
 									<option value="{{ time_period.id }}"
 										{{ selected_period is not none and selected_period.id == time_period.id ? 'selected="selected"' : '' }}
@@ -117,7 +117,7 @@
 				</div>
 			</div>
 
-			<div class="form-actions">
+			<div class="col-lg-offset-2 col-xs-offset-0">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

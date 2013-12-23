@@ -3,6 +3,7 @@
 <head>
 	{% block head %}
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
 	<title>{{ get_project_name() }}</title>
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/bootstrap.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/style.css') }}" />
@@ -13,7 +14,7 @@
 {% set info_status = devture_nagios_get_info_status() %}
 {% set program_status = devture_nagios_get_program_status() %}
 
-<div id="wrapper">
+<div id="wrapper" class="container">
 	<div class="site-navbar">
 		<div class="site-navbar-inner">
 			<div class="clearfix">
@@ -22,10 +23,10 @@
 				</a>
 				<div class="pull-right">
 					{% if program_status is none or info_status is none %}
-						<span class="label label-important">Nagios DOWN</span>
+						<span class="label label-danger">Nagios DOWN</span>
 					{% else %}
 						{% if info_status.appearsOutdated %}
-							<span class="label label-important">Nagios {{ info_status.currentVersion }} DOWN?</span>
+							<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
 						{% else %}
 							<span class="js-tooltip"
 								data-placement="bottom"

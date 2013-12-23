@@ -8,13 +8,13 @@
 
 	{% if program_status is none or info_status is none %}
 		<p class="alert alert-error">
-			<i class="icon-exclamation-sign"></i>
+			<i class="glyphicon glyphicon-exclamation-sign"></i>
 			Nagios does not appear to be running or the status file path is not configured correctly.
 		</p>
 	{% else %}
 		{% if info_status.appearsOutdated %}
 			<p class="alert alert-error">
-				<i class="icon-exclamation-sign"></i>
+				<i class="glyphicon glyphicon-exclamation-sign"></i>
 				The Nagios status file exists, but hasn't been updated for {{ macros.relative_time(info_status.creationTime) }}.
 				Maybe Nagios is not running?
 			</p>
