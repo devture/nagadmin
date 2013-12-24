@@ -63,7 +63,7 @@
 								check now
 							</a>
 							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
-								<div class="bar progress-bar" style="width: 0;"></div>
+								<div class="progress-bar" style="width: 0;"></div>
 							</div>
 						</div>
 						{% if status.nextCheckTime < none|date('U') %}
@@ -163,21 +163,7 @@
 					if (response.ok) {
 						$button.remove();
 						$progress.removeClass('hide');
-
-						var steps = 45,
-							stepTime = (waitingTime / steps);
-
-						for (var i = 1; i <= steps; ++i) {
-							(function (currentStep) {
-								window.setTimeout(function () {
-									if (currentStep === steps) {
-										window.location.reload();
-									}
-									$button.text(currentStep);
-									$progress.find('.bar').css('width', ((currentStep/steps) * 100) + '%');
-								}, (currentStep * stepTime));
-							})(i);
-						}
+						$progress.find('.progress-bar').css('width', '0%').animate({"width": "100%"}, waitingTime);
 					} else {
 						alert("There was a problem. Refresh and retry.");
 					}
