@@ -1,12 +1,12 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<div class="form-horizontal">
-		<fieldset class="compact">
+	<div>
+		<fieldset>
 			<div class="control-group">
 				<label class="control-label">Check Status</label>
-				<div class="controls fcentered">
-					<div class="fcentered alert alert-{{ isValid ? 'success' : 'error' }}">
+				<div class="controls text-center">
+					<div class="alert alert-{{ isValid ? 'success' : 'danger' }}">
 						{% if isValid %}
 							<i class="glyphicon glyphicon-thumbs-up"></i>
 							The configuration was checked and seems safe to deploy.

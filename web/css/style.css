@@ -19,8 +19,6 @@ body {
 	margin: 0 auto;
 }
 
-.middle-aligned { vertical-align: middle; }
-
 ul.validation-errors {
 	color: #e33904;
 	font-weight: bold;
@@ -44,11 +42,7 @@ ul.validation-errors li {
 }
 
 .top-spaced-minor { margin-top: 7px; }
-.top-spaced-major { margin-top: 25px; }
-.bottom-spaced-minor { margin-bottom: 7px; }
-.bottom-spaced-major { margin-bottom: 25px; }
 .display-block { display: block; }
-.fcentered { text-align: center; }
 
 .label-nagadmin { font-size: 13px; padding: 2px 4px 2px; margin: 0 3px 3px 0; }
 .label-nagadmin-status { padding: 5px 8px; font-size: 13px; }
