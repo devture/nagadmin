@@ -23,6 +23,7 @@ ul.validation-errors {
 	color: #e33904;
 	font-weight: bold;
 	margin: 5px 0 0 0;
+	padding: 0;
 	list-style: none;
 }
 ul.validation-errors li {
