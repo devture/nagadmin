@@ -39,7 +39,7 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-tasks"></i> Performance data</label>
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-tasks"></i> Performance</label>
 					<div class="col-lg-10 clearfix">
 						{{ status.performanceData }}
 					</div>
@@ -56,16 +56,7 @@
 				</div>
 				<div class="form-group row">
 					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-chevron-right"></i> Next Check</label>
-					<div class="col-lg-6 clearfix row">
-						<div class="pull-right" style="width: 250px;">
-							<a class="btn btn-default pull-right" href="javascript://" id="js-btn-service-check-schedule">
-								<i class="glyphicon glyphicon-refresh"></i>
-								check now
-							</a>
-							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
-								<div class="progress-bar" style="width: 0;"></div>
-							</div>
-						</div>
+					<div class="col-lg-10 clearfix">
 						{% if status.nextCheckTime < none|date('U') %}
 							<span class="text-error">
 								{{ macros.relative_time(status.nextCheckTime) }} ago
@@ -73,6 +64,15 @@
 						{% else %}
 							in {{ macros.relative_time(status.nextCheckTime) }}
 						{% endif %}
+						<div class="pull-right" style="width: 250px;">
+							<a class="btn btn-default btn-sm pull-right" href="javascript://" id="js-btn-service-check-schedule">
+								<i class="glyphicon glyphicon-refresh"></i>
+								check now
+							</a>
+							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
+								<div class="progress-bar" style="width: 0;"></div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -97,7 +97,7 @@
 
 			<div class="form-group row">
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Service</label>
-				<div class="col-lg-6 clearfix">
+				<div class="col-lg-10 clearfix">
 					{{ entity.name }}
 					{% if not entity.enabled %}
 						<strong>(disabled)</strong>
@@ -117,6 +117,8 @@
 						<contact entity='contact_{{ contact.id }}' size="24"></contact>
 						{{ contact.name }}
 					</a>
+				{% else %}
+					No one
 				{% endfor %}
 				</div>
 			</div>
