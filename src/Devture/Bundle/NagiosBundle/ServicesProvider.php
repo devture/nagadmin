@@ -230,6 +230,10 @@ class ServicesProvider implements ServiceProviderInterface {
 		$app['devture_nagios.controller.resource.management'] = function ($app) {
 			return new Controller\ResourceManagementController($app, 'devture_nagios');
 		};
+
+		$app['devture_nagios.controller.log.management'] = function ($app) {
+			return new Controller\LogManagementController($app, 'devture_nagios');
+		};
 	}
 
 	private function registerDeploymentServices(Application $app) {
@@ -406,6 +410,10 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.nagios_command.manager'] = $app->share(function ($app) {
 			return new NagiosCommand\Manager($app['devture_nagios.nagios_command.submitter']);
+		});
+
+		$app['devture_nagios.log.fetcher'] = $app->share(function ($app) use ($config) {
+			return new Log\Fetcher($config['log_file_path'], $app['devture_nagios.host.repository'], $app['devture_nagios.service.repository']);
 		});
 	}
 

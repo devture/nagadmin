@@ -1,0 +1,5 @@
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+
+{% block devture_nagios_content %}
+	{% include 'DevtureNagiosBundle/log/list.html.twig' with {'items': items} %}
+{% endblock %}

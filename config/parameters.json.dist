@@ -6,6 +6,7 @@
 
 	"SharedBundle.token_salt": "salt here",
 
+	"NagiosBundle.log_file_path": "/var/log/nagios/nagios.log",
 	"NagiosBundle.status_file_path": "/var/nagios/status.dat",
 	"NagiosBundle.command_file_path": "/var/nagios/rw/nagios.cmd",
 	"NagiosBundle.deployment_handler.path": "/etc/nagios/nagadmin-generated/",

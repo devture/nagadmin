@@ -26,6 +26,10 @@ class HostRepository extends BaseMongoRepository {
 		return 'host';
 	}
 
+	public function findByName($name) {
+		return $this->findOneBy(array('name' => $name));
+	}
+
 	public function delete(BaseModel $object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_HOST_DELETE, new ModelEvent($object));

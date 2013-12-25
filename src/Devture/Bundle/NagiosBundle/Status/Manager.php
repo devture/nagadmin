@@ -2,7 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Status;
 
 use Devture\Bundle\NagiosBundle\Model\Service;
-use Devture\Bundle\NagiosBundle\Exception\StatusFileMissingException;
+use Devture\Bundle\NagiosBundle\Exception\FileMissingException;
 
 class Manager {
 
@@ -79,7 +79,7 @@ class Manager {
 		if ($this->statusCache === null) {
 			try {
 				$this->statusCache = $this->fetcher->fetch();
-			} catch (StatusFileMissingException $e) {
+			} catch (FileMissingException $e) {
 				$this->statusCache = array();
 			}
 		}

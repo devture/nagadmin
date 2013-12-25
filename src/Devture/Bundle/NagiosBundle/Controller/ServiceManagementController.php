@@ -96,6 +96,7 @@ class ServiceManagementController extends BaseController {
 
 		return $this->renderView('DevtureNagiosBundle/service/view.html.twig', array_merge($this->getBaseViewData(), array(
 			'entity' => $entity,
+			'logs' => $this->getLogFetcher()->fetchForService($entity),
 		)));
 	}
 

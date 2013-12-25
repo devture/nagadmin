@@ -1,0 +1,53 @@
+{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+
+{% if items|length == 0 %}
+	No items found.
+{% else %}
+	<table class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th class="hidden-xs">Type</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for entity in items %}
+			<tr>
+				<td nowrap="nowrap">
+					{{ macros.relative_time(entity.timestamp) }} ago
+				</td>
+				<td class="hidden-xs">
+					{{ entity.type }}
+				</td>
+				<td>
+					<span class="visible-xs"><strong>{{ entity.type }}</strong>:</span>
+					<span style="word-break: break-all">
+						{{ entity.value }}
+					</span>
+
+					{% set info_link = none %}
+
+					{% if entity.service is not none %}
+						{% set info_link = path('devture_nagios.service.view', {'id': entity.service.id}) %}
+					{% else %}
+						{% if entity.host is not none %}
+							{% set info_link = path('devture_nagios.host.edit', {'id': entity.host.id}) %}
+						{% endif %}
+					{% endif %}
+
+					{% if info_link is not none %}
+						<a class="btn btn-default btn-xs pull-right" href="{{ info_link }}">
+						{% if entity.host %}
+							<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
+						{% else %}
+							<i class="glyphicon glyphicon-info-sign"></i>
+						{% endif %}
+						</a>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

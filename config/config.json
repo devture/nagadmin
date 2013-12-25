@@ -12,6 +12,7 @@
 	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",
+		"log_file_path": "%NagiosBundle.log_file_path%",
 		"status_file_path": "%NagiosBundle.status_file_path%",
 		"command_file_path": "%NagiosBundle.command_file_path%",
 		"deployment_handler": {

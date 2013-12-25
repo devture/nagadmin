@@ -69,6 +69,9 @@ class ControllersProvider implements ControllerProviderInterface {
 		$controllers->match('/resource/manage', 'devture_nagios.controller.resource.management:manageAction')
 			->method('GET|POST')->bind($namespace . '.resource.manage');
 
+		$controllers->get('/log/manage', 'devture_nagios.controller.log.management:manageAction')
+			->bind($namespace . '.log.manage');
+
 		return $controllers;
 	}
 

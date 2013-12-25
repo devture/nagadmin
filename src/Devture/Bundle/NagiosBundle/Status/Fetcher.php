@@ -2,7 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Status;
 
 use Devture\Bundle\NagiosBundle\Exception\ParseException;
-use Devture\Bundle\NagiosBundle\Exception\StatusFileMissingException;
+use Devture\Bundle\NagiosBundle\Exception\FileMissingException;
 
 class Fetcher {
 
@@ -16,12 +16,12 @@ class Fetcher {
 	}
 
 	/**
-	 * @throws StatusFileMissingException
+	 * @throws FileMissingException
 	 * @return \Devture\Bundle\NagiosBundle\Status\Status[]
 	 */
 	public function fetch() {
 		if (!file_exists($this->statusFilePath)) {
-			throw new StatusFileMissingException(sprintf('Cannot find status file at `%s`', $this->statusFilePath));
+			throw new FileMissingException(sprintf('Cannot find status file at `%s`', $this->statusFilePath));
 		}
 		return $this->parse(file_get_contents($this->statusFilePath));
 	}
