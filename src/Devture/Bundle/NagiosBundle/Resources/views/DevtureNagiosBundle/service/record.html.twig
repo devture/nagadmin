@@ -24,9 +24,9 @@
 
 			<div class="form-group row">
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
-				<div class="col-lg-10">
+				<div class="col-lg-6">
 					{% set selected_host = entity.host %}
-					<select name="hostId" class="span4 js-chosen-select">
+					<select name="hostId" class="form-control">
 						<option value="">-- Pick one --</option>
 					{% for host in hosts %}
 						<option value="{{ host.id }}"
