@@ -60,6 +60,7 @@ ul.validation-errors li {
 .chzn-container-single .chzn-single.chzn-single-with-drop div b {
 	background-position: -18px -1px !important;
 }
+.chzn-container-multi .chzn-choices .search-field input { height: auto !important; }
 
 .spin-animate {
 	-webkit-animation-name: spin-animate;
