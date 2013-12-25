@@ -1,27 +1,29 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<a class="btn btn-default pull-right" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
-		<i class="glyphicon glyphicon-plus"></i>
-		Add new
-	</a>
+	<div class="clearfix">
+		<a class="btn btn-default pull-right" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
+			<i class="glyphicon glyphicon-plus"></i>
+			Add new
+		</a>
 
-	<ul class="nav nav-tabs">
-		<li {{ type == 'serviceCheck' ? 'class="active"' : '' }}>
-			<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceCheck'}) }}">
-				<i class="glyphicon glyphicon-check"></i>
-				Service Check commands
-			</a>
-		</li>
-		<li {{ type == 'serviceNotification' ? 'class="active"' : '' }}>
-			<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceNotification'}) }}">
-				<i class="glyphicon glyphicon-share"></i>
-				Service Notification commands
-			</a>
-		</li>
-	</ul>
+		<ul class="nav nav-tabs">
+			<li {{ type == 'serviceCheck' ? 'class="active"' : '' }}>
+				<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceCheck'}) }}">
+					<i class="glyphicon glyphicon-check"></i>
+					Check commands
+				</a>
+			</li>
+			<li {{ type == 'serviceNotification' ? 'class="active"' : '' }}>
+				<a href="{{ path('devture_nagios.command.manage', {'type': 'serviceNotification'}) }}">
+					<i class="glyphicon glyphicon-share"></i>
+					Notification commands
+				</a>
+			</li>
+		</ul>
+	</div>
 
-	<div class="clear top-spaced-minor"></div>
+	<div class="top-spaced-minor"></div>
 
 	{% include 'DevtureNagiosBundle/command/list.html.twig' with {'items': items} %}
 {% endblock %}

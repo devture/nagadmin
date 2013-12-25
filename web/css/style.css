@@ -5,6 +5,15 @@ body {
 /* Make .warning work even on tables with .table-striped */
 .table > tbody > .warning > td { background-color: #fcf8e3 !important ; }
 
+.hidden-inline-xs {
+	display: inline !important;
+}
+@media (max-width: 767px) {
+	.hidden-inline-xs {
+		display: none !important;
+	}
+}
+
 #wrapper {
 	text-align: center;
 	margin: 0 auto;
@@ -21,73 +30,17 @@ ul.validation-errors {
 ul.validation-errors li {
 }
 
-.site-navbar { overflow: visible; color: #777; }
-.site-navbar-inner {
-	margin: 0 auto;
-	background-color: #FAFAFA;
-	background-image: -moz-linear-gradient(top, white, #F2F2F2);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#F2F2F2));
-	background-image: -webkit-linear-gradient(top, white, #F2F2F2);
-	background-image: -o-linear-gradient(top, white, #F2F2F2);
-	background-image: linear-gradient(to bottom, white, #F2F2F2);
-	background-repeat: repeat-x;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
-	border: 1px solid #D4D4D4;
-	border-top: 0;
-	-webkit-border-bottom-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-moz-border-radius-bottomright: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	border-bottom-right-radius: 4px;
-	border-bottom-left-radius: 4px;
-	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-}
-.site-navbar .brand {
-	display: block;
-	float: left;
-	padding: 6px;
-	font-size: 20px;
-	color: #666;
-	font-weight: bold;
-	text-shadow: 0 1px 0 white;
-}
-.site-navbar form { margin: 5px 5px 0 0; }
-.site-navbar .nav { margin: 0; }
-.site-navbar .nav > li > a {
-	padding: 3px 8px;
-	color: #555;
-	text-decoration: none;
-	text-shadow: 0 1px 0 white;
-	line-height: 20px;
-	font-weight: bold;
-}
-.site-navbar .nav > .active > a,
-.site-navbar .nav > .active > a:hover,
-.site-navbar .nav > .active > a:focus {
-	color: #444;
-	text-decoration: none;
-	background-color: #E5E5E5;
-	-webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
-	-moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
-	box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
-}
-
 #content {
 	text-align: left;
 	padding-top: 10px;
 	background-color: #fff;
-	min-height: 630px;
-	height: auto !important;
 }
 
 #footer {
-	padding: 3px 0 0 0;
 	height: 18px;
 	border: 0;
 	color: #666464;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .top-spaced-minor { margin-top: 7px; }

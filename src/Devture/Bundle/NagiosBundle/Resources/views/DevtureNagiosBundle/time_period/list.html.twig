@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th>Title</th>
-				<th>Time Period</th>
+				<th class="hidden-xs">Time Period</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -17,7 +17,7 @@
 						{{ entity.title }}
 					</a>
 				</td>
-				<td>
+				<td class="hidden-xs">
 					{% include 'DevtureNagiosBundle/time_period/rules_table.html.twig' with {'rules': entity.rules} %}
 				</td>
 			</tr>

@@ -3,7 +3,7 @@
 <head>
 	{% block head %}
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<title>{{ get_project_name() }}</title>
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/bootstrap.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/style.css') }}" />
@@ -14,38 +14,48 @@
 {% set info_status = devture_nagios_get_info_status() %}
 {% set program_status = devture_nagios_get_program_status() %}
 
-<div id="wrapper" class="container">
-	<div class="site-navbar">
-		<div class="site-navbar-inner">
-			<div class="clearfix">
-				<a class="brand" href="{{ path('homepage') }}">
-					{{ get_project_name() }}
-				</a>
-				<div class="pull-right">
-					{% if program_status is none or info_status is none %}
-						<span class="label label-danger">Nagios DOWN</span>
-					{% else %}
-						{% if info_status.appearsOutdated %}
-							<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
-						{% else %}
-							<span class="js-tooltip"
-								data-placement="bottom"
-								title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
-								>Nagios {{ info_status.currentVersion }}</span>
-						{% endif %}
-					{% endif %}
-				</div>
-			</div>
-			<div style="clear: both; border-top: 1px solid #ededed;"></div>
+<div id="wrapper">
+
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ path('homepage') }}">
+				{{ get_project_name() }}
+			</a>
+		</div>
+
+		{% set status_interesting_to_mobile = (program_status is none or info_status is none or info_status.appearsOutdated) %}
+
+		<div class="navbar-header navbar-right navbar-text {{ status_interesting_to_mobile ? '' : 'hidden-xs' }}">
+			{% if program_status is none or info_status is none %}
+				<span class="label label-danger">Nagios DOWN</span>
+			{% else %}
+				{% if info_status.appearsOutdated %}
+					<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
+				{% else %}
+					<span class="js-tooltip"
+						data-placement="bottom"
+						title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
+						>Nagios {{ info_status.currentVersion }}</span>
+				{% endif %}
+			{% endif %}
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
 			{% include "menu_bar.html.twig" %}
 		</div>
-	</div>
+	</nav>
 
-	<div id="content">
+	<div id="content" class="container">
 		{% block content %}{% endblock %}
 	</div>
 
-	<div id="footer" class="clearfix">
+	<div id="footer" class="container clearfix">
 		<hr />
 
 		<div class="pull-left">

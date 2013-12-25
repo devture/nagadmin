@@ -8,8 +8,8 @@
 			<tr>
 				<th style="width: 30px;"></th>
 				<th>Identifier</th>
-				<th>Addresses</th>
-				<th>Notifications Period</th>
+				<th class="hidden-xs">Addresses</th>
+				<th>Notify</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -27,7 +27,7 @@
 						{{ entity.name }}
 					</a>
 				</td>
-				<td>
+				<td class="hidden-xs">
 					{% set addresses = (entity.email ? [entity.email] : [])|merge(entity.addresses) %}
 					<a href="{{ link }}" class="display-block">
 						{{ addresses|join(', ') }}

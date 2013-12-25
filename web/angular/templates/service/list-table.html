@@ -2,11 +2,11 @@
 <thead>
 	<tr>
 		<th style="width: 50px;"></th>
-		<th><i class="icon-th-large"></i> Host</th>
-		<th><i class="icon-signal"></i> Service</th>
+		<th class="hidden-xs">Host</th>
+		<th>Service</th>
 		<th>Checked</th>
-		<th>Status</th>
-		<th style="min-width: 140px;"><i class="icon-user"></i> Notify</th>
+		<th class="hidden-xs">Status</th>
+		<th class="hidden-xs" style="min-width: 140px;">Notify</th>
 	</tr>
 </thead>
 <tbody>
@@ -14,7 +14,7 @@
 		<td>
 			<service-status-badge entity="serviceInfo.status"></service-status-badge>
 		</td>
-		<td style="width: 130px;">
+		<td class="hidden-xs" style="width: 130px;">
 			{{ host.name }}
 		</td>
 		<td style="width: 210px;" ng-init="s">
@@ -37,7 +37,7 @@
 				</span>
 			</span>
 		</td>
-		<td ng-switch="serviceInfo.status">
+		<td class="hidden-xs" ng-switch="serviceInfo.status">
 			<div ng-switch-when="null">
 				-- There is no information about this service --
 			</div>
@@ -45,7 +45,7 @@
 				{{ serviceInfo.status.plugin_output }}
 			</div>
 		</td>
-		<td>
+		<td class="hidden-xs">
 			<span ng-repeat="contact in service.contacts">
 				<contact entity="contact" size="24"></contact>
 			</span>

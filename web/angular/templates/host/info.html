@@ -1,11 +1,11 @@
 <div class="clearfix">
+	<a href="{{ hostEditUrl }}">
+		<h4 style="margin: 0; padding: 0; display: inline-block;">{{ entity.host.name }}</h4>
+	</a>
 	<div class="pull-right">
 		<service-add-new-button host="entity.host"></service-add-new-button>
 		<host-recheck-button host="entity.host" rechecking="isBeingRechecked" on-dirty="updateHostInfo"></host-recheck-button>
 	</div>
-	<a href="{{ hostEditUrl }}">
-		<h3 style="margin: 0; padding: 0; display: inline-block;">{{ entity.host.name }}</h3>
-	</a>
 </div>
 
 <div class="top-spaced-minor"></div>
