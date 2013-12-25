@@ -309,3 +309,32 @@ nagadminApp.directive('hrefTo', function ($filter) {
 		}
 	};
 });
+
+nagadminApp.directive('logListTable', function (templatePathRegistry, apiUrlRegistry) {
+	var generateInfoLink = function (entity) {
+		if (entity.service.id) {
+			return apiUrlRegistry.service.view.replace('__ID__', entity.service.id);
+		}
+
+		if (entity.host.id) {
+			return apiUrlRegistry.host.edit.replace('__ID__', entity.host.id);
+		}
+
+		return null;
+	};
+
+	return {
+		"restrict": "E",
+		"scope": {
+			"entities": "=entities"
+		},
+		"templateUrl": templatePathRegistry.log.listTable,
+		"link": function ($scope) {
+			$scope.$watch('entities', function () {
+				$scope.entities.forEach(function (entity) {
+					entity.infoLink = generateInfoLink(entity);
+				});
+			});
+		}
+	};
+});

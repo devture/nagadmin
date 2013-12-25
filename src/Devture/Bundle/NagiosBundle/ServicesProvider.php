@@ -3,11 +3,6 @@ namespace Devture\Bundle\NagiosBundle;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
-use Devture\Bundle\NagiosBundle\ApiModelBridge\ServiceBridge;
 
 class ServicesProvider implements ServiceProviderInterface {
 
@@ -234,6 +229,9 @@ class ServicesProvider implements ServiceProviderInterface {
 		$app['devture_nagios.controller.log.management'] = function ($app) {
 			return new Controller\LogManagementController($app, 'devture_nagios');
 		};
+		$app['devture_nagios.controller.log.api'] = function ($app) {
+			return new Controller\Api\LogApiController($app, 'devture_nagios');
+		};
 	}
 
 	private function registerDeploymentServices(Application $app) {
@@ -453,6 +451,10 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.command.api_model_bridge'] = $app->share(function () {
 			return new ApiModelBridge\CommandBridge();
+		});
+
+		$app['devture_nagios.log.api_model_bridge'] = $app->share(function () {
+			return new ApiModelBridge\LogBridge();
 		});
 	}
 

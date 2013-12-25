@@ -30,6 +30,10 @@ class ApiControllersProvider implements ControllerProviderInterface {
 			})
 			->bind($namespace . '.api.host.recheck_services');
 
+		$controllers->get('/logs/{ifNewerThanId}', 'devture_nagios.controller.log.api:listAction')
+			->value('ifNewerThanId', null)
+			->bind($namespace . '.api.log.list');
+
 		return $controllers;
 	}
 

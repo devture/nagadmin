@@ -12,6 +12,10 @@
 		"service": {
 			"add": {{ path('devture_nagios.service.add', {'commandId': '__COMMAND_ID__', 'hostId': '__HOST_ID__'})|json_encode|raw }},
 			"view": {{ path('devture_nagios.service.view', {'id': '__ID__'})|json_encode|raw }}
+		},
+		"log": {
+			"listAll": {{ path('devture_nagios.api.log.list')|json_encode|raw }},
+			"listAllIfNewer": {{ path('devture_nagios.api.log.list', {'ifNewerThanId': '__LAST_SEEN_ID__'})|json_encode|raw }}
 		}
 	};
 
@@ -24,6 +28,9 @@
 			"listTable": "{{ static_url('/angular/templates/service/list-table.html') }}",
 			"addNewButton": "{{ static_url('/angular/templates/service/add-new-button.html') }}",
 			"statusBadge": "{{ static_url('/angular/templates/service/status-badge.html') }}"
+		},
+		"log": {
+			"listTable": "{{ static_url('/angular/templates/log/list-table.html') }}"
 		}
 	};
 

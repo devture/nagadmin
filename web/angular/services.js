@@ -20,6 +20,17 @@ nagadminApp.factory('ServiceCheckCommand', function ($http, apiUrlRegistry) {
 	};
 });
 
+nagadminApp.factory('LogRepository', function ($http, apiUrlRegistry) {
+	return {
+		"findAll": function () {
+			return $http.get(apiUrlRegistry.log.listAll);
+		},
+		"findAllIfNewerThanId": function (lastSeenId) {
+			return $http.get(apiUrlRegistry.log.listAllIfNewer.replace('__LAST_SEEN_ID__', lastSeenId));
+		}
+	};
+});
+
 nagadminApp.factory('ServiceCheckScheduler', function ($http, apiUrlRegistry, csrfToken) {
 	return {
 		"scheduleOnHost": function (host, recheckType) {
@@ -143,5 +154,31 @@ nagadminApp.controller('HostInfoCtrl', function ($scope, HostInfo) {
 
 	HostInfo.find($scope.hostId).success(function (hostInfo) {
 		$scope.hostInfo = hostInfo;
+	});
+});
+
+nagadminApp.controller('LogsCtrl', function ($scope, $timeout, LogRepository) {
+	$scope.entities = [];
+
+	LogRepository.findAll().success(function (entities) {
+		$scope.entities = entities;
+
+		var timeout;
+
+		var scheduleUpdate = function () {
+			timeout = $timeout(function () {
+				var lastId = ($scope.entities.length !== 0 ? $scope.entities[0].id : 'null');
+
+				LogRepository.findAllIfNewerThanId(lastId).success(function (entities) {
+					if (entities.length !== 0) {
+						$scope.entities = entities;
+					}
+				}).finally(function () {
+					scheduleUpdate();
+				});
+			}, 10000, false);
+		};
+
+		scheduleUpdate();
 	});
 });

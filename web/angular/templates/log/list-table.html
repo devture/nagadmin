@@ -1,0 +1,32 @@
+<table class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th class="hidden-xs">Type</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="entity in entities track by entity.id">
+			<td nowrap="nowrap">
+				<relative-time timestamp="entity.timestamp * 1000"></relative-time> ago
+			</td>
+			<td class="hidden-xs">
+				{{ entity.type }}
+			</td>
+			<td>
+				<span class="visible-xs"><strong>{{ entity.type }}</strong>:</span>
+				<span style="word-break: break-all;">
+					{{ entity.value }}
+				</span>
+
+				<div ng-if="entity.infoLink != null">
+					<a class="btn btn-default btn-xs pull-right" href="{{ entity.infoLink }}">
+						<img ng-if="entity.host.address != null" ng-src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
+						<i ng-if="entity.host.address == null" class="glyphicon glyphicon-info-sign"></i>
+					</a>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

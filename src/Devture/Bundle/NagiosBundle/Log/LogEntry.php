@@ -20,6 +20,10 @@ class LogEntry {
 		$this->service = $service;
 	}
 
+	public function getId() {
+		return sha1($this->type . $this->timestamp . $this->value);
+	}
+
 	public function getType() {
 		return $this->type;
 	}
@@ -32,10 +36,16 @@ class LogEntry {
 		return $this->value;
 	}
 
+	/**
+	 * @return Host|NULL
+	 */
 	public function getHost() {
 		return $this->host;
 	}
 
+	/**
+	 * @return Service|NULL
+	 */
 	public function getService() {
 		return $this->service;
 	}
