@@ -2,6 +2,9 @@ body {
 	overflow-y: scroll;
 }
 
+/* Make .warning work even on tables with .table-striped */
+.table > tbody > .warning > td { background-color: #fcf8e3 !important ; }
+
 #wrapper {
 	text-align: center;
 	margin: 0 auto;
