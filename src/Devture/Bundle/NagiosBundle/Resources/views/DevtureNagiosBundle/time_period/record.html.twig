@@ -2,17 +2,14 @@
 
 {% macro render_rules_example() %}
 {% spaceless %}
-monday                              08:00-24:00
-tuesday                             09:00-17:00
-wednesday                           08:00-12:00,15:00-19:00
-thursday                            08:00-24:00
-sunday                              14:00-19:00
-2007-01-01 - 2008-02-01             00:00-24:00
-tuesday 1 april - friday 2 may      15:00-17:00
-monday 3                            00:00-09:00,17:00-24:00
-day 2                               00:00-24:00
-february 10                         00:00-24:00
-february -1                         00:00-24:00
+monday     08:00-24:00
+tuesday    09:00-17:00
+wednesday  08:00-12:00,15:00-19:00
+thursday   08:00-24:00
+sunday     14:00-19:00
+monday 3   00:00-09:00,17:00-24:00
+day 2      00:00-24:00
+february 4 00:00-24:00
 {% endspaceless %}
 {% endmacro %}
 
@@ -58,11 +55,14 @@ february -1                         00:00-24:00
 						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': none, 'number': '__NUMBER__'} %}
 					</script>
 
-					<a class="btn" href="javascript://" id="js-button-add-rule">Add new rule</a>
+					<a class="btn btn-default btn-sm" href="javascript://" id="js-button-add-rule">
+						<i class="glyphicon glyphicon-plus"></i>
+						Add new rule
+					</a>
 
 					<p class="help-block top-spaced-minor">
 						<strong>Example:</strong><br />
-						<pre style="width: 500px;"><code>{{ _self.render_rules_example() }}</code></pre>
+						<pre style="max-width: 400px;"><code>{{ _self.render_rules_example() }}</code></pre>
 						To learn more, read the docs on
 						<a href="http://nagios.sourceforge.net/docs/3_0/objectdefinitions.html#timeperiod"
 							target="_blank">Time Period definitions</a>

@@ -1,17 +1,23 @@
 <div class="js-rule-editor" data-number="{{ number }}">
-	<div>
+	<div class="row">
 	{% spaceless %}
-		<input type="text" name="rules[{{ number }}][dateRange]"
-			value="{{ entity is not none ? entity.dateRange : '' }}"
-			placeholder="Weekday or date range" class="form-control col-lg-2" style="display: inline-block; text-align: left; width: 40%;" />
+		<div class="col-lg-3">
+			<input type="text" name="rules[{{ number }}][dateRange]"
+				value="{{ entity is not none ? entity.dateRange : '' }}"
+				placeholder="Weekday or date range" class="form-control" />
+		</div>
 
-		<input type="text" name="rules[{{ number }}][timeRange]"
-			value="{{ entity is not none ? entity.timeRange : '' }}"
-			placeholder="Time range" class="form-control col-lg-2" style="display: inline-block; width: 30%;" />
+		<div class="col-lg-3">
+			<input type="text" name="rules[{{ number }}][timeRange]"
+				value="{{ entity is not none ? entity.timeRange : '' }}"
+				placeholder="Time range" class="form-control" />
+		</div>
+
+		<div class="col-lg-3">
+			<a href="javascript://" class="btn btn-default btn-sm js-button-remove-rule"><i class="glyphicon glyphicon-remove"></i> Remove rule</a>
+		</div>
 	{% endspaceless %}
 	</div>
-
-	<a href="javascript://" class="btn btn-mini js-button-remove-rule"><i class="glyphicon glyphicon-remove"></i> Remove rule</a>
 
 	<div class="top-spaced-minor"></div>
 </div>
