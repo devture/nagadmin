@@ -29,9 +29,7 @@
 			</a>
 		</div>
 
-		{% set status_interesting_to_mobile = (program_status is none or info_status is none or info_status.appearsOutdated) %}
-
-		<div class="navbar-header navbar-right navbar-text {{ status_interesting_to_mobile ? '' : 'hidden-xs' }}">
+		<div class="navbar-header navbar-right navbar-text hidden-xs">
 			{% if program_status is none or info_status is none %}
 				<span class="label label-danger">Nagios DOWN</span>
 			{% else %}
@@ -39,7 +37,7 @@
 					<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
 				{% else %}
 					<span class="js-tooltip"
-						data-placement="bottom"
+						data-placement="left"
 						title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
 						>Nagios {{ info_status.currentVersion }}</span>
 				{% endif %}
@@ -48,6 +46,18 @@
 
 		<div class="collapse navbar-collapse" id="navbar-collapse">
 			{% include "menu_bar.html.twig" %}
+
+			<div class="navbar-text visible-xs">
+				{% if program_status is none or info_status is none %}
+					<span class="label label-danger">Nagios DOWN</span>
+				{% else %}
+					{% if info_status.appearsOutdated %}
+						<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
+					{% else %}
+						<span class="text-muted">Powered by Nagios {{ info_status.currentVersion }}.</span>
+					{% endif %}
+				{% endif %}
+			</div>
 		</div>
 	</nav>
 
