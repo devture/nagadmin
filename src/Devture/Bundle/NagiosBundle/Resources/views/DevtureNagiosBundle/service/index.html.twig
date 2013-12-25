@@ -2,7 +2,13 @@
 
 {% block devture_nagios_content %}
 	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
-		<div ng-if="filteredHostsInfo.length == 0">Loading..</div>
+		<div ng-if="filteredHostsInfo.length == 0">
+			<div class="spinner text-center">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+		</div>
 
 		<!--
 			Using ng-show, instead of ng-if here, because otherwise the `selectedHostId` variable
