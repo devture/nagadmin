@@ -89,6 +89,7 @@
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
 				<div class="col-lg-10">
 					<a href="{{ path('devture_nagios.host.edit', {'id': entity.host.id}) }}">
+						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
 						{{ entity.host.name }}
 					</a>
 					({{ entity.host.address }})

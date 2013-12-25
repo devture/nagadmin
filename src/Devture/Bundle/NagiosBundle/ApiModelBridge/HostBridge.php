@@ -9,6 +9,7 @@ class HostBridge {
 		return array(
 			'id' => (string) $entity->getId(),
 			'name' => $entity->getName(),
+			'address' => $entity->getAddress(),
 		);
 	}
 
