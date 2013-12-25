@@ -3,9 +3,9 @@
 {% block devture_nagios_content %}
 	<div>
 		<fieldset>
-			<div class="control-group">
-				<label class="control-label">Check Status</label>
-				<div class="controls text-center">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Check Status</label>
+				<div class="col-lg-10">
 					<div class="alert alert-{{ isValid ? 'success' : 'danger' }}">
 						{% if isValid %}
 							<i class="glyphicon glyphicon-thumbs-up"></i>
@@ -17,7 +17,8 @@
 					</div>
 					{% if isValid %}
 						<form name="deploy" method="post" action="{{ path('devture_nagios.configuration.deploy') }}"
-							id="js-deployment-form">
+							id="js-deployment-form"
+							class="text-center">
 							<input type="hidden" name="token" value="{{ csrf_token('deploy') }}" />
 							<button type="submit" class="btn btn-primary btn-large" id="js-deployment-button-submit">
 								<i class="glyphicon glyphicon-retweet glyphicon glyphicon-white"></i>
@@ -29,19 +30,19 @@
 								<div class="bar" style="width: 100%"></div>
 							</div>
 						</div>
-						<div id="js-deployment-result"></div>
+						<div id="js-deployment-result" class="top-spaced-minor"></div>
 					{% endif %}
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label">Check Output</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Check Output</label>
+				<div class="col-lg-10">
 					<pre style="max-height: 300px; overflow-y: auto;">{{ checkOutput }}</pre>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label">Configuration</label>
-				<div class="controls">
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Configuration</label>
+				<div class="col-lg-10">
 					{% for file in files %}
 						<strong>{{ file.path }}</strong>
 						<pre class="top-spaced-minor" style="max-height: 300px; overflow-y: auto;">{{ file.configuration }}</pre>
