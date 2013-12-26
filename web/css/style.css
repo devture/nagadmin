@@ -16,11 +16,6 @@ body {
 
 [ng-cloak] { display: none; }
 
-#wrapper {
-	text-align: center;
-	margin: 0 auto;
-}
-
 ul.validation-errors {
 	color: #e33904;
 	font-weight: bold;
@@ -31,15 +26,7 @@ ul.validation-errors {
 ul.validation-errors li {
 }
 
-#content {
-	text-align: left;
-	padding-top: 10px;
-	background-color: #fff;
-}
-
 #footer {
-	height: 18px;
-	border: 0;
 	color: #666464;
 	font-size: 12px;
 }

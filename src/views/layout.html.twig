@@ -14,63 +14,61 @@
 {% set info_status = devture_nagios_get_info_status() %}
 {% set program_status = devture_nagios_get_program_status() %}
 
-<div id="wrapper">
-	<nav class="navbar navbar-default" role="navigation">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="{{ path('homepage') }}">
-				{{ get_project_name() }}
-			</a>
-		</div>
+<nav class="navbar navbar-default" role="navigation">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="{{ path('devture_nagios.dashboard') }}">
+			{{ get_project_name() }}
+		</a>
+	</div>
 
-		<div class="navbar-header navbar-right navbar-text hidden-xs">
+	<div class="navbar-header navbar-right navbar-text hidden-xs">
+		{% if program_status is none or info_status is none %}
+			<span class="label label-danger">Nagios DOWN</span>
+		{% else %}
+			{% if info_status.appearsOutdated %}
+				<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
+			{% else %}
+				<span class="js-tooltip"
+					data-placement="left"
+					title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
+					>Nagios {{ info_status.currentVersion }}</span>
+			{% endif %}
+		{% endif %}
+	</div>
+
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+		{% include "menu_bar.html.twig" %}
+
+		<div class="navbar-text visible-xs">
 			{% if program_status is none or info_status is none %}
 				<span class="label label-danger">Nagios DOWN</span>
 			{% else %}
 				{% if info_status.appearsOutdated %}
 					<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
 				{% else %}
-					<span class="js-tooltip"
-						data-placement="left"
-						title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}"
-						>Nagios {{ info_status.currentVersion }}</span>
+					<span class="text-muted">Powered by Nagios {{ info_status.currentVersion }}.</span>
 				{% endif %}
 			{% endif %}
 		</div>
-
-		<div class="collapse navbar-collapse" id="navbar-collapse">
-			{% include "menu_bar.html.twig" %}
-
-			<div class="navbar-text visible-xs">
-				{% if program_status is none or info_status is none %}
-					<span class="label label-danger">Nagios DOWN</span>
-				{% else %}
-					{% if info_status.appearsOutdated %}
-						<span class="label label-danger">Nagios {{ info_status.currentVersion }} DOWN?</span>
-					{% else %}
-						<span class="text-muted">Powered by Nagios {{ info_status.currentVersion }}.</span>
-					{% endif %}
-				{% endif %}
-			</div>
-		</div>
-	</nav>
-
-	<div id="content" class="container">
-		{% block content %}{% endblock %}
 	</div>
+</nav>
 
-	<div id="footer" class="container clearfix">
-		<hr />
+<div id="content" class="container">
+	{% block content %}{% endblock %}
+</div>
 
-		<div class="pull-left">
-			&copy; 2012 - {{ none|date('Y') }}
-			<a href="http://devture.com/" target="_blank" title="Devture Ltd - developing your future">Devture Ltd</a>.
-		</div>
+<div id="footer" class="container clearfix">
+	<hr />
+
+	<div class="pull-left">
+		&copy; 2012 - {{ none|date('Y') }}
+		<a href="http://devture.com/" target="_blank" title="Devture Ltd - developing your future">Devture Ltd</a>.
 	</div>
 </div>
 
