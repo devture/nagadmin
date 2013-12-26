@@ -1,9 +1,9 @@
 <span ng-switch="entity">
-	<span ng-switch-when="null" class="text-center label" style="display: block;">
+	<span ng-switch-when="null" class="text-center label label-default" style="display: block;">
 		missing
 	</span>
 	<span ng-switch-default ng-switch="entity.has_been_checked">
-		<span ng-switch-when="0" class="text-center label" style="display: block;">
+		<span ng-switch-when="0" class="text-center label label-default" style="display: block;">
 			pending
 		</span>
 		<span ng-switch-when="1"
