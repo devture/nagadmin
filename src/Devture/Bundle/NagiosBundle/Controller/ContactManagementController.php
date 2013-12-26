@@ -51,6 +51,7 @@ class ContactManagementController extends BaseController {
 		$binder = $this->getContactFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getContactRepository()->update($entity);
+			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
 
@@ -66,6 +67,7 @@ class ContactManagementController extends BaseController {
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
 				$this->getContactRepository()->delete($this->getContactRepository()->find($id));
+				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
 			}

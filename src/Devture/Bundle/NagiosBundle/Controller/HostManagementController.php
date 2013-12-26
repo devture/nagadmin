@@ -60,6 +60,7 @@ class HostManagementController extends BaseController {
 		$binder = $this->getHostFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getHostRepository()->update($entity);
+			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
 
@@ -75,6 +76,7 @@ class HostManagementController extends BaseController {
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
 				$this->getHostRepository()->delete($this->getHostRepository()->find($id));
+				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
 			}

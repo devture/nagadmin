@@ -37,6 +37,7 @@ class TimePeriodManagementController extends BaseController {
 		$binder = $this->getTimePeriodFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getTimePeriodRepository()->update($entity);
+			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
 
@@ -52,6 +53,7 @@ class TimePeriodManagementController extends BaseController {
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
 				$this->getTimePeriodRepository()->delete($this->getTimePeriodRepository()->find($id));
+				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
 			}

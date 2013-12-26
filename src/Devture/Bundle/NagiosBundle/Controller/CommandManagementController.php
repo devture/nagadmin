@@ -43,6 +43,7 @@ class CommandManagementController extends BaseController {
 		$binder = $this->getCommandFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
 			$this->getCommandRepository()->update($entity);
+			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
 
@@ -58,6 +59,7 @@ class CommandManagementController extends BaseController {
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
 				$this->getCommandRepository()->delete($this->getCommandRepository()->find($id));
+				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
 			}
