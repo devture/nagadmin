@@ -69,6 +69,12 @@ comploader.register("jquery.autoresize", {
 	]
 });
 
+comploader.register("fastclick", {
+	"scripts": [
+		"{{ static_url('/js/fastclick.js') }}"
+	]
+});
+
 comploader.register("nagadminApp", {
 	"requires": ["angular"],
 	"scripts": [

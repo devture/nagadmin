@@ -108,6 +108,23 @@
 	});
 
 	(function () {
+		var isTouchDevice = function () {
+			try {
+				document.createEvent("TouchEvent");
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+
+		if (isTouchDevice()) {
+			comploader.load('fastclick', function () {
+				FastClick.attach(document.body);
+			});
+		}
+	})();
+
+	(function () {
 		var lazyNgAppLoad = function () {
 			$('[ng-app-lazy]').each(function () {
 				var $appRoot = $(this),
