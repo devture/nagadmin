@@ -233,52 +233,6 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 	};
 });
 
-nagadminApp.directive('chosenSelect', function ($timeout, comploader) {
-	return {
-		"restrict": "A",
-		"scope": {
-			"chosenDataSource": "=chosenDataSource"
-		},
-		"link": function ($scope, $element, attrs) {
-			var initialized = false;
-
-			var initialize = function () {
-				initialize = function () { };
-
-				$element.css('display', 'inline-block');
-
-				comploader.load("chosen", function () {
-					initialized = true;
-					$timeout(function () {
-						$element.chosen();
-					}, 0, false);
-				});
-			};
-
-			var rebuild = function () {
-				$timeout(function () {
-					$element.trigger('liszt:updated');
-				}, 0, false);
-			};
-
-			$scope.$watch('chosenDataSource', function (newVal, oldVal) {
-				if (!newVal || newVal.length == 0) {
-					if (initialized) {
-						rebuild();
-					}
-					return;
-				}
-
-				if (initialized) {
-					rebuild();
-				} else {
-					initialize();
-				}
-			});
-		}
-	};
-});
-
 nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avatar_urlFilter) {
 	return {
 		"restrict": "E",
