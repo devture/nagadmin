@@ -76,6 +76,8 @@ class Fetcher {
 					$host = $this->getCurrentHostStateAssociations($value);
 				} else if ($type === 'EXTERNAL COMMAND') {
 					list($host, $service) = $this->getExternalCommandAssociations($value);
+				} else if ($type === 'SERVICE NOTIFICATION') {
+					list($host, $service) = $this->getServiceNotificationAssociations($value);
 				}
 
 				$objects[] = new LogEntry($type, $timestamp, $value, $host, $service);
@@ -116,6 +118,13 @@ class Fetcher {
 
 	private function getExternalCommandAssociations($value) {
 		if (preg_match("/^SCHEDULE_SVC_CHECK;([^;]+);([^;]+)/", $value, $matches)) {
+			return $this->getServiceAssociationByNames($matches[1], $matches[2]);
+		}
+		return array(null, null);
+	}
+
+	private function getServiceNotificationAssociations($value) {
+		if (preg_match("/^(?:[^;]+);([^;]+);([^;]+)/", $value, $matches)) {
 			return $this->getServiceAssociationByNames($matches[1], $matches[2]);
 		}
 		return array(null, null);
