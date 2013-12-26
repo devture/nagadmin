@@ -4,7 +4,7 @@ namespace Devture\Bundle\NagiosBundle\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\ServiceCommandArgument;

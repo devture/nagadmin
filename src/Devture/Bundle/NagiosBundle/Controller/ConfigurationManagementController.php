@@ -2,7 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException;
 
 class ConfigurationManagementController extends BaseController {

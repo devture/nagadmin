@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Event;
 
-use Devture\Bundle\SharedBundle\Model\BaseModel;
+use Devture\Component\DBAL\Model\BaseModel;
 use Symfony\Component\EventDispatcher\Event;
 
 class ModelEvent extends Event {

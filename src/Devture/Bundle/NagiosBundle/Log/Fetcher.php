@@ -7,7 +7,7 @@ use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Exception\NotFound;
 
 class Fetcher {
 

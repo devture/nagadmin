@@ -2,7 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\HostInfo;
 use Devture\Bundle\NagiosBundle\Model\Service;

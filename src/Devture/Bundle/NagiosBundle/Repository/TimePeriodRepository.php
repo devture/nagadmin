@@ -3,8 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Devture\Bundle\SharedBundle\Model\BaseModel;
-use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
+use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
@@ -26,7 +25,7 @@ class TimePeriodRepository extends BaseMongoRepository {
 		return 'time_period';
 	}
 
-	public function delete(BaseModel $object) {
+	public function delete($object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_TIME_PERIOD_DELETE, new ModelEvent($object));
 		parent::delete($object);

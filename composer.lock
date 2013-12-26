@@ -3,8 +3,55 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "68b6f6b170cdd12d3d4bf62c1bc79b45",
+    "hash": "05fe2769848748ef0cd33a349eddc58d",
     "packages": [
+        {
+            "name": "devture/dbal",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devture/dbal.git",
+                "reference": "b59d0c936ac21968f524efbf58c683ab629cca6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devture/dbal/zipball/b59d0c936ac21968f524efbf58c683ab629cca6d",
+                "reference": "b59d0c936ac21968f524efbf58c683ab629cca6d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "For using with relational databases",
+                "doctrine/mongodb": "For using with MongoDB"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Devture\\Component\\DBAL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Slavi Pantaleev",
+                    "email": "s.pantaleev@gmail.com"
+                }
+            ],
+            "description": "Tiny database abstraction layer for MongoDB (doctrine/mongodb) and relational databases (doctrine/dbal)",
+            "keywords": [
+                "database",
+                "dbal",
+                "doctrine",
+                "mongodb",
+                "relational"
+            ],
+            "time": "2013-12-26 21:17:35"
+        },
         {
             "name": "devture/silex-provider-config",
             "version": "1.0",
@@ -1494,7 +1541,7 @@
 
     ],
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=5.4.0"
     },
     "platform-dev": [
 

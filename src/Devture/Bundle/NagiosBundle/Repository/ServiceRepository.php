@@ -2,7 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
-use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
+use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Command;
@@ -32,10 +32,9 @@ class ServiceRepository extends BaseMongoRepository {
 	}
 
 	/**
-	 * Hydrates a model object from the data object.
-	 * @param array $data
+	 * @see \Devture\Component\DBAL\Repository\BaseRepository::hydrateModel()
 	 */
-	public function createModel(array $data) {
+	protected function hydrateModel(array $data) {
 		$model = new Service($data);
 
 		if (isset($data['hostId'])) {
@@ -55,7 +54,10 @@ class ServiceRepository extends BaseMongoRepository {
 		return $model;
 	}
 
-	public function exportModel(Service $model) {
+	/**
+	 * @see \Devture\Component\DBAL\Repository\BaseRepository::exportModel()
+	 */
+	protected function exportModel($model) {
 		$export = parent::exportModel($model);
 
 		$host = $model->getHost();

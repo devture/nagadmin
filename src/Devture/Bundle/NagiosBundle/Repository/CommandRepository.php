@@ -3,9 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Devture\Bundle\SharedBundle\Model\BaseModel;
-use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
-use Devture\Bundle\NagiosBundle\Model\Command;
+use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
@@ -30,7 +28,7 @@ class CommandRepository extends BaseMongoRepository {
 		return $this->findBy(array('type' => $type), array());
 	}
 
-	public function delete(BaseModel $object) {
+	public function delete($object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_COMMAND_DELETE, new ModelEvent($object));
 		parent::delete($object);

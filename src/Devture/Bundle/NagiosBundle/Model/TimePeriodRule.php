@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Model;
 
-use Devture\Bundle\SharedBundle\Model\BaseModel;
+use Devture\Component\DBAL\Model\BaseModel;
 
 class TimePeriodRule extends BaseModel {
 

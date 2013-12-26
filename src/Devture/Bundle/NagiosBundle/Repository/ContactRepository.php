@@ -3,8 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Devture\Bundle\SharedBundle\Model\BaseModel;
-use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
+use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 use Devture\Bundle\NagiosBundle\Model\Command;
@@ -35,10 +34,9 @@ class ContactRepository extends BaseMongoRepository {
 	}
 
 	/**
-	 * Hydrates a model object from the data object.
-	 * @param array $data
+	 * @see \Devture\Component\DBAL\Repository\BaseRepository::hydrateModel()
 	 */
-	public function createModel(array $data) {
+	protected function hydrateModel(array $data) {
 		$model = new Contact($data);
 
 		if (isset($data['timePeriodId'])) {
@@ -52,7 +50,11 @@ class ContactRepository extends BaseMongoRepository {
 		return $model;
 	}
 
-	public function exportModel(Contact $model) {
+	/**
+	 * @see \Devture\Component\DBAL\Repository\BaseRepository::exportModel()
+	 * @param $model Contact
+	 */
+	protected function exportModel($model) {
 		$export = parent::exportModel($model);
 
 		$timePeriod = $model->getTimePeriod();
@@ -72,7 +74,7 @@ class ContactRepository extends BaseMongoRepository {
 		return $this->findBy(array('timePeriodId' => $timePeriod->getId()));
 	}
 
-	public function delete(BaseModel $object) {
+	public function delete($object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_CONTACT_DELETE, new ModelEvent($object));
 		parent::delete($object);

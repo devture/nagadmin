@@ -1,8 +1,8 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
 
-use Devture\Bundle\SharedBundle\Repository\BaseMongoRepository;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Repository\BaseMongoRepository;
+use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ResourceRepository extends BaseMongoRepository {
