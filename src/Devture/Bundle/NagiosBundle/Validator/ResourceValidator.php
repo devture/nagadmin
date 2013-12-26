@@ -2,12 +2,17 @@
 namespace Devture\Bundle\NagiosBundle\Validator;
 
 use Devture\Bundle\SharedBundle\Validator\BaseValidator;
-use Devture\Bundle\SharedBundle\Exception\NotFound;
+use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ResourceValidator extends BaseValidator {
 
-	public function validate(Resource $entity, array $options = array()) {
+	/**
+	 * @param Resource $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		foreach ($entity->getVariables() as $name => $value) {

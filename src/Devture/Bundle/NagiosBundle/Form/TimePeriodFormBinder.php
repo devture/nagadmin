@@ -16,7 +16,12 @@ class TimePeriodFormBinder extends SetterRequestBinder {
 		$this->validator = $validator;
 	}
 
-	protected function doBindRequest(TimePeriod $entity, Request $request, array $options = array()) {
+	/**
+	 * @param TimePeriod $entity
+	 * @param Request $request
+	 * @param array $options
+	 */
+	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array('name', 'title');
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 

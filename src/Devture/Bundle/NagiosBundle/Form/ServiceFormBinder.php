@@ -24,7 +24,12 @@ class ServiceFormBinder extends SetterRequestBinder {
 		$this->validator = $validator;
 	}
 
-	protected function doBindRequest(Service $entity, Request $request, array $options = array()) {
+	/**
+	 * @param Service $entity
+	 * @param Request $request
+	 * @param array $options
+	 */
+	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array(
 			'name',
 			'maxCheckAttempts',

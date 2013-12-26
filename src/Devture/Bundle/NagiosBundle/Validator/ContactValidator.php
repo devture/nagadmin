@@ -16,7 +16,12 @@ class ContactValidator extends BaseValidator {
 		$this->repository = $repository;
 	}
 
-	public function validate(Contact $entity, array $options = array()) {
+	/**
+	 * @param Contact $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		$name = $entity->getName();

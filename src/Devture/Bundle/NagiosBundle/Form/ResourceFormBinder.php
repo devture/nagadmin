@@ -15,7 +15,12 @@ class ResourceFormBinder extends SetterRequestBinder {
 		$this->validator = $validator;
 	}
 
-	protected function doBindRequest(Resource $entity, Request $request, array $options = array()) {
+	/**
+	 * @param Resource $entity
+	 * @param Request $request
+	 * @param array $options
+	 */
+	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$entity->clearVariables();
 		foreach ((array)$request->request->get('variables') as $variableName => $variableValue) {
 			if ($variableValue) {

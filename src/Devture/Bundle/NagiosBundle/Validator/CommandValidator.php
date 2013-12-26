@@ -14,7 +14,12 @@ class CommandValidator extends BaseValidator {
 		$this->repository = $repository;
 	}
 
-	public function validate(Command $entity, array $options = array()) {
+	/**
+	 * @param Command $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		$name = $entity->getName();

@@ -14,7 +14,12 @@ class TimePeriodValidator extends BaseValidator {
 		$this->repository = $repository;
 	}
 
-	public function validate(TimePeriod $entity, array $options = array()) {
+	/**
+	 * @param TimePeriod $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		$name = $entity->getName();

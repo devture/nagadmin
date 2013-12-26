@@ -16,7 +16,12 @@ class CommandFormBinder extends SetterRequestBinder {
 		$this->validator = $validator;
 	}
 
-	protected function doBindRequest(Command $entity, Request $request, array $options = array()) {
+	/**
+	 * @param Command $entity
+	 * @param Request $request
+	 * @param array $options
+	 */
+	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array('name', 'title', 'line', 'type');
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 

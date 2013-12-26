@@ -35,7 +35,12 @@ class ContactFormBinder extends SetterRequestBinder {
 		return $command;
 	}
 
-	protected function doBindRequest(Contact $entity, Request $request, array $options = array()) {
+	/**
+	 * @param Contact $entity
+	 * @param Request $request
+	 * @param array $options
+	 */
+	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array('name', 'email');
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 

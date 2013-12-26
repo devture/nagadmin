@@ -14,7 +14,12 @@ class HostValidator extends BaseValidator {
 		$this->repository = $repository;
 	}
 
-	public function validate(Host $entity, array $options = array()) {
+	/**
+	 * @param Host $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		$regexName = "/^[a-z][a-z0-9_\-\.]+$/";

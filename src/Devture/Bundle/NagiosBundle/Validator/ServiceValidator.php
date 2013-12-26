@@ -17,7 +17,12 @@ class ServiceValidator extends BaseValidator {
 		$this->repository = $repository;
 	}
 
-	public function validate(Service $entity, array $options = array()) {
+	/**
+	 * @param Service $entity
+	 * @param array $options
+	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 */
+	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
 		$name = $entity->getName();
