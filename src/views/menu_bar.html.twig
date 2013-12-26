@@ -10,6 +10,8 @@
 {% endmacro %}
 
 <ul class="nav navbar-nav">
+	{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
+
 	{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
 
 	{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}

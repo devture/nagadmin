@@ -31,6 +31,52 @@ nagadminApp.factory('LogRepository', function ($http, apiUrlRegistry) {
 	};
 });
 
+nagadminApp.factory('LogEntriesUpdaterFactory', function ($timeout, LogRepository) {
+	var LogEntriesUpdater = function (entities, callback) {
+		this.entities = entities;
+		this.callback = callback;
+		this.running = false;
+		this.timeoutId;
+	};
+	LogEntriesUpdater.prototype = {
+		start: function () {
+			var self = this;
+
+			this.running = true;
+
+			var scheduleUpdate = function () {
+				self.timeoutId = $timeout(function () {
+					var lastId = (self.entities.length !== 0 ? self.entities[0].id : 'null');
+
+					LogRepository.findAllIfNewerThanId(lastId).success(function (entities) {
+						if (entities.length !== 0) {
+							self.entities= entities;
+							self.callback(entities);
+						}
+					}).finally(function () {
+						if (self.running) {
+							scheduleUpdate();
+						}
+					});
+				}, 10000, false);
+			};
+
+			scheduleUpdate();
+		},
+
+		stop: function () {
+			this.running = false;
+			$timeout.cancel(this.timeout);
+		}
+	};
+
+	return {
+		"create": function (entities, callback) {
+			return new LogEntriesUpdater(entities, callback);
+		}
+	};
+});
+
 nagadminApp.factory('ServiceCheckScheduler', function ($http, apiUrlRegistry, csrfToken) {
 	return {
 		"scheduleOnHost": function (host, recheckType) {
@@ -157,28 +203,33 @@ nagadminApp.controller('HostInfoCtrl', function ($scope, HostInfo) {
 	});
 });
 
-nagadminApp.controller('LogsCtrl', function ($scope, $timeout, LogRepository) {
-	$scope.entities = [];
+nagadminApp.controller('LogsCtrl', function ($scope, LogRepository, LogEntriesUpdaterFactory) {
+	$scope.logs = [];
 
-	LogRepository.findAll().success(function (entities) {
-		$scope.entities = entities;
+	LogRepository.findAll().success(function (logs) {
+		$scope.logs = logs;
 
-		var timeout;
+		var updater = LogEntriesUpdaterFactory.create($scope.logs, function (logs) {
+			$scope.logs = logs;
+		});
+		updater.start();
+	});
+});
 
-		var scheduleUpdate = function () {
-			timeout = $timeout(function () {
-				var lastId = ($scope.entities.length !== 0 ? $scope.entities[0].id : 'null');
+nagadminApp.controller('DashboardCtrl', function ($scope, LogRepository, HostInfo, LogEntriesUpdaterFactory) {
+	$scope.logs = [];
+	$scope.hostsInfo = [];
 
-				LogRepository.findAllIfNewerThanId(lastId).success(function (entities) {
-					if (entities.length !== 0) {
-						$scope.entities = entities;
-					}
-				}).finally(function () {
-					scheduleUpdate();
-				});
-			}, 10000, false);
-		};
+	LogRepository.findAll().success(function (logs) {
+		$scope.logs = logs;
 
-		scheduleUpdate();
+		var updater = LogEntriesUpdaterFactory.create($scope.logs, function (logs) {
+			$scope.logs = logs;
+		});
+		updater.start();
+	});
+
+	HostInfo.findAll().success(function (infoObjectsList) {
+		$scope.hostsInfo = infoObjectsList;
 	});
 });

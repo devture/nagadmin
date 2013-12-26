@@ -1,0 +1,34 @@
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+
+{% block devture_nagios_content %}
+	<div ng-controller="DashboardCtrl" ng-app-lazy="nagadminApp">
+		<div ng-cloak ng-hide="logs.length == 0" class="pull-right">
+			<a class="btn btn-default btn-sm" href="{{ path('devture_nagios.log.manage') }}">
+				<i class="glyphicon glyphicon-book"></i>
+				see all {{ '{{ logs.length }}' }} log entries
+			</a>
+		</div>
+		<h3>Logs</h3>
+		<div ng-if="logs.length == 0">
+			<div class="spinner text-center">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+		</div>
+		<log-list-table ng-if="logs.length != 0" entities="logs" limit="3"></log-list-table>
+
+		<div ng-cloak ng-hide="hostsInfo == 0" class="pull-right">
+			<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
+		</div>
+		<h3>Services</h3>
+		<div ng-if="hostsInfo.length == 0">
+			<div class="spinner text-center">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+		</div>
+		<host-info ng-repeat="hostInfo in hostsInfo" entity="hostInfo"></host-info>
+	</div>
+{% endblock %}

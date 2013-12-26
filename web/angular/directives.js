@@ -310,30 +310,41 @@ nagadminApp.directive('hrefTo', function ($filter) {
 	};
 });
 
-nagadminApp.directive('logListTable', function (templatePathRegistry, apiUrlRegistry) {
+nagadminApp.directive('logListTable', function (templatePathRegistry, url_service_viewFilter, url_host_editFilter) {
 	var generateInfoLink = function (entity) {
 		if (entity.service.id) {
-			return apiUrlRegistry.service.view.replace('__ID__', entity.service.id);
+			return url_service_viewFilter(entity.service);
 		}
 
 		if (entity.host.id) {
-			return apiUrlRegistry.host.edit.replace('__ID__', entity.host.id);
+			return url_host_editFilter(entity.host);
 		}
 
 		return null;
 	};
 
+	var processEntities = function (entities, limit) {
+		var entities = (limit ? entities.slice(0, limit) : entities);
+
+		entities.forEach(function (entity) {
+			entity.infoLink = generateInfoLink(entity);
+		});
+
+		return entities;
+	};
+
 	return {
 		"restrict": "E",
 		"scope": {
-			"entities": "=entities"
+			"entities": "=entities",
+			"limit": "=limit"
 		},
 		"templateUrl": templatePathRegistry.log.listTable,
 		"link": function ($scope) {
-			$scope.$watch('entities', function () {
-				$scope.entities.forEach(function (entity) {
-					entity.infoLink = generateInfoLink(entity);
-				});
+			$scope.filteredEntities = [];
+
+			$scope.$watch('entities', function (newVal, oldVal) {
+				$scope.filteredEntities = processEntities(newVal, $scope.limit);
 			});
 		}
 	};

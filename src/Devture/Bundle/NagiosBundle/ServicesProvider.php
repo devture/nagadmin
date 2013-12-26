@@ -232,6 +232,10 @@ class ServicesProvider implements ServiceProviderInterface {
 		$app['devture_nagios.controller.log.api'] = function ($app) {
 			return new Controller\Api\LogApiController($app, 'devture_nagios');
 		};
+
+		$app['devture_nagios.controller.dashboard'] = function ($app) {
+			return new Controller\DashboardController($app, 'devture_nagios');
+		};
 	}
 
 	private function registerDeploymentServices(Application $app) {

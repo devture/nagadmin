@@ -72,6 +72,9 @@ class ControllersProvider implements ControllerProviderInterface {
 		$controllers->get('/log/manage', 'devture_nagios.controller.log.management:manageAction')
 			->bind($namespace . '.log.manage');
 
+		$controllers->get('/dashboard', 'devture_nagios.controller.dashboard:dashboardAction')
+			->bind($namespace . '.dashboard');
+
 		return $controllers;
 	}
 

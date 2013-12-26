@@ -7,7 +7,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="entity in entities track by entity.id">
+		<tr ng-repeat="entity in filteredEntities track by entity.id">
 			<td nowrap="nowrap">
 				<relative-time timestamp="entity.timestamp * 1000"></relative-time> ago
 			</td>
