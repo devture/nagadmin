@@ -203,7 +203,7 @@
 	{{ parent() }}
 
 	{% if isAdded %}
-	$('#form-delete-btn').bind('click', function () {
+	$('#form-delete-btn').click('click', function () {
 		if (confirm('Are you sure you want to delete this?')) {
 			$.ajax({
 				"url": {{ path('devture_nagios.service.delete', {'id': entity.id, 'token': csrf_token('delete-service-' ~ entity.id)})|json_encode|raw }},
