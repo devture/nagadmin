@@ -4,7 +4,7 @@
 	{% block head %}
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<title>{{ get_project_name() }}</title>
+	<title>{{ app.config.project_name }} / nagadmin</title>
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/bootstrap.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/style.css') }}" />
 	{% endblock %}
@@ -23,7 +23,7 @@
 			<span class="icon-bar"></span>
 		</button>
 		<a class="navbar-brand" href="{{ path('devture_nagios.dashboard') }}">
-			{{ get_project_name() }}
+			{{ app.config.project_name }}
 		</a>
 	</div>
 

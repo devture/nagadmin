@@ -54,15 +54,9 @@ class Application extends \Silex\Application {
 			return $app['mongodb.connection']->selectDatabase($app['config']['mongo']['db_name']);
 		});
 
-		$app->register(new \Devture\Bundle\SharedBundle\ServicesProvider($this['config']['SharedBundle']));
+		$app->register(new \Devture\Bundle\FrameworkBundle\ServicesProvider($this['config']['FrameworkBundle']));
 
 		$app->register(new \Devture\Bundle\NagiosBundle\ServicesProvider($app['config']['NagiosBundle']));
-	}
-
-	public function boot() {
-		parent::boot();
-
-		$this['twig']->addExtension(new \Devture\Website\Twig\Extension\ProjectExtension($this['config']['project.name']));
 	}
 
 }

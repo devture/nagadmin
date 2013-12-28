@@ -1,6 +1,6 @@
 {
 	"trusted_proxies": "%trusted_proxies%",
-	"project.name": "%project_name%",
+	"project_name": "%project_name%",
 	"debug": "%is_debug%",
 	"mongo": {
 		"db_name": "%db_name%"
