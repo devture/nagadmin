@@ -1,6 +1,6 @@
 {
 	"is_debug": false,
-	"is_proxy_data_trusted": false,
+	"trusted_proxies": [],
 	"project_name": "name-here",
 	"db_name": "nagadmin",
 

@@ -27,8 +27,8 @@ class Application extends \Silex\Application {
 	protected function initServiceProviders() {
 		$app = $this;
 
-		if ($this['config']['trust_proxy_data']) {
-			\Symfony\Component\HttpFoundation\Request::trustProxyData();
+		if ($this['config']['trusted_proxies']) {
+			\Symfony\Component\HttpFoundation\Request::setTrustedProxies($this['config']['trusted_proxies']);
 		}
 
 		$app['app_base_path'] = $this->basePath;

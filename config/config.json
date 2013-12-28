@@ -1,5 +1,5 @@
 {
-	"trust_proxy_data": "%is_proxy_data_trusted%",
+	"trusted_proxies": "%trusted_proxies%",
 	"project.name": "%project_name%",
 	"debug": "%is_debug%",
 	"mongo": {
