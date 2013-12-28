@@ -78,6 +78,8 @@ class Fetcher {
 					list($host, $service) = $this->getExternalCommandAssociations($value);
 				} else if ($type === 'SERVICE NOTIFICATION') {
 					list($host, $service) = $this->getServiceNotificationAssociations($value);
+				} else if ($type === 'SERVICE FLAPPING ALERT') {
+					list($host, $service) = $this->getServiceAlertAssociations($value);
 				}
 
 				$objects[] = new LogEntry($type, $timestamp, $value, $host, $service);
