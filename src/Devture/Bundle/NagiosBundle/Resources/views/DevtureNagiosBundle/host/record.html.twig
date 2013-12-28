@@ -54,6 +54,14 @@
 				<div class="col-lg-10">
 					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
 						<div ng-controller="HostInfoCtrl">
+							<div ng-if="hostInfo == null">
+								<div class="spinner text-center">
+									<div class="bounce1"></div>
+									<div class="bounce2"></div>
+									<div class="bounce3"></div>
+								</div>
+							</div>
+
 							<host-info entity="hostInfo" ng-if="hostInfo != null"></host-info>
 						</div>
 					</div>
