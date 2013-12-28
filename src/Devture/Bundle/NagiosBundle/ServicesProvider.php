@@ -50,7 +50,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.time_period.form_binder'] = function ($app) {
 			$binder = new Form\TimePeriodFormBinder($app['devture_nagios.time_period.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'time_period');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'time_period');
 			return $binder;
 		};
 
@@ -68,7 +68,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.command.form_binder'] = function ($app) {
 			$binder = new Form\CommandFormBinder($app['devture_nagios.command.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'command');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'command');
 			return $binder;
 		};
 
@@ -86,7 +86,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.contact.form_binder'] = function ($app) {
 			$binder = new Form\ContactFormBinder($app['devture_nagios.time_period.repository'], $app['devture_nagios.command.repository'], $app['devture_nagios.contact.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'contact');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'contact');
 			return $binder;
 		};
 
@@ -104,7 +104,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.host.form_binder'] = function ($app) {
 			$binder = new Form\HostFormBinder($app['devture_nagios.host.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'host');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'host');
 			return $binder;
 		};
 
@@ -120,7 +120,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.service.form_binder'] = function ($app) {
 			$binder = new Form\ServiceFormBinder($app['devture_nagios.host.repository'], $app['devture_nagios.contact.repository'], $app['devture_nagios.service.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'service');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'service');
 			return $binder;
 		};
 
@@ -134,7 +134,7 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.resource.form_binder'] = function ($app) {
 			$binder = new Form\ResourceFormBinder($app['devture_nagios.resource.validator']);
-			$binder->setCsrfProtection($app['shared.csrf_token_generator'], 'resource');
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'resource');
 			return $binder;
 		};
 

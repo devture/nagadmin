@@ -21,7 +21,7 @@ class CommandManagementController extends BaseController {
 		$entity->setType($type);
 
 		$binder = $this->getCommandFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getCommandRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));
 		}
@@ -41,7 +41,7 @@ class CommandManagementController extends BaseController {
 		}
 
 		$binder = $this->getCommandFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getCommandRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('command.manage', array('type' => $entity->getType())));

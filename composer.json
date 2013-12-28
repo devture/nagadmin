@@ -5,7 +5,6 @@
 			"email": "s.pantaleev@gmail.com"
 		}
 	],
-	"repositories": [ { "type": "composer", "url": "http://packages.devture.com/" } ],
 	"require": {
 		"php": ">=5.4.0",
 		"silex/silex": "1.0.*",
@@ -18,7 +17,7 @@
 		"swiftmailer/swiftmailer": "5.0.*",
 		"devture/silex-provider-doctrine-mongodb": "1.0.*",
 		"devture/silex-provider-config": "1.0.*",
-		"devture/silex-shared-bundle": "1.*",
+		"devture/silex-framework-bundle": "1.0.*",
 		"devture/sms-sender": "1.1.*",
 		"devture/dbal": "1.0.*"
 	},

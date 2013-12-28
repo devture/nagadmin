@@ -15,7 +15,7 @@ class TimePeriodManagementController extends BaseController {
 		$entity = $this->getTimePeriodRepository()->createModel(array());
 
 		$binder = $this->getTimePeriodFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getTimePeriodRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('time_period.manage'));
 		}
@@ -35,7 +35,7 @@ class TimePeriodManagementController extends BaseController {
 		}
 
 		$binder = $this->getTimePeriodFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getTimePeriodRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('time_period.manage'));

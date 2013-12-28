@@ -5,10 +5,8 @@
 	"mongo": {
 		"db_name": "%db_name%"
 	},
-	"SharedBundle": {
-		"token.validity_time": 7200,
-		"token.salt": "%SharedBundle.token_salt%",
-		"token.hash_function": "md5"
+	"FrameworkBundle": {
+		"token.secret": "%FrameworkBundle.token_secret%"
 	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",

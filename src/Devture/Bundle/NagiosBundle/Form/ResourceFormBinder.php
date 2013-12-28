@@ -2,18 +2,10 @@
 namespace Devture\Bundle\NagiosBundle\Form;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Binder\SetterRequestBinder;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ResourceFormBinder extends SetterRequestBinder {
-
-	private $validator;
-
-	public function __construct(BaseValidator $validator) {
-		parent::__construct();
-		$this->validator = $validator;
-	}
 
 	/**
 	 * @param Resource $entity
@@ -27,8 +19,6 @@ class ResourceFormBinder extends SetterRequestBinder {
 				$entity->setVariable($variableName, $variableValue);
 			}
 		}
-
-		$this->violations->merge($this->validator->validate($entity));
 	}
 
 }

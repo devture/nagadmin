@@ -2,19 +2,11 @@
 namespace Devture\Bundle\NagiosBundle\Form;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Binder\SetterRequestBinder;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\CommandArgument;
 
 class CommandFormBinder extends SetterRequestBinder {
-
-	private $validator;
-
-	public function __construct(BaseValidator $validator) {
-		parent::__construct();
-		$this->validator = $validator;
-	}
 
 	/**
 	 * @param Command $entity
@@ -37,8 +29,6 @@ class CommandFormBinder extends SetterRequestBinder {
 			$argument->setId('$ARG' . $argumentNumber . '$');
 			$entity->addArgument($argument);
 		}
-
-		$this->violations->merge($this->validator->validate($entity));
 	}
 
 }

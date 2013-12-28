@@ -4,7 +4,7 @@
 	{{ render_form_violations(form, '__other__') }}
 
 	<form name="record-form" id="record-form" method="post" action="">
-		{{ form_csrf_token(form) }}
+		{{ render_form_csrf_token(form) }}
 
 		<fieldset>
 			<div class="form-group row">

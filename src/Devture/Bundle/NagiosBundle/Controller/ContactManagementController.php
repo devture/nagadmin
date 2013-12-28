@@ -29,7 +29,7 @@ class ContactManagementController extends BaseController {
 		$entity = $this->getContactRepository()->createModel(array());
 
 		$binder = $this->getContactFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getContactRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('contact.manage'));
 		}
@@ -49,7 +49,7 @@ class ContactManagementController extends BaseController {
 		}
 
 		$binder = $this->getContactFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getContactRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('contact.manage'));

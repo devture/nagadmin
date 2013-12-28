@@ -10,7 +10,7 @@ class ResourceManagementController extends BaseController {
 		$entity = $this->getResourceRepository()->getResource();
 
 		$binder = $this->getResourceFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getResourceRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('resource.manage'));

@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Controller;
 
-class BaseController extends \Devture\Bundle\SharedBundle\Controller\BaseController {
+class BaseController extends \Devture\Bundle\FrameworkBundle\Controller\BaseController {
 
 	/**
 	 * @return \Devture\Bundle\NagiosBundle\Repository\HostRepository
@@ -89,14 +89,14 @@ class BaseController extends \Devture\Bundle\SharedBundle\Controller\BaseControl
 	}
 
 	protected function isValidCsrfToken($intention, $token) {
-		return $this->getCsrfTokenGenerator()->isValid($intention, $token);
+		return $this->getCsrfTokenManager()->isValid($intention, $token);
 	}
 
 	/**
-	 * @return \Devture\Bundle\SharedBundle\Token\TokenGeneratorInterface
+	 * @return \Devture\Component\Form\Token\TokenManagerInterface
 	 */
-	private function getCsrfTokenGenerator() {
-		return $this->get('shared.csrf_token_generator');
+	private function getCsrfTokenManager() {
+		return $this->get('devture_framework.csrf_token_manager');
 	}
 
 }

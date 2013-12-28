@@ -16,14 +16,12 @@ body {
 
 [ng-cloak] { display: none; }
 
-ul.validation-errors {
+.devture-form-validation-errors {
 	color: #e33904;
 	font-weight: bold;
 	margin: 5px 0 0 0;
 	padding: 0;
 	list-style: none;
-}
-ul.validation-errors li {
 }
 
 .navbar-nagadmin { border-radius: 0; border-left: 0; border-right: 0; }

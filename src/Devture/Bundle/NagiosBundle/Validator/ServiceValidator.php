@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Validator;
 
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Validator\BaseValidator;
 use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 use Devture\Bundle\NagiosBundle\Model\Service;
@@ -20,7 +20,7 @@ class ServiceValidator extends BaseValidator {
 	/**
 	 * @param Service $entity
 	 * @param array $options
-	 * @return \Devture\Bundle\SharedBundle\Validator\ViolationsList
+	 * @return \Devture\Component\Form\Validator\ViolationsList
 	 */
 	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);

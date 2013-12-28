@@ -4,7 +4,7 @@
 	"project_name": "name-here",
 	"db_name": "nagadmin",
 
-	"SharedBundle.token_salt": "salt here",
+	"FrameworkBundle.token_secret": "secret here",
 
 	"NagiosBundle.log_file_path": "/var/log/nagios/nagios.log",
 	"NagiosBundle.status_file_path": "/var/nagios/status.dat",

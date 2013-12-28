@@ -2,26 +2,24 @@
 namespace Devture\Bundle\NagiosBundle\Form;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Binder\SetterRequestBinder;
 use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\ServiceCommandArgument;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
+use Devture\Bundle\NagiosBundle\Validator\ServiceValidator;
 
 class ServiceFormBinder extends SetterRequestBinder {
 
 	private $hostRepository;
 	private $contactRepository;
-	private $validator;
 
-	public function __construct(HostRepository $hostRepository, ContactRepository $contactRepository, BaseValidator $validator) {
-		parent::__construct();
+	public function __construct(HostRepository $hostRepository, ContactRepository $contactRepository, ServiceValidator $validator) {
+		parent::__construct($validator);
 		$this->hostRepository = $hostRepository;
 		$this->contactRepository = $contactRepository;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -33,7 +31,8 @@ class ServiceFormBinder extends SetterRequestBinder {
 		$whitelisted = array(
 			'name',
 			'maxCheckAttempts',
-			'checkInterval', 'retryInterval',
+			'checkInterval',
+			'retryInterval',
 			'notificationInterval',
 		);
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
@@ -44,7 +43,7 @@ class ServiceFormBinder extends SetterRequestBinder {
 			$host = $this->hostRepository->find($request->request->get('hostId'));
 			$entity->setHost($host);
 		} catch (NotFound $e) {
-			$this->violations->add('host', 'Cannot find the selected host.');
+			$this->getViolations()->add('host', 'Cannot find the selected host.');
 		}
 
 		$entity->clearArguments();
@@ -69,11 +68,9 @@ class ServiceFormBinder extends SetterRequestBinder {
 			try {
 				$entity->addContact($this->contactRepository->find($contactId));
 			} catch (NotFound $e) {
-				$this->violations->add('contacts', 'Cannot find contact.');
+				$this->getViolations()->add('contacts', 'Cannot find contact.');
 			}
 		}
-
-		$this->violations->merge($this->validator->validate($entity));
 	}
 
 }

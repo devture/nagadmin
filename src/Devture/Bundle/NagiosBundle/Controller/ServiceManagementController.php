@@ -51,7 +51,7 @@ class ServiceManagementController extends BaseController {
 		}
 
 		$binder = $this->getServiceFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getServiceRepository()->add($entity);
 			$this->tryDeployConfiguration();
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');
@@ -73,7 +73,7 @@ class ServiceManagementController extends BaseController {
 		}
 
 		$binder = $this->getServiceFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getServiceRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			$next = $request->query->has('next') ? $request->query->get('next') : $this->generateUrlNs('service.manage');

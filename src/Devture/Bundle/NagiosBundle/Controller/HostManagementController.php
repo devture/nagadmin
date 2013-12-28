@@ -38,7 +38,7 @@ class HostManagementController extends BaseController {
 		$entity = $this->getHostRepository()->createModel(array());
 
 		$binder = $this->getHostFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getHostRepository()->add($entity);
 			return $this->redirect($this->generateUrlNs('host.manage'));
 		}
@@ -46,8 +46,8 @@ class HostManagementController extends BaseController {
 		return $this->renderView('DevtureNagiosBundle/host/record.html.twig', array_merge($this->getBaseViewData($entity), array(
 			'entity' => $entity,
 			'isAdded' => false,
-			'form' => $binder,)
-		));
+			'form' => $binder,
+		)));
 	}
 
 	public function editAction(Request $request, $id) {
@@ -58,7 +58,7 @@ class HostManagementController extends BaseController {
 		}
 
 		$binder = $this->getHostFormBinder();
-		if ($request->getMethod() === 'POST' && $binder->bindProtectedRequest($entity, $request)) {
+		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getHostRepository()->update($entity);
 			$this->tryDeployConfiguration();
 			return $this->redirect($this->generateUrlNs('host.manage'));

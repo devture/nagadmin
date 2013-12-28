@@ -2,18 +2,10 @@
 namespace Devture\Bundle\NagiosBundle\Form;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Binder\SetterRequestBinder;
 use Devture\Bundle\NagiosBundle\Model\Host;
 
 class HostFormBinder extends SetterRequestBinder {
-
-	private $validator;
-
-	public function __construct(BaseValidator $validator) {
-		parent::__construct();
-		$this->validator = $validator;
-	}
 
 	/**
 	 * @param Host $entity
@@ -28,8 +20,6 @@ class HostFormBinder extends SetterRequestBinder {
 		foreach ((array)$request->request->get('groups') as $groupName) {
 			$entity->addGroup($groupName);
 		}
-
-		$this->violations->merge($this->validator->validate($entity));
 	}
 
 }

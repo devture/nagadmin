@@ -2,25 +2,23 @@
 namespace Devture\Bundle\NagiosBundle\Form;
 
 use Symfony\Component\HttpFoundation\Request;
-use Devture\Bundle\SharedBundle\Form\SetterRequestBinder;
-use Devture\Bundle\SharedBundle\Validator\BaseValidator;
+use Devture\Component\Form\Binder\SetterRequestBinder;
 use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
+use Devture\Bundle\NagiosBundle\Validator\ContactValidator;
 
 class ContactFormBinder extends SetterRequestBinder {
 
 	private $timePeriodRepository;
 	private $commandRepository;
-	private $validator;
 
-	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, BaseValidator $validator) {
-		parent::__construct();
+	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, ContactValidator $validator) {
+		parent::__construct($validator);
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;
-		$this->validator = $validator;
 	}
 
 	/**
@@ -49,14 +47,14 @@ class ContactFormBinder extends SetterRequestBinder {
 			$entity->setTimePeriod($timePeriod);
 
 		} catch (NotFound $e) {
-			$this->violations->add('timePeriod', 'Cannot find the selected time period.');
+			$this->getViolations()->add('timePeriod', 'Cannot find the selected time period.');
 		}
 
 		try {
 			$command = $this->getNotificationCommandById($request->request->get('serviceNotificationCommandId'));
 			$entity->setServiceNotificationCommand($command);
 		} catch (NotFound $e) {
-			$this->violations->add('serviceNotificationCommand', 'Cannot find the selected service notification command.');
+			$this->getViolations()->add('serviceNotificationCommand', 'Cannot find the selected service notification command.');
 		}
 
 		$entity->clearAddresses();
@@ -65,8 +63,6 @@ class ContactFormBinder extends SetterRequestBinder {
 				$entity->addAddress($slot, $address);
 			}
 		}
-
-		$this->violations->merge($this->validator->validate($entity));
 	}
 
 }
