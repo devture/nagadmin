@@ -1,7 +1,6 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Deployment;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile;
 
