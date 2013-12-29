@@ -14,12 +14,12 @@
 			{% set link = path('devture_nagios.host.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="display-block">
+					<a href="{{ link }}" class="btn-block">
 						{{ entity.name }}
 					</a>
 				</td>
 				<td class="hidden-xs">
-					<a href="{{ link }}" class="display-block">
+					<a href="{{ link }}" class="btn-block">
 						<img src="//www.google.com/s2/favicons?domain={{ entity.address }}" alt="" />
 						{{ entity.address }}
 					</a>
