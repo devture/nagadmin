@@ -66,6 +66,13 @@ class Fetcher {
 				$host = null;
 				$service = null;
 
+				if ($type === 'Warning') {
+					if (preg_match("/^Host '[^']+' has no default contacts or contactgroups defined!$/", $value)) {
+						//We don't support host-related stuff, so this is irrelevevant.
+						continue;
+					}
+				}
+
 				if ($type === 'SERVICE ALERT') {
 					list($host, $service) = $this->getServiceAlertAssociations($value);
 				} else if ($type === 'CURRENT SERVICE STATE') {
