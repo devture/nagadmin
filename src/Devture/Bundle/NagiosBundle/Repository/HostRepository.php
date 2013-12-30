@@ -29,6 +29,17 @@ class HostRepository extends BaseMongoRepository {
 		return $this->findOneBy(array('name' => $name));
 	}
 
+	public function getDistinctGroups() {
+		$groupsMap = array();
+		foreach ($this->findBy(array(), array()) as $host) {
+			foreach ($host->getGroups() as $groupName) {
+				$groupsMap[$groupName] = true;
+			}
+		}
+		ksort($groupsMap);
+		return array_keys($groupsMap);
+	}
+
 	public function delete($object) {
 		$this->validateModelClass($object);
 		$this->dispatcher->dispatch(Events::BEFORE_HOST_DELETE, new ModelEvent($object));

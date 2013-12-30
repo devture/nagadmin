@@ -81,17 +81,24 @@
 {% endmacro %}
 
 {% block devture_nagios_content %}
-	{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% if devture_nagios_can_user_manage_service(app.user, entity) %}
+		{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% endif %}
 
 	<div ng-app-lazy="nagadminApp">
 		<fieldset>
 			<div class="form-group row">
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
 				<div class="col-lg-10">
-					<a href="{{ path('devture_nagios.host.edit', {'id': entity.host.id}) }}">
+					{% if devture_nagios_can_user_manage_service(app.user, entity) %}
+						<a href="{{ path('devture_nagios.host.edit', {'id': entity.host.id}) }}">
+							<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
+							{{ entity.host.name }}
+						</a>
+					{% else %}
 						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
 						{{ entity.host.name }}
-					</a>
+					{% endif %}
 					({{ entity.host.address }})
 				</div>
 			</div>
@@ -110,14 +117,24 @@
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-user"></i> Users to notify</label>
 				<div class="col-lg-10 clearfix">
 				{% for contact in entity.contacts %}
-					<a
-						class="well well-small"
-						style="display: inline-block; padding: 2px 5px;"
-						href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
-						ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
-						<contact entity='contact_{{ contact.id }}' size="24"></contact>
-						{{ contact.name }}
-					</a>
+					{% if devture_nagios_can_user_manage_contact(app.user, contact) %}
+						<a
+							class="well well-small"
+							style="display: inline-block; padding: 2px 5px;"
+							href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
+							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
+							<contact entity='contact_{{ contact.id }}' size="24"></contact>
+							{{ contact.name }}
+						</a>
+					{% else %}
+						<span
+							class="well well-small"
+							style="display: inline-block; padding: 2px 5px;"
+							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
+							<contact entity='contact_{{ contact.id }}' size="24"></contact>
+							{{ contact.name }}
+						</span>
+					{% endif %}
 				{% else %}
 					No one
 				{% endfor %}

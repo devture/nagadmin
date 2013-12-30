@@ -14,21 +14,13 @@ class HostManagementController extends BaseController {
 	}
 
 	private function getBaseViewData(Host $currentHost) {
-		$groupsMap = array();
-		$hosts = $this->getHostRepository()->findBy(array(), array());
-		$hosts[] = $currentHost;
-		foreach ($hosts as $host) {
-			foreach ($host->getGroups() as $groupName) {
-				$groupsMap[$groupName] = true;
-			}
-		}
-		ksort($groupsMap);
+		$groups = array_unique(array_merge($this->getHostRepository()->getDistinctGroups(), $currentHost->getGroups()));
 
 		$findBy = array('type' => Command::TYPE_SERVICE_CHECK);
 		$commands = $this->getCommandRepository()->findBy($findBy, array('sort' => array('title' => 1)));
 
 		$viewData = array();
-		$viewData['groups'] = array_keys($groupsMap);
+		$viewData['groups'] = $groups;
 		$viewData['services'] = $this->getServiceRepository()->findByHost($currentHost);
 		$viewData['commands'] = $commands;
 		return $viewData;

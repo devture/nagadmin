@@ -6,7 +6,7 @@
 		</h4>
 	</a>
 	<div class="pull-right">
-		<service-add-new-button host="entity.host"></service-add-new-button>
+		<service-add-new-button ng-if="entity.host.editable" host="entity.host"></service-add-new-button>
 		<host-recheck-button host="entity.host" rechecking="isBeingRechecked" on-dirty="updateHostInfo"></host-recheck-button>
 	</div>
 </div>

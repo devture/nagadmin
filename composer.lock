@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "18a03a2de48f3b3beee2733a4535809c",
+    "hash": "ae7b990a5d17ed2297d7170ea8c5e9b9",
     "packages": [
         {
             "name": "browserid/browserid",
@@ -303,16 +303,16 @@
         },
         {
             "name": "devture/silex-user-bundle",
-            "version": "5.1.1",
+            "version": "5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devture/silex-user-bundle.git",
-                "reference": "9745ebbd76c7c050b6e27c58426d04289da86f97"
+                "reference": "c15e90b9e3873b8729c330a81e98b11208433152"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devture/silex-user-bundle/zipball/9745ebbd76c7c050b6e27c58426d04289da86f97",
-                "reference": "9745ebbd76c7c050b6e27c58426d04289da86f97",
+                "url": "https://api.github.com/repos/devture/silex-user-bundle/zipball/c15e90b9e3873b8729c330a81e98b11208433152",
+                "reference": "c15e90b9e3873b8729c330a81e98b11208433152",
                 "shasum": ""
             },
             "require": {
@@ -350,7 +350,7 @@
                 "bundle",
                 "silex"
             ],
-            "time": "2013-12-30 19:07:43"
+            "time": "2013-12-30 23:17:04"
         },
         {
             "name": "devture/sms-sender",

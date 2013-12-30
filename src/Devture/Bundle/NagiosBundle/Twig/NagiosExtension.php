@@ -1,6 +1,8 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Twig;
 
+use Devture\Bundle\NagiosBundle\Model\User;
+use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 
@@ -21,6 +23,10 @@ class NagiosExtension extends \Twig_Extension {
 			'devture_nagios_get_info_status' => new \Twig_Function_Method($this, 'getInfoStatus'),
 			'devture_nagios_get_program_status' => new \Twig_Function_Method($this, 'getProgramStatus'),
 			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
+			'devture_nagios_can_user_manage_host' => new \Twig_Function_Method($this, 'canUserManageHost'),
+			'devture_nagios_can_user_manage_service' => new \Twig_Function_Method($this, 'canUserManageService'),
+			'devture_nagios_can_user_manage_contact' => new \Twig_Function_Method($this, 'canUserManageContact'),
+			'devture_nagios_get_distinct_groups' => new \Twig_Function_Method($this, 'getDistinctGroups'),
 		);
 	}
 
@@ -51,6 +57,22 @@ class NagiosExtension extends \Twig_Extension {
 		return $this->getStatusManager()->getServiceStatus($service);
 	}
 
+	public function canUserManageHost(User $user, Host $host) {
+		return $this->getAccessChecker()->canUserManageHost($user, $host);
+	}
+
+	public function canUserManageService(User $user, Service $service) {
+		return $this->getAccessChecker()->canUserManageService($user, $service);
+	}
+
+	public function canUserManageContact(User $user, Contact $contact) {
+		return $this->getAccessChecker()->canUserManageContact($user, $contact);
+	}
+
+	public function getDistinctGroups() {
+		return $this->getHostRepository()->getDistinctGroups();
+	}
+
 	/**
 	 * @return \Devture\Bundle\NagiosBundle\Status\Manager
 	 */
@@ -66,10 +88,24 @@ class NagiosExtension extends \Twig_Extension {
 	}
 
 	/**
+	 * @return \Devture\Bundle\NagiosBundle\Helper\AccessChecker
+	 */
+	private function getAccessChecker() {
+		return $this->container['devture_nagios.helper.access_checker'];
+	}
+
+	/**
 	 * @return \Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge
 	 */
 	private function getContactApiModelBridge() {
 		return $this->container['devture_nagios.contact.api_model_bridge'];
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Repository\HostRepository
+	 */
+	private function getHostRepository() {
+		return $this->container['devture_nagios.host.repository'];
 	}
 
 }

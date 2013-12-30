@@ -16,16 +16,25 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 		try {
 			if ($id) {
 				$selectedHost = $this->getHostRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserViewHost($this->getUser(), $selectedHost)) {
+					return $this->abort(401);
+				}
 			}
 		} catch (NotFound $e) {
-
+			return $this->json(array());
 		}
 
 		$hosts = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 
+		$accessChecker = $this->getAccessChecker();
+
 		$items = array();
 		foreach ($hosts as $host) {
 			if ($selectedHost === null || $selectedHost === $host) {
+				if (!$accessChecker->canUserViewHost($this->getUser(), $host)) {
+					continue;
+				}
 				$items[] = $this->createHostInfo($host);
 			}
 		}
@@ -50,6 +59,11 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 			$scheduledCount = 0;
 			try {
 				$host = $this->getHostRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserViewHost($this->getUser(), $host)) {
+					return $this->json(array('ok' => false, 'unauthorized' => true));
+				}
+
 				$commandManager = $this->getNagiosCommandManager();
 
 				foreach ($this->getServiceRepository()->findByHost($host) as $service) {

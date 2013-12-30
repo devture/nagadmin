@@ -22,10 +22,8 @@ class HostValidator extends BaseValidator {
 	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
-		$regexName = "/^[a-z][a-z0-9_\-\.]+$/";
-
 		$name = $entity->getName();
-		if (strlen($name) < 3 || !preg_match($regexName, $name)) {
+		if (strlen($name) < 3 || !NameValidator::isValid($name)) {
 			$violations->add('name', 'Invalid name.');
 		} else {
 			try {
@@ -43,7 +41,7 @@ class HostValidator extends BaseValidator {
 		}
 
 		foreach ($entity->getGroups() as $groupName) {
-			if (!preg_match($regexName, $groupName)) {
+			if (!NameValidator::isValid($groupName)) {
 				$violations->add('groups', 'The group name %name% is not valid.', array('%name%' => $groupName));
 			}
 		}

@@ -4,6 +4,7 @@ namespace Devture\Bundle\NagiosBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Command;
+use Devture\Bundle\NagiosBundle\Model\Service;
 
 class ServiceManagementController extends BaseController {
 
@@ -18,6 +19,7 @@ class ServiceManagementController extends BaseController {
 	}
 
 	public function addAction(Request $request, $hostId, $commandId) {
+		/* @var $entity Service */
 		$entity = $this->getServiceRepository()->createModel(array());
 
 		$defaults = $this->getNs('service.defaults');
@@ -42,7 +44,13 @@ class ServiceManagementController extends BaseController {
 		}
 
 		try {
-			$entity->setHost($this->getHostRepository()->find($hostId));
+			$host = $this->getHostRepository()->find($hostId);
+
+			if (!$this->getAccessChecker()->canUserManageHost($this->getUser(), $host)) {
+				return $this->abort(401);
+			}
+
+			$entity->setHost($host);
 		} catch (NotFound $e) {
 			return $this->abort(404);
 		}
@@ -64,9 +72,14 @@ class ServiceManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
+			/* @var $entity Service */
 			$entity = $this->getServiceRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
+		}
+
+		if (!$this->getAccessChecker()->canUserManageService($this->getUser(), $entity)) {
+			return $this->abort(401);
 		}
 
 		$binder = $this->getServiceFormBinder();
@@ -86,9 +99,14 @@ class ServiceManagementController extends BaseController {
 
 	public function viewAction(Request $request, $id) {
 		try {
+			/* @var $entity Service */
 			$entity = $this->getServiceRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
+		}
+
+		if (!$this->getAccessChecker()->canUserViewService($this->getUser(), $entity)) {
+			return $this->json(array('ok' => false));
 		}
 
 		return $this->renderView('DevtureNagiosBundle/service/view.html.twig', array_merge($this->getBaseViewData(), array(
@@ -101,7 +119,13 @@ class ServiceManagementController extends BaseController {
 		$intention = 'schedule-service-check-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
+				/* @var $service Service */
 				$service = $this->getServiceRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserManageService($this->getUser(), $service)) {
+					return $this->json(array('ok' => false));
+				}
+
 				$this->getNagiosCommandManager()->scheduleServiceCheck($service);
 			} catch (NotFound $e) {
 
@@ -115,7 +139,14 @@ class ServiceManagementController extends BaseController {
 		$intention = 'delete-service-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getServiceRepository()->delete($this->getServiceRepository()->find($id));
+				/* @var $service Service */
+				$service = $this->getServiceRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserManageService($this->getUser(), $service)) {
+					return $this->json(array('ok' => false));
+				}
+
+				$this->getServiceRepository()->delete($service);
 				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 

@@ -14,6 +14,14 @@ class LogApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseContr
 			}
 		}
 
+
+		$accessChecker = $this->getAccessChecker();
+		$user = $this->getUser();
+
+		$items = array_values(array_filter($items, function (LogEntry $logEntry) use ($accessChecker, $user) {
+			return $accessChecker->canUserViewLogEntry($user, $logEntry);
+		}));
+
 		/** @var $logBridge \Devture\Bundle\NagiosBundle\ApiModelBridge\LogBridge */
 		$logBridge = $this->getNs('log.api_model_bridge');
 

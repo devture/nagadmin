@@ -20,6 +20,7 @@
 		"cookie_signing_secret": "%UserBundle.cookie_signing_secret%",
 		"cookie_path": "/",
 		"roles": {
+			"configuration_management": "Management - the ability to manage the Nagios configuration",
 			"sensitive": "Sensitive information - like Resource Variables, Configuration, system logs",
 			"devture_user": "User management - the ability to create/edit/delete user accounts",
 			"all": "ALL"

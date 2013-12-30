@@ -93,6 +93,20 @@ class BaseController extends \Devture\Bundle\FrameworkBundle\Controller\BaseCont
 	}
 
 	/**
+	 * @return \Devture\Bundle\NagiosBundle\Helper\AccessChecker
+	 */
+	protected function getAccessChecker() {
+		return $this->getNs('helper.access_checker');
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Model\User|NULL
+	 */
+	protected function getUser() {
+		return $this->get('user');
+	}
+
+	/**
 	 * @return \Devture\Component\Form\Token\TokenManagerInterface
 	 */
 	private function getCsrfTokenManager() {

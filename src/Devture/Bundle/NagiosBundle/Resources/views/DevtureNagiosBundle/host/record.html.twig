@@ -44,6 +44,11 @@
 					{% endfor %}
 					</select>
 					<button class="btn btn-default btn-sm" id="js-add-group">Create a new Group</button>
+
+					<p class="help-block">
+						Users who have access to a given group can see all hosts belonging to it.
+					</p>
+
 					{{ render_form_violations(form, 'groups') }}
 				</div>
 			</div>

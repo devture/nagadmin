@@ -142,9 +142,15 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Helper\Colorizer($app['devture_nagios.colors']);
 		});
 
+		$app['devture_nagios.helper.access_checker'] = $app->share(function ($app) {
+			return new Helper\AccessChecker();
+		});
+
 		$app['devture_nagios.twig.extension'] = function ($app) {
 			return new Twig\NagiosExtension($app);
 		};
+
+		$this->overrideUserServices($app);
 
 		$this->registerDeploymentServices($app);
 
@@ -161,6 +167,22 @@ class ServicesProvider implements ServiceProviderInterface {
 		$this->registerConsoleServices($app);
 
 		$this->registerControllers($app);
+	}
+
+	private function overrideUserServices(Application $app) {
+		if (!isset($app['devture_user.repository'])) {
+			throw new \LogicException('The NagiosBundle needs to be registered after the UserBundle, as it needs to override some of its services');
+		}
+
+		$app['devture_user.repository'] = $app->share(function ($app) {
+			return new Repository\UserRepository($app['devture_user.db']);
+		});
+
+		$app['devture_user.form_binder'] = function ($app) {
+			$binder = new Form\UserFormBinder($app['devture_user.validator'], $app['devture_user.password_encoder']);
+			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'user');
+			return $binder;
+		};
 	}
 
 	private function registerConsoleServices(Application $app) {
@@ -424,8 +446,8 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new ApiModelBridge\ContactBridge($app['devture_nagios.helper.colorizer']);
 		});
 
-		$app['devture_nagios.host.api_model_bridge'] = $app->share(function () {
-			return new ApiModelBridge\HostBridge();
+		$app['devture_nagios.host.api_model_bridge'] = $app->share(function ($app) {
+			return new ApiModelBridge\HostBridge($app['devture_user.access_control'], $app['devture_nagios.helper.access_checker']);
 		});
 
 		$app['devture_nagios.host_info.api_model_bridge'] = $app->share(function ($app) {
