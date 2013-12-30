@@ -51,6 +51,8 @@ class Application extends \Silex\Application {
 		});
 
 		$app->register(new \Devture\Bundle\FrameworkBundle\ServicesProvider($this['config']['FrameworkBundle']));
+		$app->register(new \Devture\Bundle\LocalizationBundle\ServicesProvider($app['config']['LocalizationBundle']));
+		$app->register(new \Devture\Bundle\UserBundle\ServicesProvider($app['config']['UserBundle']));
 
 		$app->register(new \Devture\Bundle\NagiosBundle\ServicesProvider($app['config']['NagiosBundle']));
 	}

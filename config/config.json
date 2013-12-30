@@ -8,6 +8,25 @@
 	"FrameworkBundle": {
 		"token.secret": "%FrameworkBundle.token_secret%"
 	},
+	"LocalizationBundle": {
+		"locales": {"en": "English"},
+		"default_locale": "en",
+		"fallback_locale": "en"
+	},
+	"UserBundle": {
+		"database_service_id": "mongodb.database",
+		"blowfish_cost": 13,
+		"password_token_salt": "%UserBundle.password_token_salt%",
+		"cookie_signing_secret": "%UserBundle.cookie_signing_secret%",
+		"cookie_path": "/",
+		"roles": {
+			"sensitive": "Sensitive information - like Resource Variables, Configuration, system logs",
+			"devture_user": "User management - the ability to create/edit/delete user accounts",
+			"all": "ALL"
+		},
+		"browser_id.enabled": "%UserBundle.browser_id.enabled%",
+		"browser_id.audience": "%UserBundle.browser_id.audience%"
+	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",
 		"log_file_path": "%NagiosBundle.log_file_path%",

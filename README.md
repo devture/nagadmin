@@ -96,9 +96,12 @@ Here's everything you need to do to install it:
 	# Also comment the resource_file directive and add a new one:
 	resource_file=/etc/nagios/nagadmin-generated/resource.cfg
 
+	# Create a new administrator user account
+	php console.php devture-user:add "username-here" "email-here"
+
 	# Set up your web server (see the resources/webserver directory for examples)
 
-	# Open the web interface for this tool, go to Deployment and hit the Deploy button.
+	# Open the web interface for this tool, log in, go to Configuration and hit the Deploy button.
 	# This is supposed to create the initial configuration in /etc/nagios/nagadmin-generated
 
 	# Restart Nagios

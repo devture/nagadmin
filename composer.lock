@@ -3,8 +3,48 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bee874f039010f77a3074df26e08ae40",
+    "hash": "18a03a2de48f3b3beee2733a4535809c",
     "packages": [
+        {
+            "name": "browserid/browserid",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/raymondjavaxx/php5-browserid.git",
+                "reference": "1028776ef7a4b2a4f8e4e831e186a3bf2c187657"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/raymondjavaxx/php5-browserid/zipball/1028776ef7a4b2a4f8e4e831e186a3bf2c187657",
+                "reference": "1028776ef7a4b2a4f8e4e831e186a3bf2c187657",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "browserid": "libraries/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ramon Torres",
+                    "email": "raymondjavaxx@gmail.com"
+                }
+            ],
+            "description": "BrowserID lib for PHP >= 5.3",
+            "homepage": "https://github.com/raymondjavaxx/php5-browserid",
+            "keywords": [
+                "Authentication",
+                "BrowserID",
+                "Persona",
+                "auth"
+            ],
+            "time": "2012-11-19 04:44:13"
+        },
         {
             "name": "devture/dbal",
             "version": "1.0",
@@ -94,21 +134,22 @@
         },
         {
             "name": "devture/silex-framework-bundle",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devture/silex-framework-bundle.git",
-                "reference": "501408a895b7d8acc16b4fa8af0122bcd756fcb7"
+                "reference": "7893d6a7abc92843b726c9b8083db9b8616b0931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devture/silex-framework-bundle/zipball/501408a895b7d8acc16b4fa8af0122bcd756fcb7",
-                "reference": "501408a895b7d8acc16b4fa8af0122bcd756fcb7",
+                "url": "https://api.github.com/repos/devture/silex-framework-bundle/zipball/7893d6a7abc92843b726c9b8083db9b8616b0931",
+                "reference": "7893d6a7abc92843b726c9b8083db9b8616b0931",
                 "shasum": ""
             },
             "require": {
                 "devture/form": ">=1.0,<1.1",
-                "silex/silex": ">=1.0,<1.2"
+                "silex/silex": ">=1.0,<1.2",
+                "twig/twig": ">=1.8.0,<2.0-dev"
             },
             "type": "library",
             "autoload": {
@@ -126,12 +167,57 @@
                     "email": "s.pantaleev@gmail.com"
                 }
             ],
-            "description": "A Silex 'bundle' initializing the environment and hooking up a few base components",
+            "description": "Silex bundle initializing the environment and hooking up a few base components",
             "keywords": [
                 "bundle",
                 "silex"
             ],
-            "time": "2013-12-28 21:35:58"
+            "time": "2013-12-30 08:27:19"
+        },
+        {
+            "name": "devture/silex-localization-bundle",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devture/silex-localization-bundle.git",
+                "reference": "3f2e0906a10e30a3211fba263b022db036c0d4b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devture/silex-localization-bundle/zipball/3f2e0906a10e30a3211fba263b022db036c0d4b6",
+                "reference": "3f2e0906a10e30a3211fba263b022db036c0d4b6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "silex/silex": ">=1.0,<1.2",
+                "symfony/config": ">=2.2,<2.5-dev",
+                "symfony/translation": ">=2.2,<2.5-dev",
+                "symfony/twig-bridge": ">=2.2,<2.5-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Devture\\Bundle\\LocalizationBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Slavi Pantaleev",
+                    "email": "s.pantaleev@gmail.com"
+                }
+            ],
+            "description": "Silex bundle that helps with localization.",
+            "keywords": [
+                "bundle",
+                "localization",
+                "silex"
+            ],
+            "time": "2013-12-29 16:27:28"
         },
         {
             "name": "devture/silex-provider-config",
@@ -214,6 +300,57 @@
                 "silex"
             ],
             "time": "2013-02-23 16:30:51"
+        },
+        {
+            "name": "devture/silex-user-bundle",
+            "version": "5.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devture/silex-user-bundle.git",
+                "reference": "9745ebbd76c7c050b6e27c58426d04289da86f97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devture/silex-user-bundle/zipball/9745ebbd76c7c050b6e27c58426d04289da86f97",
+                "reference": "9745ebbd76c7c050b6e27c58426d04289da86f97",
+                "shasum": ""
+            },
+            "require": {
+                "browserid/browserid": "1.0.*",
+                "devture/silex-framework-bundle": "1.0.*",
+                "devture/silex-localization-bundle": "2.0.*",
+                "php": ">=5.3.0",
+                "silex/silex": ">=1.0,<1.2"
+            },
+            "suggest": {
+                "ircmaxell/password-compat": "To be able to hash bcrypt passwords on PHP<5.5",
+                "symfony/console": "To use the console commands"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Devture\\Bundle\\UserBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Slavi Pantaleev",
+                    "email": "s.pantaleev@gmail.com"
+                }
+            ],
+            "description": "Silex bundle that provides user management, authentication and authorization.",
+            "keywords": [
+                "Authentication",
+                "User management",
+                "authorization",
+                "bundle",
+                "silex"
+            ],
+            "time": "2013-12-30 19:07:43"
         },
         {
             "name": "devture/sms-sender",
@@ -456,7 +593,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -594,7 +731,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -941,6 +1078,54 @@
             "time": "2013-12-03 13:33:24"
         },
         {
+            "name": "symfony/config",
+            "version": "v2.4.0",
+            "target-dir": "Symfony/Component/Config",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Config.git",
+                "reference": "16068f76c0af74968f3ad8fcec3eb90df1fde394"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/16068f76c0af74968f3ad8fcec3eb90df1fde394",
+                "reference": "16068f76c0af74968f3ad8fcec3eb90df1fde394",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/filesystem": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Config\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Config Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-11-26 16:40:27"
+        },
+        {
             "name": "symfony/console",
             "version": "v2.4.0",
             "target-dir": "Symfony/Component/Console",
@@ -1101,6 +1286,53 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
             "time": "2013-12-03 14:52:22"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v2.4.0",
+            "target-dir": "Symfony/Component/Filesystem",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Filesystem.git",
+                "reference": "79acd777762e81d0f3414ca25a602deeeb48240d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/79acd777762e81d0f3414ca25a602deeeb48240d",
+                "reference": "79acd777762e81d0f3414ca25a602deeeb48240d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Filesystem Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-11-16 15:13:54"
         },
         {
             "name": "symfony/finder",
@@ -1497,6 +1729,61 @@
             "description": "Symfony Security Component - CSRF Library",
             "homepage": "http://symfony.com",
             "time": "2013-11-21 06:37:18"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v2.4.0",
+            "target-dir": "Symfony/Component/Translation",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Translation.git",
+                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/0919e0fc709217f8c9e5049f2603419fdd4a34ff",
+                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/config": "~2.0",
+                "symfony/yaml": "~2.2"
+            },
+            "suggest": {
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Translation\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Translation Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-11-28 10:27:26"
         },
         {
             "name": "symfony/twig-bridge",

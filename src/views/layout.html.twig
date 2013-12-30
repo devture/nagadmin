@@ -11,8 +11,10 @@
 </head>
 <body>
 
-{% set info_status = devture_nagios_get_info_status() %}
-{% set program_status = devture_nagios_get_program_status() %}
+{% if is_logged_in() %}
+	{% set info_status = devture_nagios_get_info_status() %}
+	{% set program_status = devture_nagios_get_program_status() %}
+{% endif %}
 
 <nav class="navbar navbar-default navbar-nagadmin" role="navigation">
 	<div class="navbar-header">
@@ -27,6 +29,7 @@
 		</a>
 	</div>
 
+	{% if is_logged_in() %}
 	<div class="navbar-header navbar-right navbar-text hidden-xs">
 		{% if program_status is none or info_status is none %}
 			<span class="label label-danger">Nagios DOWN</span>
@@ -41,10 +44,12 @@
 			{% endif %}
 		{% endif %}
 	</div>
+	{% endif %}
 
 	<div class="collapse navbar-collapse" id="navbar-collapse">
 		{% include "menu_bar.html.twig" %}
 
+		{% if is_logged_in() %}
 		<div class="navbar-text visible-xs">
 			{% if program_status is none or info_status is none %}
 				<span class="label label-danger">Nagios DOWN</span>
@@ -56,6 +61,7 @@
 				{% endif %}
 			{% endif %}
 		</div>
+		{% endif %}
 	</div>
 </nav>
 

@@ -12,11 +12,6 @@
 		RewriteEngine on
 		RewriteCond %{REQUEST_FILENAME} !-f
 		RewriteRule ^ index.php [L]
-
-		AuthType Digest
-		AuthName "nagadmin"
-		AuthUserFile /etc/httpd/htdigest-nagadmin
-		Require valid-user
 	</Directory>
 	<Location ~ "^/(angular|js|css)/">
 		Header set Cache-Control "max-age=2592000, public"

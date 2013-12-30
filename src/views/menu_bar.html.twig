@@ -9,22 +9,36 @@
 	</li>
 {% endmacro %}
 
-<ul class="nav navbar-nav">
-	{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
+{% if is_logged_in() %}
+	<ul class="nav navbar-nav">
+		{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
 
-	{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
+		{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
 
-	{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
+		{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
 
-	{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
+		{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
 
-	{{ _self.menu_item('devture_nagios.host.', path('devture_nagios.host.manage'), 'Hosts', 'glyphicon glyphicon-th-large') }}
+		{{ _self.menu_item('devture_nagios.host.', path('devture_nagios.host.manage'), 'Hosts', 'glyphicon glyphicon-th-large') }}
 
-	{{ _self.menu_item('devture_nagios.service.', path('devture_nagios.service.manage'), 'Services', 'glyphicon glyphicon-signal') }}
+		{{ _self.menu_item('devture_nagios.service.', path('devture_nagios.service.manage'), 'Services', 'glyphicon glyphicon-signal') }}
 
-	{{ _self.menu_item('devture_nagios.resource.', path('devture_nagios.resource.manage'), 'Resource Variables', 'glyphicon glyphicon-wrench') }}
+		{{ _self.menu_item('devture_nagios.log.', path('devture_nagios.log.manage'), 'Logs', 'glyphicon glyphicon-book') }}
 
-	{{ _self.menu_item('devture_nagios.log.', path('devture_nagios.log.manage'), 'Logs', 'glyphicon glyphicon-book') }}
+		{% if is_granted('sensitive') %}
+			{{ _self.menu_item('devture_nagios.resource.', path('devture_nagios.resource.manage'), 'Resource Variables', 'glyphicon glyphicon-wrench') }}
 
-	{{ _self.menu_item('devture_nagios.configuration.', path('devture_nagios.configuration.test'), 'Configuration', 'glyphicon glyphicon-retweet') }}
-</ul>
+			{{ _self.menu_item('devture_nagios.configuration.', path('devture_nagios.configuration.test'), 'Configuration', 'glyphicon glyphicon-retweet') }}
+		{% endif %}
+
+		{% if is_granted('devture_user') %}
+			{{ _self.menu_item('devture_user.', path('devture_user.manage'), 'Users', 'glyphicon glyphicon-user') }}
+		{% endif %}
+	</ul>
+
+	<form class="navbar-form navbar-right" method="post" action="{{ path('devture_user.logout', {'token': csrf_token('logout')}) }}">
+		<button class="btn btn-default btn-sm">
+			{{ "devture_user.logout"|trans }}
+		</button>
+	</form>
+{% endif %}

@@ -9,7 +9,6 @@
 		"php": ">=5.4.0",
 		"silex/silex": "1.1.*",
 		"twig/twig": "1.15.*",
-		"symfony/twig-bridge": "2.4.*",
 		"symfony/console": "2.4.*",
 		"symfony/finder": "2.4.*",
 		"symfony/process": "2.4.*",
@@ -17,6 +16,8 @@
 		"devture/silex-provider-doctrine-mongodb": "1.0.*",
 		"devture/silex-provider-config": "1.0.*",
 		"devture/silex-framework-bundle": "1.0.*",
+		"devture/silex-localization-bundle": "2.0.*",
+		"devture/silex-user-bundle": "5.1.*",
 		"devture/sms-sender": "1.1.*",
 		"devture/dbal": "1.0.*"
 	},
