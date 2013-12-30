@@ -12,6 +12,17 @@
 
 		<fieldset>
 			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
+				<div class="col-lg-6">
+					<a href="{{ path('devture_nagios.host.edit', {'id': entity.host.id}) }}">
+						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
+						{{ entity.host.name }}
+					</a>
+					({{ entity.host.address }})
+				</div>
+			</div>
+
+			<div class="form-group row">
 				<label class="col-lg-2 control-label">Identifier</label>
 				<div class="col-lg-10">
 					<input type="text" name="name" id="name"
@@ -19,22 +30,6 @@
 						required="required"
 						value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
-				</div>
-			</div>
-
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
-				<div class="col-lg-6">
-					{% set selected_host = entity.host %}
-					<select name="hostId" class="form-control">
-						<option value="">-- Pick one --</option>
-					{% for host in hosts %}
-						<option value="{{ host.id }}"
-							{{ selected_host is not none and selected_host.id == host.id ? 'selected="selected"' : '' }}
-							>{{ host.name }} ({{ host.address }})</option>
-					{% endfor %}
-					</select>
-					{{ render_form_violations(form, 'host') }}
 				</div>
 			</div>
 

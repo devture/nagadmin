@@ -50,7 +50,7 @@ class ControllersProvider implements ControllerProviderInterface {
 
 		$controllers->get('/service/manage', 'devture_nagios.controller.service.management:indexAction')
 			->bind($namespace . '.service.manage');
-		$controllers->match('/service/add/{commandId}', 'devture_nagios.controller.service.management:addAction')
+		$controllers->match('/service/add/{hostId}/{commandId}', 'devture_nagios.controller.service.management:addAction')
 			->method('GET|POST')->bind($namespace . '.service.add');
 		$controllers->match('/service/edit/{id}', 'devture_nagios.controller.service.management:editAction')
 			->method('GET|POST')->bind($namespace . '.service.edit');

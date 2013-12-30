@@ -7,18 +7,15 @@ use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\ServiceCommandArgument;
-use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
 use Devture\Bundle\NagiosBundle\Validator\ServiceValidator;
 
 class ServiceFormBinder extends SetterRequestBinder {
 
-	private $hostRepository;
 	private $contactRepository;
 
-	public function __construct(HostRepository $hostRepository, ContactRepository $contactRepository, ServiceValidator $validator) {
+	public function __construct(ContactRepository $contactRepository, ServiceValidator $validator) {
 		parent::__construct($validator);
-		$this->hostRepository = $hostRepository;
 		$this->contactRepository = $contactRepository;
 	}
 
@@ -38,13 +35,6 @@ class ServiceFormBinder extends SetterRequestBinder {
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
 		$entity->setEnabled($request->request->get('enabled') === '1');
-
-		try {
-			$host = $this->hostRepository->find($request->request->get('hostId'));
-			$entity->setHost($host);
-		} catch (NotFound $e) {
-			$this->getViolations()->add('host', 'Cannot find the selected host.');
-		}
 
 		$entity->clearArguments();
 		$command = $entity->getCommand();

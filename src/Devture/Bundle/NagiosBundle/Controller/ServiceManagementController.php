@@ -13,12 +13,11 @@ class ServiceManagementController extends BaseController {
 
 	private function getBaseViewData() {
 		$viewData = array();
-		$viewData['hosts'] = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		$viewData['contacts'] = $this->getContactRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		return $viewData;
 	}
 
-	public function addAction(Request $request, $commandId) {
+	public function addAction(Request $request, $hostId, $commandId) {
 		$entity = $this->getServiceRepository()->createModel(array());
 
 		$defaults = $this->getNs('service.defaults');
@@ -42,12 +41,10 @@ class ServiceManagementController extends BaseController {
 			return $this->abort(404);
 		}
 
-		if ($request->query->has('hostId')) {
-			try {
-				$entity->setHost($this->getHostRepository()->find($request->query->get('hostId')));
-			} catch (NotFound $e) {
-				return $this->abort(404);
-			}
+		try {
+			$entity->setHost($this->getHostRepository()->find($hostId));
+		} catch (NotFound $e) {
+			return $this->abort(404);
 		}
 
 		$binder = $this->getServiceFormBinder();

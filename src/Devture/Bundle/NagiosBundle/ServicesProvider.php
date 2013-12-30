@@ -119,7 +119,7 @@ class ServicesProvider implements ServiceProviderInterface {
 		};
 
 		$app['devture_nagios.service.form_binder'] = function ($app) {
-			$binder = new Form\ServiceFormBinder($app['devture_nagios.host.repository'], $app['devture_nagios.contact.repository'], $app['devture_nagios.service.validator']);
+			$binder = new Form\ServiceFormBinder($app['devture_nagios.contact.repository'], $app['devture_nagios.service.validator']);
 			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'service');
 			return $binder;
 		};
