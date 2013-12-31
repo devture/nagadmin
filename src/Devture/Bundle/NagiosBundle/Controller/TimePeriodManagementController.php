@@ -3,6 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Devture\Component\DBAL\Exception\NotFound;
+use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 
 class TimePeriodManagementController extends BaseController {
 
@@ -23,6 +24,7 @@ class TimePeriodManagementController extends BaseController {
 		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
 			'entity' => $entity,
 			'isAdded' => false,
+			'isUsed' => false,
 			'form' => $binder,
 		));
 	}
@@ -44,6 +46,7 @@ class TimePeriodManagementController extends BaseController {
 		return $this->renderView('DevtureNagiosBundle/time_period/record.html.twig', array(
 			'entity' => $entity,
 			'isAdded' => true,
+			'isUsed' => $this->isTimePeriodUsed($entity),
 			'form' => $binder,
 		));
 	}
@@ -52,7 +55,12 @@ class TimePeriodManagementController extends BaseController {
 		$intention = 'delete-time-period-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getTimePeriodRepository()->delete($this->getTimePeriodRepository()->find($id));
+				$timePeriod = $this->getTimePeriodRepository()->find($id);
+				if ($this->isTimePeriodUsed($timePeriod)) {
+					return $this->json(array('ok' => false));
+				}
+
+				$this->getTimePeriodRepository()->delete($timePeriod);
 				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
@@ -67,6 +75,10 @@ class TimePeriodManagementController extends BaseController {
 	 */
 	private function getTimePeriodFormBinder() {
 		return $this->getNs('time_period.form_binder');
+	}
+
+	private function isTimePeriodUsed(TimePeriod $entity) {
+		return (count($this->getContactRepository()->findByTimePeriod($entity)) !== 0);
 	}
 
 }
