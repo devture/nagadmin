@@ -50,7 +50,7 @@ Installing on other distros only requires minor changes.
 
 - sudo
 
-- PHP 5.3+ (5.5+ is recommended and will make your life much easier)
+- PHP 5.4+ (5.5+ is recommended and will make your life much easier)
 
 - The php-mongo/php-pecl-mongo extension - for connecting to MongoDB
 
@@ -218,7 +218,7 @@ Nagadmin is written in [PHP](http://php.net/) and uses the [Silex microframework
 
 ### What are the system requirements?
 
-You need Nagios 3.x or 4.x to consume the generated configuration files and PHP 5.3+ to power the web-configurator.
+You need Nagios 3.x or 4.x to consume the generated configuration files and PHP 5.4+ to power the web-configurator.
 
 
 ### Can I install the web-configurator on another machine (not the one running Nagios)?

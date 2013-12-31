@@ -1,4 +1,9 @@
 {
+	"name": "devture/nagadmin",
+	"description": "Web-configurator and frontend for Nagios",
+	"type": "project",
+	"keywords": ["nagios"],
+	"license": "BSD",
 	"authors": [
 		{
 			"name": "Slavi Pantaleev",
