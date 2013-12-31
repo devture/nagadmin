@@ -14,6 +14,10 @@ class AccessChecker {
 			return true;
 		}
 
+		if ($user->hasRole('overseer')) {
+			return true;
+		}
+
 		foreach ($host->getGroups() as $groupName) {
 			if ($user->hasGroup($groupName)) {
 				return true;
