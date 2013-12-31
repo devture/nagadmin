@@ -9,6 +9,7 @@ The reason it does this is to optimize for the common monitoring use-case and ma
 
 If your requirements are complicated, you may need to look into some other solutions or fork-and-improve this one.
 
+![dashboard-partial-screenshot](https://raw.github.com/devture/nagadmin/master/resources/screenshots/dashboard-partial.png)
 
 --------------------
 
