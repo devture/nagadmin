@@ -86,9 +86,15 @@
 				</button>
 
 				{% if isAdded %}
-				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
-					Delete
-				</button>
+					{% if isUsed %}
+						<p class="text-danger">
+							This command is currently in use and cannot be deleted.
+						</p>
+					{% else %}
+						<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+							Delete
+						</button>
+					{% endif %}
 				{% endif %}
 			</div>
 		</fieldset>

@@ -29,6 +29,7 @@ class CommandManagementController extends BaseController {
 		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
 			'entity' => $entity,
 			'isAdded' => false,
+			'isUsed' => false,
 			'form' => $binder,
 		));
 	}
@@ -50,6 +51,7 @@ class CommandManagementController extends BaseController {
 		return $this->renderView('DevtureNagiosBundle/command/record.html.twig', array(
 			'entity' => $entity,
 			'isAdded' => true,
+			'isUsed' => $this->isCommandUsed($entity),
 			'form' => $binder,
 		));
 	}
@@ -58,7 +60,13 @@ class CommandManagementController extends BaseController {
 		$intention = 'delete-command-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getCommandRepository()->delete($this->getCommandRepository()->find($id));
+				$command = $this->getCommandRepository()->find($id);
+
+				if ($this->isCommandUsed($command)) {
+					return $this->json(array('ok' => false));
+				}
+
+				$this->getCommandRepository()->delete($command);
 				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 
@@ -73,6 +81,18 @@ class CommandManagementController extends BaseController {
 	 */
 	private function getCommandFormBinder() {
 		return $this->getNs('command.form_binder');
+	}
+
+	private function isCommandUsed(Command $entity) {
+		if ($entity->getType() === Command::TYPE_SERVICE_CHECK) {
+			return (count($this->getServiceRepository()->findByCommand($entity)) !== 0);
+		}
+
+		if ($entity->getType() === Command::TYPE_SERVICE_NOTIFICATION) {
+			return (count($this->getContactRepository()->findByCommand($entity)) !== 0);
+		}
+
+		throw new \LogicException('Unknown command type: ' . $entity->getType());
 	}
 
 }
