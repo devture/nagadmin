@@ -24,7 +24,7 @@ body {
 	list-style: none;
 }
 
-.navbar-nagadmin { border-radius: 0; border-left: 0; border-right: 0; }
+.navbar-nagadmin { border-radius: 0; border-top: 0; border-left: 0; border-right: 0; }
 
 #footer {
 	color: #666464;
