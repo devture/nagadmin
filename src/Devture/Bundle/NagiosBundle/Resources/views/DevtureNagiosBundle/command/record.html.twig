@@ -145,13 +145,13 @@
 				var hasVisible = false;
 				$.each($('.js-parameter-definition'), function () {
 					if ($(this).data('number') <= maxArgumentNumber) {
-						$(this).show();
+						$(this).show().removeClass('hide');
 						hasVisible = true;
 					}
 				});
 
 				if (hasVisible) {
-					$('#js-control-group-arguments').show();
+					$('#js-control-group-arguments').show().removeClass('hide');
 				} else {
 					$('#js-control-group-arguments').hide();
 				}

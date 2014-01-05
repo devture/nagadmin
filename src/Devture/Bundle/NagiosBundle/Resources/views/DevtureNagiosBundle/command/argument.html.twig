@@ -1,25 +1,24 @@
 <fieldset>
-	<div class="control-group">
-		<label class="control-label">Argument</label>
-		<div class="controls">
+	<div class="form-group row">
+		<label class="col-lg-2 control-label">Argument</label>
+		<div class="col-lg-offset-2">
 			$ARG{{ ident }}$
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label">Description</label>
-		<div class="controls">
+	<div class="form-group row">
+		<label class="col-lg-2 control-label">Description</label>
+		<div class="col-lg-offset-2">
 			<input type="text" name="arguments[{{ ident }}][description]"
 				value="{{ entity is not none ? entity.description : '' }}"
-				class="input-xxlarge" />
+				class="form-control" />
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label">Default</label>
-		<div class="controls">
+	<div class="form-group row">
+		<label class="col-lg-2 control-label">Default</label>
+		<div class="col-lg-offset-2">
 			<input type="text" name="arguments[{{ ident }}][defaultValue]"
 				value="{{ entity is not none ? entity.defaultValue : '' }}"
-				class="input-xxlarge" />
+				class="form-control" />
 		</div>
 	</div>
-	<div class="top-spaced-minor"></div>
 </fieldset>
