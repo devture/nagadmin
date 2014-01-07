@@ -192,9 +192,14 @@
 				"dataType": "json",
 				"success": function (response) {
 					if (response.ok) {
+						var $bar = $progress.find('.progress-bar');
+
 						$button.remove();
 						$progress.removeClass('hide');
-						$progress.find('.progress-bar').css('width', '0%').animate({"width": "100%"}, waitingTime);
+						$bar.css('width', '0%');
+						$bar.animate({"width": "100%"}, waitingTime, 'linear', function () {
+							window.location.reload();
+						});
 					} else {
 						alert("There was a problem. Refresh and retry.");
 					}
