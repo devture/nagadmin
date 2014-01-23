@@ -159,12 +159,46 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 		},
 		"templateUrl": templatePathRegistry.service.statusBadge,
 		"link": function ($scope) {
-			$scope.$watch('entity.current_state', function (currentState) {
-				if (currentState !== null) {
-					$scope.currentStateHuman = humanize_stateFilter(currentState);
-					$scope.currentStateLabelClass = state_label_classFilter($scope.currentStateHuman);
+			var createDependenciesStamp = function (entity) {
+				if (entity === null) {
+					return '';
 				}
-			});
+				return (entity.has_been_checked ? '1' : '0') + (entity.current_state) + entity.last_hard_state;
+			};
+
+			var lastDependenciesStamp = null;
+
+			var rebuildScope = function () {
+				var entity = $scope.entity;
+
+				lastDependenciesStamp = createDependenciesStamp(entity);
+
+				$scope.classes = '';
+
+				if (entity === null) {
+					$scope.text = 'missing';
+					$scope.classes = 'label-default';
+				} else {
+					if (entity.has_been_checked) {
+						if (entity.current_state !== null) {
+							var currentStateHuman = humanize_stateFilter(entity.current_state);
+							$scope.text = currentStateHuman;
+							$scope.classes += (' ' + state_label_classFilter(currentStateHuman));
+						}
+
+						if (entity.last_hard_state !== entity.current_state) {
+							$scope.text += ' >';
+						}
+					} else {
+						$scope.text = 'pending';
+						$scope.classes = 'label-default';
+					}
+				}
+			};
+
+			$scope.$watch(function ($scope) {
+				return createDependenciesStamp($scope.entity);
+			}, rebuildScope);
 		}
 	};
 });
