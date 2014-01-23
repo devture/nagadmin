@@ -268,9 +268,11 @@ nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avata
 		"template": '<img ng-src="{{ avatarUrl }}" class="img-rounded" style="border: 3px solid {{ entity.color }};" title="{{ entity.name }}" />',
 		"link": function ($scope, $element) {
 			$scope.avatarUrl = avatar_urlFilter($scope.entity.avatar_url, $scope.size);
-			$timeout(function () {
-				$element.find('img').tooltip();
-			}, 0, false);
+
+			$element.on('mouseover', function () {
+				//Create the tooltip on initial interaction
+				$(this).find('img').tooltip().tooltip('show');
+			});
 		}
 	};
 });
