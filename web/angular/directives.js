@@ -190,7 +190,7 @@ nagadminApp.directive('serviceAddNewButton', function (ServiceCheckCommand, temp
 	};
 });
 
-nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, comploader) {
+nagadminApp.directive('relativeTime', function ($timeout, $window, templatePathRegistry, comploader) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -198,28 +198,19 @@ nagadminApp.directive('relativeTime', function ($timeout, templatePathRegistry, 
 		},
 		"template": '<time data-time="{{ timestamp }}">&laquo; calculating time &raquo;</time>',
 		"link": function ($scope, $element) {
-			var $timeElement = $element.find('time');
 			var timeoutId = null;
 
 			//Handles initialization & change transformations
 			$scope.$watch('timestamp', function (timestampNew, timestampOld) {
 				if (timestampNew) {
-					comploader.load("relative-time", function () {
-						$timeout(function () {
-							if (timestampNew !== timestampOld) {
-								//Reinitialization. Remove the old tooltip first.
-								$timeElement.tooltip('destroy')
-							}
-							$timeElement.relativeTime().tooltip();
-						}, 0, false);
-					});
+					$element.text($window.relativizeTime(new Date(timestampNew), new Date()));
 				}
 			});
 
 			//Periodically update relative time text
 			var scheduleUpdate = function () {
 				timeoutId = $timeout(function () {
-					$timeElement.relativeTime();
+					$element.find('time').relativeTime();
 					scheduleUpdate();
 				}, 15000, false);
 			};

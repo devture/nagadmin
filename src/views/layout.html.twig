@@ -81,6 +81,7 @@
 <script type="text/javascript" src="{{ static_url('/js/jquery-2.0.3.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
 
 <script type="text/javascript">
 	{% include 'comploader_components.js.twig' %}
@@ -98,12 +99,7 @@
 			});
 		}
 
-		var $relativeTimes = $('.js-relative-time');
-		if ($relativeTimes.length > 0) {
-			comploader.load("relative-time", function () {
-				$relativeTimes.relativeTime().tooltip();
-			});
-		}
+		$('.js-relative-time').relativeTime().tooltip();
 
 		var $textareas = $('textarea');
 		if ($textareas.length > 0) {

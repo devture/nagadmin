@@ -1,4 +1,4 @@
-$.fn.relativeTime = function () {
+window.relativizeTime = (function () {
 	var MINUTE = 60;
 	var HOUR = 60 * MINUTE;
 	var DAY = 24 * HOUR;
@@ -36,12 +36,16 @@ $.fn.relativeTime = function () {
 		return years + ' ' + (years == 1 ? 'year' : 'years');
 	};
 
+	return relative;
+})();
+
+$.fn.relativeTime = function () {
 	var process = function () {
 		//Intentionally using .attr('data-time'), instead of .data('time').
 		//jQuery caches data attributes and future changes coming from outside jQuery are not detected.
 		var date = new Date(parseInt($(this).attr('data-time'), 10));
 
-		$(this).text(relative(date, new Date()));
+		$(this).text(relativizeTime(date, new Date()));
 		$(this).attr('title', date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
 	};
 
