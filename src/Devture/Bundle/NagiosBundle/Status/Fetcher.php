@@ -34,15 +34,9 @@ class Fetcher {
 		$objects = array();
 
 		foreach ($lines as $line) {
-			if (strpos($line, '#') === 0) {
-				continue;
-			}
-
 			if ($line === '') {
 				continue;
 			}
-
-			$line = trim($line);
 
 			if ($state === self::STATE_FREE) {
 				if (preg_match('/^(.+?)\s{$/', $line, $matches)) {
@@ -52,10 +46,16 @@ class Fetcher {
 					continue;
 				}
 
+				if (strpos($line, '#') === 0) {
+					continue;
+				}
+
 				throw new ParseException('Unexpected line during free state: ' . $line);
 			}
 
 			if ($state === self::STATE_DEFINITION) {
+				$line = ltrim($line);
+
 				if ($line === '}') {
 					if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
 						$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
