@@ -2,7 +2,6 @@
 <thead>
 	<tr>
 		<th style="width: 50px;"></th>
-		<th class="hidden-xs">Host</th>
 		<th>Service</th>
 		<th>Checked</th>
 		<th class="hidden-xs">Status</th>
@@ -13,9 +12,6 @@
 	<tr ng-repeat="serviceInfo in servicesInfo track by serviceInfo.id" ng-init="service = serviceInfo.service">
 		<td>
 			<service-status-badge entity="serviceInfo.status"></service-status-badge>
-		</td>
-		<td class="hidden-xs" style="width: 130px;">
-			{{ host.name }}
 		</td>
 		<td style="width: 210px;">
 			<a href-to="service" href-via="'url_service_view'" class="btn-block">
