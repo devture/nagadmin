@@ -2,7 +2,30 @@
 
 {% block devture_nagios_content %}
 	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
-		<div ng-if="filteredHostsInfo.length == 0">
+		<div class="row">
+			<div class="col-lg-3 col-xs-6">
+				<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
+
+				<div class="hidden-xs pull-right" ng-if="hostsInfo.length == 0">
+					<div class="spinner text-center">
+						<div class="bounce1"></div>
+						<div class="bounce2"></div>
+						<div class="bounce3"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-9 col-xs-6">
+				<div class="row col-lg-5 col-lg-offset-7 text-right">
+					<select ng-model="selectedHostId" class="form-control">
+						<option value="">-- All hosts --</option>
+						<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="visible-xs" ng-if="hostsInfo.length == 0">
 			<div class="spinner text-center">
 				<div class="bounce1"></div>
 				<div class="bounce2"></div>
@@ -10,26 +33,7 @@
 			</div>
 		</div>
 
-		<!--
-			Using ng-show, instead of ng-if here, because otherwise the `selectedHostId` variable
-			won't be available in the controller for watching at all.
-		-->
-		<div ng-cloak ng-show="hostsInfo.length != 0">
-			<div class="row">
-				<div class="col-lg-3 col-xs-6">
-					<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
-				</div>
-
-				<div class="col-lg-3 col-lg-offset-6 col-xs-6 text-right">
-					<select ng-model="selectedHostId" class="form-control">
-						<option value="">-- All hosts --</option>
-						<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
-					</select>
-				</div>
-			</div>
-
-			<hr />
-		</div>
+		<hr />
 
 		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo"></host-info>
 	</div>
