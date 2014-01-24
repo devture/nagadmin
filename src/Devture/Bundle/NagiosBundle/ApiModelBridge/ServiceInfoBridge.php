@@ -15,12 +15,13 @@ class ServiceInfoBridge {
 	}
 
 	public function export(ServiceInfo $entity) {
-		$status = ($entity->getStatus() instanceof ServiceStatus ? $this->serviceStatusBridge->export($entity->getStatus()) : null);
+		$status = $entity->getStatus();
+		$service = $entity->getService();
 
 		return array(
-			'id' => (string) $entity->getService()->getId(),
-			'service' => $this->serviceBridge->export($entity->getService()),
-			'status' => $status,
+			'id' => (string) $service->getId(),
+			'service' => $this->serviceBridge->export($service),
+			'status' => ($status instanceof ServiceStatus ? $this->serviceStatusBridge->export($status) : null),
 		);
 	}
 

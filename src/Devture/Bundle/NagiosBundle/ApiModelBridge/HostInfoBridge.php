@@ -19,9 +19,11 @@ class HostInfoBridge {
 			return $this->servicesInfoBridge->export($serviceInfo);
 		}, $entity->getServicesInfo());
 
+		$host = $entity->getHost();
+
 		return array(
-			'id' => (string) $entity->getHost()->getId(),
-			'host' => $this->hostBridge->export($entity->getHost()),
+			'id' => (string) $host->getId(),
+			'host' => $this->hostBridge->export($host),
 			'servicesInfo' => $servicesInfo,
 		);
 	}

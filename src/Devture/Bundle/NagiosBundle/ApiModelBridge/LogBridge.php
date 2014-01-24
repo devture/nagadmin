@@ -8,17 +8,20 @@ use Devture\Bundle\NagiosBundle\Model\Service;
 class LogBridge {
 
 	public function export(LogEntry $entity) {
+		$host = $entity->getHost();
+		$service = $entity->getService();
+
 		return array(
 			'id' => (string) $entity->getId(),
 			'type' => $entity->getType(),
 			'timestamp' => $entity->getTimestamp(),
 			'value' => $entity->getValue(),
 			'host' => array(
-				'id' => ($entity->getHost() instanceof Host ? (string) $entity->getHost()->getId() : null),
-				'address' => ($entity->getHost() instanceof Host ? $entity->getHost()->getAddress() : null),
+				'id' => ($host instanceof Host ? (string) $host->getId() : null),
+				'address' => ($host instanceof Host ? $host->getAddress() : null),
 			),
 			'service' => array(
-				'id' => ($entity->getService() instanceof Service ? (string) $entity->getService()->getId() : null),
+				'id' => ($service instanceof Service ? (string) $service->getId() : null),
 			),
 		);
 	}

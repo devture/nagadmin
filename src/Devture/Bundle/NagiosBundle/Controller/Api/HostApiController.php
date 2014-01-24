@@ -49,7 +49,6 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 		} else {
 			$result = $hostInfoBridge->export($items[0]);
 		}
-
 		return $this->json($result);
 	}
 
@@ -83,8 +82,9 @@ class HostApiController extends \Devture\Bundle\NagiosBundle\Controller\BaseCont
 	private function createHostInfo(Host $host) {
 		$services = $this->getServiceRepository()->findByHost($host);
 
-		$servicesInfo = array_map(function (Service $service) {
-			$serviceStatus = $this->getStatusManager()->getServiceStatus($service);
+		$statusManager = $this->getStatusManager();
+		$servicesInfo = array_map(function (Service $service) use ($statusManager) {
+			$serviceStatus = $statusManager->getServiceStatus($service);
 			return new ServiceInfo($service, $serviceStatus);
 		}, $services);
 
