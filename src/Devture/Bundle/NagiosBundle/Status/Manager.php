@@ -7,7 +7,20 @@ use Devture\Bundle\NagiosBundle\Exception\FileMissingException;
 class Manager {
 
 	private $fetcher;
-	private $statusCache;
+
+	private $statusLoaded = false;
+
+	private $servicesStatusMap = array(); //identifier -> ServiceStatus
+
+	/**
+	 * @var InfoStatus|NULL
+	 */
+	private $infoStatus;
+
+	/**
+	 * @var ProgramStatus|NULL
+	 */
+	private $programStatus;
 
 	public function __construct(Fetcher $fetcher) {
 		$this->fetcher = $fetcher;
@@ -18,14 +31,7 @@ class Manager {
 	 */
 	public function getInfoStatus() {
 		$this->load();
-
-		foreach ($this->statusCache as $status) {
-			if ($status instanceof InfoStatus) {
-				return $status;
-			}
-		}
-
-		return null;
+		return $this->infoStatus;
 	}
 
 	/**
@@ -33,14 +39,7 @@ class Manager {
 	 */
 	public function getProgramStatus() {
 		$this->load();
-
-		foreach ($this->statusCache as $status) {
-			if ($status instanceof ProgramStatus) {
-				return $status;
-			}
-		}
-
-		return null;
+		return $this->programStatus;
 	}
 
 	/**
@@ -48,10 +47,7 @@ class Manager {
 	 */
 	public function getServicesStatus() {
 		$this->load();
-
-		return array_filter($this->statusCache, function (Status $status) {
-			return ($status instanceof ServiceStatus);
-		});
+		return array_values($this->servicesStatusMap);
 	}
 
 	/**
@@ -59,28 +55,28 @@ class Manager {
 	 * @return \Devture\Bundle\NagiosBundle\Status\ServiceStatus|NULL
 	 */
 	public function getServiceStatus(Service $service) {
-		$hostName = $service->getHost()->getName();
-		$serviceDescription = $service->getName();
-
-		/* @var $status ServiceStatus */
-		foreach ($this->getServicesStatus() as $status) {
-			if ($status->getHostname() !== $hostName) {
-				continue;
-			}
-			if ($status->getServiceDescription() === $serviceDescription) {
-				return $status;
-			}
-		}
-
-		return null;
+		$this->load();
+		$serviceIdentifier = $service->getHost()->getName() . '/' . $service->getName();
+		return (isset($this->servicesStatusMap[$serviceIdentifier]) ? $this->servicesStatusMap[$serviceIdentifier] : null);
 	}
 
 	private function load() {
-		if ($this->statusCache === null) {
+		if (!$this->statusLoaded) {
+			$this->statusLoaded = true;
+
 			try {
-				$this->statusCache = $this->fetcher->fetch();
+				foreach ($this->fetcher->fetch() as $status) {
+					if ($status instanceof ServiceStatus) {
+						$serviceIdentifier = $status->getHostname() . '/' . $status->getServiceDescription();
+						$this->servicesStatusMap[$serviceIdentifier] = $status;
+					} else if ($status instanceof InfoStatus) {
+						$this->infoStatus = $status;
+					} else if ($status instanceof ProgramStatus) {
+						$this->programStatus = $status;
+					}
+				}
 			} catch (FileMissingException $e) {
-				$this->statusCache = array();
+
 			}
 		}
 	}
