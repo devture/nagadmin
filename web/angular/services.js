@@ -169,7 +169,7 @@ nagadminApp.factory('HostInfoUpdaterFactory', function ($timeout, HostInfo) {
 	};
 });
 
-nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
+nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo, progressiveListGrower) {
 	$scope.hostsInfo = [];
 	$scope.filteredHostsInfo = [];
 	$scope.selectedHostId = '';
@@ -184,13 +184,15 @@ nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo) {
 	};
 
 	HostInfo.findAll().success(function (infoObjectsList) {
-		$scope.hostsInfo = infoObjectsList;
-		$scope.filteredHostsInfo = getFilteredHostsInfo();
+		$scope.$watch('selectedHostId', function () {
+			$scope.filteredHostsInfo = getFilteredHostsInfo();
+		});
+		$scope.$watch('hostsInfo.length', function () {
+			$scope.filteredHostsInfo = getFilteredHostsInfo();
+		});
 
-		$scope.$watch('selectedHostId', function (newVal, oldVal) {
-			if (newVal !== oldVal) {
-				$scope.filteredHostsInfo = getFilteredHostsInfo();
-			}
+		progressiveListGrower(infoObjectsList, function (partialList) {
+			$scope.hostsInfo = partialList;
 		});
 	});
 });
@@ -203,20 +205,28 @@ nagadminApp.controller('HostInfoCtrl', function ($scope, HostInfo) {
 	});
 });
 
-nagadminApp.controller('LogsCtrl', function ($scope, LogRepository, LogEntriesUpdaterFactory) {
+nagadminApp.controller('LogsCtrl', function ($scope, LogRepository, LogEntriesUpdaterFactory, progressiveListGrower) {
 	$scope.logs = [];
 
 	LogRepository.findAll().success(function (logs) {
-		$scope.logs = logs;
+		var batchSizer = function (currentLength) {
+			return (currentLength < 50 ? 10 : 50);
+		};
 
-		var updater = LogEntriesUpdaterFactory.create($scope.logs, function (logs) {
-			$scope.logs = logs;
-		});
-		updater.start();
+		progressiveListGrower(logs, function (partialList) {
+			$scope.logs = partialList;
+
+			if (partialList.length === logs.length) {
+				var updater = LogEntriesUpdaterFactory.create($scope.logs, function (logs) {
+					$scope.logs = logs;
+				});
+				updater.start();
+			}
+		}, batchSizer);
 	});
 });
 
-nagadminApp.controller('DashboardCtrl', function ($scope, LogRepository, HostInfo, LogEntriesUpdaterFactory) {
+nagadminApp.controller('DashboardCtrl', function ($scope, LogRepository, HostInfo, LogEntriesUpdaterFactory, progressiveListGrower) {
 	$scope.logs = [];
 	$scope.hostsInfo = [];
 
@@ -230,6 +240,51 @@ nagadminApp.controller('DashboardCtrl', function ($scope, LogRepository, HostInf
 	});
 
 	HostInfo.findAll().success(function (infoObjectsList) {
-		$scope.hostsInfo = infoObjectsList;
+		progressiveListGrower(infoObjectsList, function (partialList) {
+			$scope.hostsInfo = partialList;
+		});
+
+		$scope.hostsInfo = infoObjectsList.slice(0, 1);
 	});
+});
+
+/**
+ * Takes a "big" list and calls the given callback periodically
+ * giving it a larger and larger part of the original list.
+ *
+ * The goal is to have the consumer work with a small list initially,
+ * so it could render something fast, and then continue expanding that
+ * until the full list length is reached.
+ */
+nagadminApp.factory('progressiveListGrower', function ($timeout) {
+	return function (list, callback, batchSizer) {
+		var totalLength = list.length,
+			lastLength = null;
+
+		if (!batchSizer) {
+			batchSizer = function (currentLength) {
+				//Use smaller batches initially, larger after that.
+				return (currentLength < 5 ? 1 : 6);
+			};
+		}
+
+		var pushList = function (currentList) {
+			callback(currentList);
+			lastLength = currentList.length;
+		};
+
+		//Start by pushing just one item.
+		pushList(list.slice(0, 1));
+
+		var pushIteration = function () {
+			var newItemsToPush = batchSizer(lastLength);
+
+			pushList(list.slice(0, lastLength + newItemsToPush));
+
+			if (lastLength < totalLength) {
+				$timeout(pushIteration);
+			}
+		};
+		$timeout(pushIteration);
+	};
 });
