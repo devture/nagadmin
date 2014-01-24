@@ -233,18 +233,23 @@ nagadminApp.directive('relativeTime', function ($timeout, $window, templatePathR
 		"template": '<time data-time="{{ timestamp }}">&laquo; calculating time &raquo;</time>',
 		"link": function ($scope, $element) {
 			var timeoutId = null;
+			var $time = $element.find('time');
 
 			//Handles initialization & change transformations
 			$scope.$watch('timestamp', function (timestampNew, timestampOld) {
 				if (timestampNew) {
-					$element.find('time').text($window.relativizeTime(new Date(timestampNew), new Date()));
+					$time.text($window.relativizeTime(new Date(timestampNew), new Date()));
 				}
+			});
+
+			$time.on('mouseover', function () {
+				$time.relativeTime().tooltip().tooltip('show');
 			});
 
 			//Periodically update relative time text
 			var scheduleUpdate = function () {
 				timeoutId = $timeout(function () {
-					$element.find('time').relativeTime();
+					$time.relativeTime();
 					scheduleUpdate();
 				}, 15000, false);
 			};
