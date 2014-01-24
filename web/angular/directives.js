@@ -237,7 +237,7 @@ nagadminApp.directive('relativeTime', function ($timeout, $window, templatePathR
 			//Handles initialization & change transformations
 			$scope.$watch('timestamp', function (timestampNew, timestampOld) {
 				if (timestampNew) {
-					$element.text($window.relativizeTime(new Date(timestampNew), new Date()));
+					$element.find('time').text($window.relativizeTime(new Date(timestampNew), new Date()));
 				}
 			});
 
