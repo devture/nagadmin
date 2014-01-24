@@ -10,14 +10,14 @@
 	</tr>
 </thead>
 <tbody>
-	<tr ng-repeat="serviceInfo in servicesInfo track by serviceInfo.id" ng-init="service = serviceInfo.service" ng-class="{warning: !service.enabled}">
+	<tr ng-repeat="serviceInfo in servicesInfo track by serviceInfo.id" ng-init="service = serviceInfo.service">
 		<td>
 			<service-status-badge entity="serviceInfo.status"></service-status-badge>
 		</td>
 		<td class="hidden-xs" style="width: 130px;">
 			{{ host.name }}
 		</td>
-		<td style="width: 210px;" ng-init="s">
+		<td style="width: 210px;">
 			<a href-to="service" href-via="'url_service_view'" class="btn-block">
 				{{ service.name }}
 
@@ -25,24 +25,22 @@
 			</a>
 		</td>
 		<td nowrap="nowrap">
-			<span class="help-inline" ng-switch="serviceInfo.status == null">
-				<span ng-switch-when="true">-</span>
-				<span ng-switch-when="false">
-					<span ng-switch="serviceInfo.status.last_check == 0">
-						<span ng-switch-when="true">Never</span>
-						<span ng-switch-when="false">
-							<relative-time timestamp="serviceInfo.status.last_check * 1000"></relative-time> ago
-						</span>
+			<span class="help-inline">
+				<span ng-show="serviceInfo.status == null">-</span>
+
+				<span ng-show="serviceInfo.status != null">
+					<span ng-show="serviceInfo.status.last_check == 0">Never</span>
+
+					<span ng-show="serviceInfo.status.last_check != 0">
+						<relative-time timestamp="serviceInfo.status.last_check * 1000"></relative-time> ago
 					</span>
 				</span>
 			</span>
 		</td>
-		<td class="hidden-xs" ng-switch="serviceInfo.status">
-			<div ng-switch-when="null">
+		<td class="hidden-xs">
+			{{ serviceInfo.status.plugin_output }}
+			<div ng-show="serviceInfo.status == null">
 				-- There is no information about this service --
-			</div>
-			<div ng-switch-default>
-				{{ serviceInfo.status.plugin_output }}
 			</div>
 		</td>
 		<td class="hidden-xs">
