@@ -27,6 +27,11 @@ class HostManagementController extends BaseController {
 	}
 
 	public function addAction(Request $request) {
+		if (!$this->getAccessChecker()->canUserCreateHosts($this->getUser())) {
+			return $this->abort(401);
+		}
+
+		/* @var $entity Host */
 		$entity = $this->getHostRepository()->createModel(array());
 
 		$binder = $this->getHostFormBinder();
@@ -44,9 +49,14 @@ class HostManagementController extends BaseController {
 
 	public function editAction(Request $request, $id) {
 		try {
+			/* @var $entity Host */
 			$entity = $this->getHostRepository()->find($id);
 		} catch (NotFound $e) {
 			return $this->abort(404);
+		}
+
+		if (!$this->getAccessChecker()->canUserManageHost($this->getUser(), $entity)) {
+			return $this->abort(401);
 		}
 
 		$binder = $this->getHostFormBinder();
@@ -63,11 +73,36 @@ class HostManagementController extends BaseController {
 		)));
 	}
 
+	public function viewAction(Request $request, $id) {
+		try {
+			/* @var $entity Host */
+			$entity = $this->getHostRepository()->find($id);
+		} catch (NotFound $e) {
+			return $this->abort(404);
+		}
+
+		if (!$this->getAccessChecker()->canUserViewHost($this->getUser(), $entity)) {
+			return $this->abort(403);
+		}
+
+		return $this->renderView('DevtureNagiosBundle/host/view.html.twig', array(
+			'entity' => $entity,
+			'logs' => $this->getLogFetcher()->fetchForHost($entity),
+		));
+	}
+
 	public function deleteAction(Request $request, $id, $token) {
 		$intention = 'delete-host-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getHostRepository()->delete($this->getHostRepository()->find($id));
+				/* @var $host Host */
+				$host = $this->getHostRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserManageHost($this->getUser(), $entity)) {
+					return $this->json(array('ok' => false));
+				}
+
+				$this->getHostRepository()->delete($host);
 				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 

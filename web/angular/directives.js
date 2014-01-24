@@ -1,4 +1,4 @@
-nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePathRegistry, url_host_editFilter) {
+nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePathRegistry, url_host_viewFilter) {
 	return {
 		"restrict": "E",
 		"scope": {
@@ -17,7 +17,7 @@ nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePath
 			var updater = HostInfoUpdaterFactory.create($scope.entity, onUpdateStart, onUpdateEnd);
 
 			$scope.isBeingRechecked = false;
-			$scope.hostEditUrl = url_host_editFilter($scope.entity.host);
+			$scope.hostViewUrl = url_host_viewFilter($scope.entity.host);
 
 			$scope.updateHostInfo = function () {
 				updater.update();
@@ -296,14 +296,14 @@ nagadminApp.directive('hrefTo', function ($filter) {
 	};
 });
 
-nagadminApp.directive('logListTable', function (templatePathRegistry, url_service_viewFilter, url_host_editFilter) {
+nagadminApp.directive('logListTable', function (templatePathRegistry, url_service_viewFilter, url_host_viewFilter) {
 	var generateInfoLink = function (entity) {
 		if (entity.service.id) {
 			return url_service_viewFilter(entity.service);
 		}
 
 		if (entity.host.id) {
-			return url_host_editFilter(entity.host);
+			return url_host_viewFilter(entity.host);
 		}
 
 		return null;

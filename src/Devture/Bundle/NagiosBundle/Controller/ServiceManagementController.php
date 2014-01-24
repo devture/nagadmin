@@ -79,7 +79,7 @@ class ServiceManagementController extends BaseController {
 		}
 
 		if (!$this->getAccessChecker()->canUserManageService($this->getUser(), $entity)) {
-			return $this->abort(401);
+			return $this->abort(403);
 		}
 
 		$binder = $this->getServiceFormBinder();
@@ -106,7 +106,7 @@ class ServiceManagementController extends BaseController {
 		}
 
 		if (!$this->getAccessChecker()->canUserViewService($this->getUser(), $entity)) {
-			return $this->json(array('ok' => false));
+			return $this->abort(403);
 		}
 
 		return $this->renderView('DevtureNagiosBundle/service/view.html.twig', array_merge($this->getBaseViewData(), array(

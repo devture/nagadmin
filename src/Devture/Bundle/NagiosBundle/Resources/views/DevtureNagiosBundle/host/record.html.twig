@@ -1,6 +1,10 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
+	{% if devture_nagios_can_user_manage_host(app.user, entity) %}
+		{% include 'DevtureNagiosBundle/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}
+	{% endif %}
+
 	{{ render_form_violations(form, '__other__') }}
 
 	<form name="record-form" id="record-form" method="post" action="">

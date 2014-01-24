@@ -1,0 +1,60 @@
+{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+
+{% block devture_nagios_content %}
+	{% if devture_nagios_can_user_manage_host(app.user, entity) %}
+		{% include 'DevtureNagiosBundle/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% endif %}
+
+	<div ng-app-lazy="nagadminApp">
+		<fieldset>
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
+				<div class="col-lg-10 clearfix">
+					<img src="//www.google.com/s2/favicons?domain={{ entity.address }}" alt="" />
+					{{ entity.name }}
+					({{ entity.address }})
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Groups</label>
+				<div class="col-lg-10">
+				{% for group in entity.groups %}
+					<span class="label label-nagadmin label-info"
+						style="background-color: {{ group|devture_nagios_colorize }};">{{ group }}</span>
+				{% endfor %}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Services</label>
+				<div class="col-lg-10">
+					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
+						<div ng-controller="HostInfoCtrl">
+							<div ng-if="hostInfo == null">
+								<div class="spinner text-center">
+									<div class="bounce1"></div>
+									<div class="bounce2"></div>
+									<div class="bounce3"></div>
+								</div>
+							</div>
+
+							<host-info entity="hostInfo" ng-if="hostInfo != null"></host-info>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-book"></i> Logs</label>
+				<div class="col-lg-10">
+					{% if logs|length == 0 %}
+						No recent log entries related to this host.
+					{% else %}
+						{% include 'DevtureNagiosBundle/log/list.html.twig' with {'items': logs} only %}
+					{% endif %}
+				</div>
+			</div>
+		</fieldset>
+	</div>
+{% endblock %}

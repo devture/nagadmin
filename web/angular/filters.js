@@ -18,9 +18,9 @@ nagadminApp.filter('state_label_class', function () {
 	};
 });
 
-nagadminApp.filter('url_host_edit', function (apiUrlRegistry) {
+nagadminApp.filter('url_host_view', function (apiUrlRegistry) {
 	return function (entity) {
-		return apiUrlRegistry.host.edit.replace('__ID__', entity.id);
+		return apiUrlRegistry.host.view.replace('__ID__', entity.id);
 	};
 });
 

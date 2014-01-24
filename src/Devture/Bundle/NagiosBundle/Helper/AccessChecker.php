@@ -27,6 +27,10 @@ class AccessChecker {
 		return false;
 	}
 
+	public function canUserCreateHosts(User $user) {
+		return $this->canUserDoConfigurationManagement($user);
+	}
+
 	public function canUserManageHost(User $user, Host $host) {
 		return $this->canUserDoConfigurationManagement($user);
 	}

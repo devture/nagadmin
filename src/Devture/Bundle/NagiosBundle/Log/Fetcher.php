@@ -34,6 +34,12 @@ class Fetcher {
 		return $this->parse(file_get_contents($this->logFilePath));
 	}
 
+	public function fetchForHost(Host $host) {
+		return array_filter($this->fetch(), function (LogEntry $logEntry) use ($host) {
+			return ($logEntry->getHost() === $host);
+		});
+	}
+
 	public function fetchForService(Service $service) {
 		return array_filter($this->fetch(), function (LogEntry $logEntry) use ($service) {
 			return ($logEntry->getService() === $service);

@@ -1,0 +1,10 @@
+ <ul class="nav nav-tabs">
+	<li class="{{ currentSection == 'status' ? 'active' : '' }}">
+		<a href="{{ path('devture_nagios.host.view', {'id': entity.id}) }}">Host Status</a>
+	</li>
+	<li class="{{ currentSection == 'edit' ? 'active' : '' }}">
+		<a href="{{ path('devture_nagios.host.edit', {'id': entity.id}) }}">Edit Host Details</a>
+	</li>
+</ul>
+
+<div class="top-spaced-minor"></div>

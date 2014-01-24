@@ -32,7 +32,7 @@
 						{% set info_link = path('devture_nagios.service.view', {'id': entity.service.id}) %}
 					{% else %}
 						{% if entity.host is not none %}
-							{% set info_link = path('devture_nagios.host.edit', {'id': entity.host.id}) %}
+							{% set info_link = path('devture_nagios.host.view', {'id': entity.host.id}) %}
 						{% endif %}
 					{% endif %}
 

@@ -1,7 +1,7 @@
 (function () {
 	var apiUrlRegistry = {
 		"host": {
-			"edit": {{ path('devture_nagios.host.edit', {'id': '__ID__'})|json_encode|raw }},
+			"view": {{ path('devture_nagios.host.view', {'id': '__ID__'})|json_encode|raw }},
 			"info": {{ path('devture_nagios.api.host.info', {'id': '__ID__'})|json_encode|raw }},
 			"infoAll": {{ path('devture_nagios.api.host.info')|json_encode|raw }},
 			"recheckServices": {{ path('devture_nagios.api.host.recheck_services', {'id': '__ID__', 'recheckType': '__RECHECK_TYPE__', 'token': '__TOKEN__'})|json_encode|raw }}

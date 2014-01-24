@@ -13,7 +13,6 @@ $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.c
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.time_period.', 'configuration_management');
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.command.', 'configuration_management');
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.contact.', 'configuration_management');
-$app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.host.', 'configuration_management');
 
 $app->mount('/user', $app['devture_user.controllers_provider.management']);
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_user.', 'devture_user', $app['devture_user.public_routes']);
