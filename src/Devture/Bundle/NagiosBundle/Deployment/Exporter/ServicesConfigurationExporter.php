@@ -64,8 +64,9 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 		//`escapeshellarg($argumentValue)` will not work for our special needs.
 		//The resulting string will be similar (single-quote surrounded), but not quite the same.
 
-		//Escaping `$` in argument values (according to Nagios rules) should result in `\\$$`.
-		$argumentValue = str_replace('$', '\\\\$$', $argumentValue);
+		$argumentValue = str_replace('\\', '\\\\', $argumentValue);
+
+		$argumentValue = str_replace('$', '$$', $argumentValue);
 
 		//`!` is used to separate the arguments passed to the command. It needs to be escaped.
 		$argumentValue = str_replace('!', '\\!', $argumentValue);
