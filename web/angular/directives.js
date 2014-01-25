@@ -163,7 +163,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 				if (entity === null) {
 					return '';
 				}
-				return (entity.has_been_checked) + (entity.current_state) + entity.last_hard_state;
+				return entity.has_been_checked + entity.current_state + entity.last_hard_state + entity.current_attempt + entity.max_attempts;
 			};
 
 			var lastDependenciesStamp = null;
@@ -187,7 +187,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 						}
 
 						if (entity.last_hard_state !== entity.current_state) {
-							$scope.text += ' >';
+							$scope.text = $scope.text + ' (' + entity.current_attempt + '/' + entity.max_attempts + ')';
 						}
 					} else {
 						$scope.text = 'pending';
