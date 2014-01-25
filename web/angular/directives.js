@@ -179,7 +179,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 					$scope.text = 'missing';
 					$scope.classes = 'label-default';
 				} else {
-					if (entity.has_been_checked) {
+					if (entity.has_been_checked == 1) {
 						if (entity.current_state !== null) {
 							var currentStateHuman = humanize_stateFilter(entity.current_state);
 							$scope.text = currentStateHuman;
