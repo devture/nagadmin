@@ -163,7 +163,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 				if (entity === null) {
 					return '';
 				}
-				return (entity.has_been_checked ? '1' : '0') + (entity.current_state) + entity.last_hard_state;
+				return (entity.has_been_checked) + (entity.current_state) + entity.last_hard_state;
 			};
 
 			var lastDependenciesStamp = null;
