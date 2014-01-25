@@ -71,6 +71,8 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 		//`!` is used to separate the arguments passed to the command. It needs to be escaped.
 		$argumentValue = str_replace('!', '\\!', $argumentValue);
 
+		$argumentValue = str_replace(';', '\\;', $argumentValue);
+
 		$argumentValue = str_replace("\0", '', $argumentValue);
 
 		//Escape single-quotes within the would-be-single-quote-surrounded-string.
