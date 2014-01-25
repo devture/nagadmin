@@ -8,6 +8,10 @@ class Application extends \Silex\Application {
 	public function __construct($basePath) {
 		parent::__construct();
 
+		//Make sure we're running with some UTF-8,
+		//otherwise things like `escapeshellarg()` may ignore UTF-8 characters.
+		setlocale(LC_CTYPE, 'en_US.UTF-8');
+
 		$this->basePath = $basePath;
 
 		$this->loadConfig();

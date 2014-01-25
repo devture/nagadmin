@@ -82,11 +82,7 @@ class ServiceValidator extends BaseValidator {
 					$violations->add('arguments', 'Argument %id% is not valid for the selected command.', array('%id%' => $argumentId));
 				} else {
 					$argumentValue = $argument->getValue();
-					if (strpos($argumentValue, '!') !== false) {
-						$violations->add('arguments', 'Argument value `%value%` contains a ! character, which has a special meaning to Nagios and cannot be used.', array(
-							'%value%' => $argumentValue,
-						));
-					} else if (strpos($argumentValue, "\n") !== false) {
+					if (strpos($argumentValue, "\n") !== false) {
 						$violations->add('arguments', 'Arguments cannot contain new lines.');
 					}
 				}
