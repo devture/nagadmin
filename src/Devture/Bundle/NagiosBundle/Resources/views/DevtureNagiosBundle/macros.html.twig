@@ -1,29 +1,23 @@
 {% macro service_label_class_from_state(state) %}
 {% spaceless %}
-	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-danger', 'unknown': ''} %}
+	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-danger', 'unknown': 'label-default'} %}
 	{{ map[state] }}
 {% endspaceless %}
 {% endmacro %}
 
 {% macro service_status(status) %}
 	{% if status is none %}
-		<div class="text-center label" style="display: block;">
+		<div class="text-center label label-default" style="display: block;">
 			missing
 		</div>
 	{% else %}
 		{% if status.checked %}
 			<div class="text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
 				style="display: block;">
-			{% if status.currentState != status.lastHardState %}
-				&raquo;
 				{{ status.currentStateHuman }}
-				({{ status.currentAttempt }}/{{ status.maxAttempts }})
-			{% else %}
-				{{ status.currentStateHuman }}
-			{% endif %}
 			</div>
 		{% else %}
-			<div class="text-center label" style="display: block;">
+			<div class="text-center label label-default" style="display: block;">
 				pending
 			</div>
 		{% endif %}
