@@ -6,7 +6,7 @@
 			<div class="col-lg-3 col-xs-6">
 				<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
 
-				<div class="hidden-xs pull-right" ng-if="hostsInfo.length == 0">
+				<div class="hidden-xs pull-right" ng-if="!loaded">
 					<div class="spinner text-center">
 						<div class="bounce1"></div>
 						<div class="bounce2"></div>
@@ -17,7 +17,7 @@
 
 			<div class="col-lg-9 col-xs-6">
 				<div class="row col-lg-5 col-lg-offset-7 text-right">
-					<select ng-model="selectedHostId" class="form-control">
+					<select ng-show="hostsInfo.length > 0" ng-model="selectedHostId" class="form-control">
 						<option value="">-- All hosts --</option>
 						<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
 					</select>
@@ -36,5 +36,10 @@
 		<hr />
 
 		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo"></host-info>
+
+		<div ng-cloak class="help-block" ng-if="loaded && filteredHostsInfo.length == 0">
+			Not monitoring anything yet.
+			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-default btn-sm">Create a new host to get started</a>
+		</div>
 	</div>
 {% endblock %}

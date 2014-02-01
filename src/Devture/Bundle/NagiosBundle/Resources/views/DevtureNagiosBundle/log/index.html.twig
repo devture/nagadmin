@@ -2,7 +2,7 @@
 
 {% block devture_nagios_content %}
 	<div ng-controller="LogsCtrl" ng-app-lazy="nagadminApp">
-		<div ng-if="logs.length == 0">
+		<div ng-if="logs == null">
 			<div class="spinner text-center">
 				<div class="bounce1"></div>
 				<div class="bounce2"></div>
@@ -10,6 +10,6 @@
 			</div>
 		</div>
 
-		<log-list-table ng-if="logs.length != 0" entities="logs"></log-list-table>
+		<log-list-table entities="logs"></log-list-table>
 	</div>
 {% endblock %}

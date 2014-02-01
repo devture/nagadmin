@@ -173,6 +173,7 @@ nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo, progressiveL
 	$scope.hostsInfo = [];
 	$scope.filteredHostsInfo = [];
 	$scope.selectedHostId = '';
+	$scope.loaded = false;
 
 	var getFilteredHostsInfo = function () {
 		return jQuery.grep($scope.hostsInfo, function (hostInfo, _idx) {
@@ -184,6 +185,8 @@ nagadminApp.controller('HostsInfoCtrl', function ($scope, HostInfo, progressiveL
 	};
 
 	HostInfo.findAll().success(function (infoObjectsList) {
+		$scope.loaded = true;
+
 		$scope.$watch('selectedHostId', function () {
 			$scope.filteredHostsInfo = getFilteredHostsInfo();
 		});
@@ -206,7 +209,7 @@ nagadminApp.controller('HostInfoCtrl', function ($scope, HostInfo) {
 });
 
 nagadminApp.controller('LogsCtrl', function ($scope, LogRepository, LogEntriesUpdaterFactory, progressiveListGrower) {
-	$scope.logs = [];
+	$scope.logs = null;
 
 	LogRepository.findAll().success(function (logs) {
 		var batchSizer = function (currentLength) {
@@ -227,8 +230,8 @@ nagadminApp.controller('LogsCtrl', function ($scope, LogRepository, LogEntriesUp
 });
 
 nagadminApp.controller('DashboardCtrl', function ($scope, LogRepository, HostInfo, LogEntriesUpdaterFactory, progressiveListGrower) {
-	$scope.logs = [];
-	$scope.hostsInfo = [];
+	$scope.logs = null;
+	$scope.hostsInfo = null;
 
 	LogRepository.findAll().success(function (logs) {
 		$scope.logs = logs;
