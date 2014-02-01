@@ -69,8 +69,10 @@ class NagiosExtension extends \Twig_Extension {
 		return $this->getAccessChecker()->canUserManageContact($user, $contact);
 	}
 
-	public function getDistinctGroups() {
-		return $this->getHostRepository()->getDistinctGroups();
+	public function getDistinctGroups(User $user) {
+		$groups = $this->getHostRepository()->getDistinctGroups();
+		$groups = array_merge($groups, $user->getGroups());
+		return array_unique($groups);
 	}
 
 	/**

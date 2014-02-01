@@ -8,7 +8,7 @@
 			multiple="multiple" class="js-chosen-select"
 			data-placeholder="Choose some groups.."
 			style="width: 100%;">
-		{% for group in devture_nagios_get_distinct_groups() %}
+		{% for group in devture_nagios_get_distinct_groups(entity) %}
 			<option value="{{ group }}"
 				{{ group in entity.groups ? 'selected="selected"' : '' }}>{{ group }}</option>
 		{% endfor %}
