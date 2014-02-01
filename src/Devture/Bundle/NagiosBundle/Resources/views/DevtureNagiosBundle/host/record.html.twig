@@ -1,7 +1,7 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	{% if devture_nagios_can_user_manage_host(app.user, entity) %}
+	{% if isAdded %}
 		{% include 'DevtureNagiosBundle/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}
 	{% endif %}
 
