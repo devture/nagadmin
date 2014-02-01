@@ -31,6 +31,6 @@
 	</tbody>
 </table>
 
-<div class="help-block" ng-if="filteredEntities.length == 0">
+<div ng-cloak class="help-block" ng-if="filteredEntities != null && filteredEntities.length == 0">
 	No log entries.
 </div>
