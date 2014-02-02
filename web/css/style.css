@@ -37,6 +37,7 @@ body {
 .label-nagadmin-status { padding: 5px 8px; font-size: 13px; }
 .label-nagadmin-important-unobstrusive { background-color: white !important; border: 1px solid #953b39; text-shadow: 0; color: #953b39 !important; }
 .label-nagadmin-success-unobstrusive { background-color: white !important; border: 1px solid #468847; text-shadow: 0; color: #468847 !important; }
+.label-nagadmin-default-unobstrusive { background-color: white !important; border: 1px solid gray; text-shadow: 0; color: gray !important; }
 
 /* Fix the "x" button on Chosen multiple-selects (12px -> 16px) */
 .chzn-container-multi .chzn-choices .search-choice .search-choice-close { width: 16px !important; }

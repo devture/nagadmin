@@ -36,6 +36,8 @@ nagadminApp.directive('hostsInfoSummary', function () {
 	var templateHtml = '';
 	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobstrusive">{{ ok }} ok</span>';
 	templateHtml += ' ';
+	templateHtml += '<span ng-show="pending != 0" class="label label-default label-nagadmin-status label-nagadmin-default-unobstrusive">{{ pending }} pending</span>';
+	templateHtml += ' ';
 	templateHtml += '<span class="label label-danger label-nagadmin-status label-nagadmin-important-unobstrusive">{{ failing }} failing</span>';
 
 	return {
@@ -52,7 +54,7 @@ nagadminApp.directive('hostsInfoSummary', function () {
 
 			var watcher = function ($scope) {
 				var hostsInfo = (angular.isArray($scope.hostsInfo) ? $scope.hostsInfo : []);
-				var totalCount = 0, okCount = 0;
+				var totalCount = 0, okCount = 0, pendingCount = 0;
 
 				for (var hostIdx in hostsInfo) {
 					var hostInfo = hostsInfo[hostIdx];
@@ -67,17 +69,22 @@ nagadminApp.directive('hostsInfoSummary', function () {
 						totalCount += 1;
 
 						if (status.current_state == 0) {
-							okCount += 1;
+							if (status.has_been_checked == 0) {
+								pendingCount += 1;
+							} else {
+								okCount += 1;
+							}
 						}
 					}
 				}
 
-				return {"ok": okCount, "failing": (totalCount - okCount)};
+				return {"ok": okCount, "pending": pendingCount, "failing": (totalCount - okCount - pendingCount)};
 			};
 
 			$scope.$watch(watcher, function (status) {
 				if (status) {
 					$scope.ok = status.ok;
+					$scope.pending = status.pending;
 					$scope.failing = status.failing;
 				}
 			}, true);
