@@ -22,6 +22,7 @@ class ContactManagementController extends BaseController {
 			'sort' => array('title' => 1)
 		));
 		$viewData['addressSlotsCount'] = Contact::ADDRESS_SLOTS_COUNT;
+		$viewData['users'] = $this->getUserRepository()->findAll();
 		return $viewData;
 	}
 
@@ -81,6 +82,13 @@ class ContactManagementController extends BaseController {
 	 */
 	private function getContactFormBinder() {
 		return $this->getNs('contact.form_binder');
+	}
+
+	/**
+	 * @return \Devture\Bundle\UserBundle\Repository\UserRepositoryInterface
+	 */
+	private function getUserRepository() {
+		return $this->get('devture_user.repository');
 	}
 
 }

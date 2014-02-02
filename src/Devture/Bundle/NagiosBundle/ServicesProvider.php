@@ -77,7 +77,13 @@ class ServicesProvider implements ServiceProviderInterface {
 		});
 
 		$app['devture_nagios.contact.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\ContactRepository($app['devture_nagios.event_dispatcher'], $app['devture_nagios.time_period.repository'], $app['devture_nagios.command.repository'], $app[$config['database_service_id']]);
+			return new Repository\ContactRepository(
+				$app['devture_nagios.event_dispatcher'],
+				$app['devture_nagios.time_period.repository'],
+				$app['devture_nagios.command.repository'],
+				$app['devture_user.repository'],
+				$app[$config['database_service_id']]
+			);
 		});
 
 		$app['devture_nagios.contact.validator'] = function ($app) {
@@ -85,7 +91,12 @@ class ServicesProvider implements ServiceProviderInterface {
 		};
 
 		$app['devture_nagios.contact.form_binder'] = function ($app) {
-			$binder = new Form\ContactFormBinder($app['devture_nagios.time_period.repository'], $app['devture_nagios.command.repository'], $app['devture_nagios.contact.validator']);
+			$binder = new Form\ContactFormBinder(
+				$app['devture_nagios.time_period.repository'],
+				$app['devture_nagios.command.repository'],
+				$app['devture_user.repository'],
+				$app['devture_nagios.contact.validator']
+			);
 			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'contact');
 			return $binder;
 		};

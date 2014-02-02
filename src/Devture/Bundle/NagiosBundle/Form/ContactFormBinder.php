@@ -9,16 +9,19 @@ use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Validator\ContactValidator;
+use Devture\Bundle\UserBundle\Repository\UserRepositoryInterface;
 
 class ContactFormBinder extends SetterRequestBinder {
 
 	private $timePeriodRepository;
 	private $commandRepository;
+	private $userRepository;
 
-	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, ContactValidator $validator) {
+	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, UserRepositoryInterface $userRepository, ContactValidator $validator) {
 		parent::__construct($validator);
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;
+		$this->userRepository = $userRepository;
 	}
 
 	/**
@@ -43,9 +46,15 @@ class ContactFormBinder extends SetterRequestBinder {
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
 		try {
+			$user = $this->userRepository->find($request->request->get('userId'));
+			$entity->setUser($user);
+		} catch (NotFound $e) {
+			$entity->setUser(null);
+		}
+
+		try {
 			$timePeriod = $this->timePeriodRepository->find($request->request->get('timePeriodId'));
 			$entity->setTimePeriod($timePeriod);
-
 		} catch (NotFound $e) {
 			$this->getViolations()->add('timePeriod', 'Cannot find the selected time period.');
 		}

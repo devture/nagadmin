@@ -2,6 +2,7 @@
 namespace Devture\Bundle\NagiosBundle\Model;
 
 use Devture\Component\DBAL\Model\BaseModel;
+use Devture\Bundle\NagiosBundle\Model\User;
 
 class Contact extends BaseModel {
 
@@ -17,6 +18,11 @@ class Contact extends BaseModel {
 	 */
 	private $serviceNotificationCommand;
 
+	/**
+	 * @var User
+	 */
+	private $user;
+
 	public function setTimePeriod(TimePeriod $timePeriod) {
 		$this->timePeriod = $timePeriod;
 	}
@@ -31,6 +37,17 @@ class Contact extends BaseModel {
 
 	public function getServiceNotificationCommand() {
 		return $this->serviceNotificationCommand;
+	}
+
+	public function setUser(User $user = null) {
+		$this->user = $user;
+	}
+
+	/**
+	 * @return User|NULL
+	 */
+	public function getUser() {
+		return $this->user;
 	}
 
 	public function setName($value) {

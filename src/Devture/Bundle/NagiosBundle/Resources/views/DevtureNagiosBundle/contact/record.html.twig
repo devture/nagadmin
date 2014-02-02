@@ -34,6 +34,21 @@
 			</div>
 
 			<div class="form-group row">
+				<label class="col-lg-2 control-label">Associated with</label>
+				<div class="col-lg-6">
+					{% set selected_user = entity.user %}
+					<select name="userId" class="form-control">
+						<option value="">-- Choose one or leave empty --</option>
+					{% for user in users %}
+						<option value="{{ user.id }}"
+							{{ selected_user == user ? 'selected="selected"' : '' }}
+							>{{ user.name }} ({{ user.username }})</option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group row">
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-envelope"></i> Email</label>
 				<div class="col-lg-6">
 					<input type="text" name="email" id="email"

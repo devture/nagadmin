@@ -4,9 +4,12 @@ namespace Devture\Bundle\NagiosBundle\Repository;
 use Doctrine\MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Devture\Component\DBAL\Repository\BaseMongoRepository;
+use Devture\Component\DBAL\Exception\NotFound;
+use Devture\Bundle\UserBundle\Repository\UserRepositoryInterface;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 use Devture\Bundle\NagiosBundle\Model\Command;
+use Devture\Bundle\NagiosBundle\Model\User;
 use Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Event\Events;
@@ -17,12 +20,15 @@ class ContactRepository extends BaseMongoRepository {
 	private $dispatcher;
 	private $timePeriodRepository;
 	private $commandRepository;
+	private $userRepository;
 
-	public function __construct(EventDispatcherInterface $dispatcher, TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, Database $db) {
+	public function __construct(EventDispatcherInterface $dispatcher, TimePeriodRepository $timePeriodRepository,
+								CommandRepository $commandRepository, UserRepositoryInterface $userRepository, Database $db) {
 		parent::__construct($db);
 		$this->dispatcher = $dispatcher;
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;
+		$this->userRepository = $userRepository;
 	}
 
 	protected function getModelClass() {
@@ -47,6 +53,14 @@ class ContactRepository extends BaseMongoRepository {
 			$model->setServiceNotificationCommand($this->commandRepository->find($data['serviceNotificationCommandId']));
 		}
 
+		if (isset($data['userId'])) {
+			try {
+				$model->setUser($this->userRepository->find($data['userId']));
+			} catch (NotFound $e) {
+				//User got deleted or something
+			}
+		}
+
 		return $model;
 	}
 
@@ -62,6 +76,9 @@ class ContactRepository extends BaseMongoRepository {
 
 		$command = $model->getServiceNotificationCommand();
 		$export['serviceNotificationCommandId'] = $command instanceof Command ? $command->getId() : null;
+
+		$user = $model->getUser();
+		$export['userId'] = $user instanceof User ? $user->getId() : null;
 
 		return $export;
 	}
