@@ -28,6 +28,9 @@ class NagiosExtension extends \Twig_Extension {
 			'devture_nagios_can_user_create_hosts' => new \Twig_Function_Method($this, 'canUserCreateHosts'),
 			'devture_nagios_can_user_manage_service' => new \Twig_Function_Method($this, 'canUserManageService'),
 			'devture_nagios_can_user_manage_contact' => new \Twig_Function_Method($this, 'canUserManageContact'),
+			'devture_nagios_can_user_manage_contacts' => new \Twig_Function_Method($this, 'canUserManageContacts'),
+			'devture_nagios_can_user_create_contacts' => new \Twig_Function_Method($this, 'canUserCreateContacts'),
+			'devture_nagios_can_user_do_configuration_management' => new \Twig_Function_Method($this, 'canUserDoConfigurationManagement'),
 			'devture_nagios_get_distinct_groups' => new \Twig_Function_Method($this, 'getDistinctGroups'),
 			'devture_nagios_count_host_services' => new \Twig_Function_Method($this, 'getHostServicesCount'),
 		);
@@ -78,6 +81,18 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function canUserManageContact(User $user, Contact $contact) {
 		return $this->getAccessChecker()->canUserManageContact($user, $contact);
+	}
+
+	public function canUserManageContacts(User $user) {
+		return $this->getAccessChecker()->canUserManageContacts($user);
+	}
+
+	public function canUserCreateContacts(User $user) {
+		return $this->getAccessChecker()->canUserCreateContacts($user);
+	}
+
+	public function canUserDoConfigurationManagement(User $user) {
+		return $this->getAccessChecker()->canUserDoConfigurationManagement($user);
 	}
 
 	public function getDistinctGroups(User $user) {

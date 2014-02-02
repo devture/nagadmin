@@ -99,6 +99,8 @@ class ServicesProvider implements ServiceProviderInterface {
 				$app['devture_nagios.time_period.repository'],
 				$app['devture_nagios.command.repository'],
 				$app['devture_user.repository'],
+				$app['devture_nagios.helper.access_checker'],
+				$app['devture_user.access_control'],
 				$app['devture_nagios.contact.validator']
 			);
 			$binder->setCsrfProtection($app['devture_framework.csrf_token_manager'], 'contact');

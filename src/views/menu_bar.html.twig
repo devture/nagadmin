@@ -17,7 +17,9 @@
 			{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
 
 			{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
+		{% endif %}
 
+		{% if devture_nagios_can_user_manage_contacts(app.user) %}
 			{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
 		{% endif %}
 

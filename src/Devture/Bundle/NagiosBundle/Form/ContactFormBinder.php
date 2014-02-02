@@ -10,18 +10,26 @@ use Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Validator\ContactValidator;
 use Devture\Bundle\UserBundle\Repository\UserRepositoryInterface;
+use Devture\Bundle\NagiosBundle\Helper\AccessChecker;
+use Devture\Bundle\UserBundle\AccessControl\AccessControl;
 
 class ContactFormBinder extends SetterRequestBinder {
 
 	private $timePeriodRepository;
 	private $commandRepository;
 	private $userRepository;
+	private $accessChecker;
+	private $accessControl;
 
-	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository, UserRepositoryInterface $userRepository, ContactValidator $validator) {
+	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository,
+								UserRepositoryInterface $userRepository, AccessChecker $accessChecker, AccessControl $accessControl,
+								ContactValidator $validator) {
 		parent::__construct($validator);
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;
 		$this->userRepository = $userRepository;
+		$this->accessChecker = $accessChecker;
+		$this->accessControl = $accessControl;
 	}
 
 	/**
@@ -45,11 +53,13 @@ class ContactFormBinder extends SetterRequestBinder {
 		$whitelisted = array('name', 'email');
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
-		try {
-			$user = $this->userRepository->find($request->request->get('userId'));
-			$entity->setUser($user);
-		} catch (NotFound $e) {
-			$entity->setUser(null);
+		if ($this->accessChecker->canUserDoConfigurationManagement($this->accessControl->getUser())) {
+			try {
+				$user = $this->userRepository->find($request->request->get('userId'));
+				$entity->setUser($user);
+			} catch (NotFound $e) {
+				$entity->setUser(null);
+			}
 		}
 
 		try {

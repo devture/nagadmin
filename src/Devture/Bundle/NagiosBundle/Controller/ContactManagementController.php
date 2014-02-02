@@ -9,7 +9,12 @@ use Devture\Bundle\NagiosBundle\Model\Contact;
 class ContactManagementController extends BaseController {
 
 	public function indexAction() {
-		$items = $this->getContactRepository()->findBy(array(), array('sort' => array('name' => 1)));
+		if ($this->getAccessChecker()->canUserDoConfigurationManagement($this->getUser())) {
+			$criteria = array();
+		} else {
+			$criteria = array('userId' => $this->getUser()->getId());
+		}
+		$items = $this->getContactRepository()->findBy($criteria, array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/contact/index.html.twig', array('items' => $items));
 	}
 
@@ -27,7 +32,15 @@ class ContactManagementController extends BaseController {
 	}
 
 	public function addAction(Request $request) {
+		if (!$this->getAccessChecker()->canUserCreateContacts($this->getUser())) {
+			return $this->abort(401);
+		}
+
 		$entity = $this->getContactRepository()->createModel(array());
+
+		if (!$this->getAccessChecker()->canUserDoConfigurationManagement($this->getUser())) {
+			$entity->setUser($this->getUser());
+		}
 
 		$binder = $this->getContactFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
@@ -49,6 +62,10 @@ class ContactManagementController extends BaseController {
 			return $this->abort(404);
 		}
 
+		if (!$this->getAccessChecker()->canUserManageContact($this->getUser(), $entity)) {
+			return $this->abort(401);
+		}
+
 		$binder = $this->getContactFormBinder();
 		if ($request->getMethod() === 'POST' && $binder->bind($entity, $request)) {
 			$this->getContactRepository()->update($entity);
@@ -67,7 +84,13 @@ class ContactManagementController extends BaseController {
 		$intention = 'delete-contact-' . $id;
 		if ($this->isValidCsrfToken($intention, $token)) {
 			try {
-				$this->getContactRepository()->delete($this->getContactRepository()->find($id));
+				$contact = $this->getContactRepository()->find($id);
+
+				if (!$this->getAccessChecker()->canUserManageContact($this->getUser(), $contact)) {
+					return $this->json(array('ok' => false));
+				}
+
+				$this->getContactRepository()->delete($contact);
 				$this->tryDeployConfiguration();
 			} catch (NotFound $e) {
 

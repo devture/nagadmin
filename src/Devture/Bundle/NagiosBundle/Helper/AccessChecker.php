@@ -47,8 +47,16 @@ class AccessChecker {
 		return $this->canUserManageHost($user, $service->getHost());
 	}
 
-	public function canUserManageContact(User $user, Contact $contact) {
+	public function canUserCreateContacts(User $user) {
 		return $this->canUserDoConfigurationManagement($user);
+	}
+
+	public function canUserManageContacts(User $user) {
+		return true;
+	}
+
+	public function canUserManageContact(User $user, Contact $contact) {
+		return $this->canUserDoConfigurationManagement($user) || ($contact->getUser() === $user);
 	}
 
 	public function canUserViewLogEntry(User $user, LogEntry $logEntry) {
@@ -72,11 +80,11 @@ class AccessChecker {
 		return false;
 	}
 
-	private function canUserDoConfigurationManagement(User $user) {
+	public function canUserDoConfigurationManagement(User $user) {
 		return $user->hasRole('configuration_management') || $this->hasUserGlobalAccess($user);
 	}
 
-	private function hasUserGlobalAccess(User $user) {
+	protected function hasUserGlobalAccess(User $user) {
 		return $user->hasRole(User::ROLE_MASTER);
 	}
 
