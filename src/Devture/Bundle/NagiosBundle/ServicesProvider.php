@@ -19,6 +19,10 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.colors'] = array('#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888',);
 
+		$app['devture_nagios.db'] = $app->share(function ($app) use ($config) {
+			return $app[$config['database_service_id']];
+		});
+
 		$app['devture_nagios.event_dispatcher'] = $app->share(function ($app) {
 			$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 			foreach ($app['devture_nagios.event_subscribers'] as $subscriber) {
@@ -40,8 +44,8 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Event\Subscriber\TimePeriodEventsSubscriber($app);
 		});
 
-		$app['devture_nagios.time_period.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\TimePeriodRepository($app['devture_nagios.event_dispatcher'], $app[$config['database_service_id']]);
+		$app['devture_nagios.time_period.repository'] = $app->share(function ($app) {
+			return new Repository\TimePeriodRepository($app['devture_nagios.event_dispatcher'], $app['devture_nagios.db']);
 		});
 
 		$app['devture_nagios.time_period.validator'] = function ($app) {
@@ -58,8 +62,8 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Event\Subscriber\CommandEventsSubscriber($app);
 		});
 
-		$app['devture_nagios.command.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\CommandRepository($app['devture_nagios.event_dispatcher'], $app[$config['database_service_id']]);
+		$app['devture_nagios.command.repository'] = $app->share(function ($app) {
+			return new Repository\CommandRepository($app['devture_nagios.event_dispatcher'], $app['devture_nagios.db']);
 		});
 
 		$app['devture_nagios.command.validator'] = function ($app) {
@@ -76,13 +80,13 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Event\Subscriber\ContactEventsSubscriber($app);
 		});
 
-		$app['devture_nagios.contact.repository'] = $app->share(function ($app) use ($config) {
+		$app['devture_nagios.contact.repository'] = $app->share(function ($app) {
 			return new Repository\ContactRepository(
 				$app['devture_nagios.event_dispatcher'],
 				$app['devture_nagios.time_period.repository'],
 				$app['devture_nagios.command.repository'],
 				$app['devture_user.repository'],
-				$app[$config['database_service_id']]
+				$app['devture_nagios.db']
 			);
 		});
 
@@ -105,8 +109,8 @@ class ServicesProvider implements ServiceProviderInterface {
 			return new Event\Subscriber\HostEventsSubscriber($app);
 		});
 
-		$app['devture_nagios.host.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\HostRepository($app['devture_nagios.event_dispatcher'], $app[$config['database_service_id']]);
+		$app['devture_nagios.host.repository'] = $app->share(function ($app) {
+			return new Repository\HostRepository($app['devture_nagios.event_dispatcher'], $app['devture_nagios.db']);
 		});
 
 		$app['devture_nagios.host.validator'] = function ($app) {
@@ -121,8 +125,8 @@ class ServicesProvider implements ServiceProviderInterface {
 
 		$app['devture_nagios.service.defaults'] = new \ArrayObject($config['defaults']['service']);
 
-		$app['devture_nagios.service.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\ServiceRepository($app['devture_nagios.host.repository'], $app['devture_nagios.command.repository'], $app['devture_nagios.contact.repository'], $app[$config['database_service_id']]);
+		$app['devture_nagios.service.repository'] = $app->share(function ($app) {
+			return new Repository\ServiceRepository($app['devture_nagios.host.repository'], $app['devture_nagios.command.repository'], $app['devture_nagios.contact.repository'], $app['devture_nagios.db']);
 		});
 
 		$app['devture_nagios.service.validator'] = function ($app) {
@@ -135,8 +139,8 @@ class ServicesProvider implements ServiceProviderInterface {
 			return $binder;
 		};
 
-		$app['devture_nagios.resource.repository'] = $app->share(function ($app) use ($config) {
-			return new Repository\ResourceRepository($app[$config['database_service_id']]);
+		$app['devture_nagios.resource.repository'] = $app->share(function ($app) {
+			return new Repository\ResourceRepository($app['devture_nagios.db']);
 		});
 
 		$app['devture_nagios.resource.validator'] = function ($app) {
