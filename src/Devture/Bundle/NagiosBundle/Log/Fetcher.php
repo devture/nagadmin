@@ -77,6 +77,10 @@ class Fetcher {
 						//We don't support host-related stuff, so this is irrelevevant.
 						continue;
 					}
+					if (preg_match("/^Service '[^']+' on host '[^']+' has no default contacts or contactgroups defined!$/", $value)) {
+						//Not having contacts associated with a service is perfectly reasonable.
+						continue;
+					}
 				}
 
 				if ($type === 'SERVICE ALERT') {
