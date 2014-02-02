@@ -101,7 +101,7 @@ class HostManagementController extends BaseController {
 				/* @var $host Host */
 				$host = $this->getHostRepository()->find($id);
 
-				if (!$this->getAccessChecker()->canUserManageHost($this->getUser(), $entity)) {
+				if (!$this->getAccessChecker()->canUserManageHost($this->getUser(), $host)) {
 					return $this->json(array('ok' => false));
 				}
 
