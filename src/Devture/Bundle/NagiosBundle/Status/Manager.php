@@ -64,19 +64,31 @@ class Manager {
 		if (!$this->statusLoaded) {
 			$this->statusLoaded = true;
 
-			try {
-				foreach ($this->fetcher->fetch() as $status) {
-					if ($status instanceof ServiceStatus) {
-						$serviceIdentifier = $status->getHostname() . '/' . $status->getServiceDescription();
-						$this->servicesStatusMap[$serviceIdentifier] = $status;
-					} else if ($status instanceof InfoStatus) {
-						$this->infoStatus = $status;
-					} else if ($status instanceof ProgramStatus) {
-						$this->programStatus = $status;
-					}
+			//Try to load multiple times, with some wait time in-between,
+			//because the status file may be missing while Nagios reloads itself (after deployment).
+			//We don't want to fail in that cause, so let's try to handle such micro-problems
+			//transparently at the cost of a slow `load()` when they occur.
+			for ($i = 0; $i < 5; ++$i) {
+				try {
+					$this->doLoad();
+					break;
+				} catch (FileMissingException $e) {
+					usleep(500000); //0.5 seconds
+					shell_exec('echo "temporary failure" > /tmp/failures.txt');
 				}
-			} catch (FileMissingException $e) {
+			}
+		}
+	}
 
+	private function doLoad() {
+		foreach ($this->fetcher->fetch() as $status) {
+			if ($status instanceof ServiceStatus) {
+				$serviceIdentifier = $status->getHostname() . '/' . $status->getServiceDescription();
+				$this->servicesStatusMap[$serviceIdentifier] = $status;
+			} else if ($status instanceof InfoStatus) {
+				$this->infoStatus = $status;
+			} else if ($status instanceof ProgramStatus) {
+				$this->programStatus = $status;
 			}
 		}
 	}
