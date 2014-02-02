@@ -7,11 +7,13 @@
 				<th>Name</th>
 				<th class="hidden-xs">Address</th>
 				<th>Groups</th>
+				<th>Services</th>
 			</tr>
 		</thead>
 		<tbody>
 		{% for entity in items %}
 			{% set link = path('devture_nagios.host.view', {'id': entity.id}) %}
+			{% set services_count = devture_nagios_count_host_services(entity) %}
 			<tr>
 				<td>
 					<a href="{{ link }}" class="btn-block">
@@ -29,6 +31,11 @@
 					<span class="label label-nagadmin label-info"
 						style="background-color: {{ group|devture_nagios_colorize }};">{{ group }}</span>
 				{% endfor %}
+				</td>
+				<td>
+					<a href="{{ link }}" class="btn-block">
+						{{ services_count }} services
+					</a>
 				</td>
 			</tr>
 		{% endfor %}

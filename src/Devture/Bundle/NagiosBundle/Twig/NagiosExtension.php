@@ -29,6 +29,7 @@ class NagiosExtension extends \Twig_Extension {
 			'devture_nagios_can_user_manage_service' => new \Twig_Function_Method($this, 'canUserManageService'),
 			'devture_nagios_can_user_manage_contact' => new \Twig_Function_Method($this, 'canUserManageContact'),
 			'devture_nagios_get_distinct_groups' => new \Twig_Function_Method($this, 'getDistinctGroups'),
+			'devture_nagios_count_host_services' => new \Twig_Function_Method($this, 'getHostServicesCount'),
 		);
 	}
 
@@ -85,6 +86,10 @@ class NagiosExtension extends \Twig_Extension {
 		return array_unique($groups);
 	}
 
+	public function getHostServicesCount(Host $host) {
+		return $this->getServiceRepository()->countByHost($host);
+	}
+
 	/**
 	 * @return \Devture\Bundle\NagiosBundle\Status\Manager
 	 */
@@ -118,6 +123,13 @@ class NagiosExtension extends \Twig_Extension {
 	 */
 	private function getHostRepository() {
 		return $this->container['devture_nagios.host.repository'];
+	}
+
+	/**
+	 * @return \Devture\Bundle\NagiosBundle\Repository\ServiceRepository
+	 */
+	private function getServiceRepository() {
+		return $this->container['devture_nagios.service.repository'];
 	}
 
 }

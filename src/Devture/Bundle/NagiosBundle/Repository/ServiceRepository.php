@@ -77,6 +77,10 @@ class ServiceRepository extends BaseMongoRepository {
 		return $this->findBy(array('hostId' => $host->getId()), array('sort' => array('name' => 1)));
 	}
 
+	public function countByHost(Host $host) {
+		return $this->db->selectCollection($this->getCollectionName())->count(array('hostId' => $host->getId()));
+	}
+
 	public function findByCommand(Command $command) {
 		return $this->findBy(array('commandId' => $command->getId()), array('sort' => array('name' => 1)));
 	}
