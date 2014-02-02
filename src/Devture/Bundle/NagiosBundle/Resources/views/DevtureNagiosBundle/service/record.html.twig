@@ -64,7 +64,7 @@
 							</div>
 						</div>
 						{% for argument in entity.command.arguments %}
-							<div class="form-grup row {{ loop.last ? 'last' : '' }}">
+							<div class="form-group row">
 								<label class="col-lg-2 control-label">$ARG{{ loop.index }}$</label>
 								<div class="col-lg-10">
 									{% set command_argument = entity.getArgumentById(argument.id) %}
@@ -132,7 +132,7 @@
 									<span class="input-group-addon">times</span>
 								</div>
 								<p class="help-block">
-									Number of Retry Checks to run, before failure is confirmed and notifications get sent.
+									Number of retries, before failure is confirmed and notifications get sent.
 								</p>
 								{{ render_form_violations(form, 'maxCheckAttempts') }}
 							</div>
