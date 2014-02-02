@@ -25,7 +25,9 @@
 				<span ng-show="serviceInfo.status == null">-</span>
 
 				<span ng-show="serviceInfo.status != null">
-					<span ng-show="serviceInfo.status.last_check == 0">Never</span>
+					<span ng-show="serviceInfo.status.last_check == 0">
+						Never (first check in <relative-time timestamp="serviceInfo.status.next_check * 1000"></relative-time>)
+					</span>
 
 					<span ng-show="serviceInfo.status.last_check != 0">
 						<relative-time timestamp="serviceInfo.status.last_check * 1000"></relative-time> ago
