@@ -25,7 +25,7 @@
 				<span ng-show="serviceInfo.status == null">-</span>
 
 				<span ng-show="serviceInfo.status != null">
-					<span ng-show="serviceInfo.status.last_check == 0">
+					<span class="help-block" ng-show="serviceInfo.status.last_check == 0">
 						Never (first check in <relative-time timestamp="serviceInfo.status.next_check * 1000"></relative-time>)
 					</span>
 
@@ -45,6 +45,7 @@
 			<span ng-repeat="contact in service.contacts">
 				<contact entity="contact" size="24"></contact>
 			</span>
+			<span class="help-block" ng-show="service.contacts.length == 0">No one</span>
 		</td>
 	</tr>
 </tbody>
