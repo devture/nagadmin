@@ -98,18 +98,18 @@
 
 			<div class="form-group row">
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-share"></i> Notifications</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<fieldset>
 						<div class="form-group row">
-							<label class="col-lg-3 control-label"><i class="glyphicon glyphicon-cog"></i> Command</label>
-							<div class="col-lg-9">
+							<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-cog"></i> Command</label>
+							<div class="col-lg-8">
 								{{ _self.render_command_picker('serviceNotificationCommandId', notificationCommands, entity.serviceNotificationCommand) }}
 								{{ render_form_violations(form, 'serviceNotificationCommand') }}
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-3 control-label"><i class="glyphicon glyphicon-time"></i> Period</label>
-							<div class="col-lg-9">
+							<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-time"></i> Period</label>
+							<div class="col-lg-8">
 								{% set selected_period = entity.timePeriod %}
 								<select name="timePeriodId" id="timePeriodId" class="form-control" required="required">
 								{% for time_period in timePeriods %}
@@ -172,10 +172,10 @@
 
 	$('#timePeriodId').change(function () {
 		var selectedTimePeriodId = $(this).val();
-		$('.js-time-period-preview').hide();
+		$('.js-time-period-preview').addClass('hide');
 		$.each($('.js-time-period-preview'), function () {
 			if ($(this).data('id') == selectedTimePeriodId) {
-				$(this).show();
+				$(this).removeClass('hide');
 				return false;
 			}
 		});
@@ -184,10 +184,10 @@
 	$('.js-command-chooser').change(function () {
 		var $previewContainer = $(this).parent().find('.js-command-preview');
 		if ($(this).val() === '') {
-			$previewContainer.hide();
+			$previewContainer.addClass('hide');
 		} else {
 			$previewContainer.find('pre').text($(this).find('option').filter(':selected').data('command-line'));
-			$previewContainer.show();
+			$previewContainer.removeClass('hide');
 		}
 	}).trigger('change');
 {% endblock %}
