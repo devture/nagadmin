@@ -31,6 +31,10 @@ class AccessChecker {
 		return $this->canUserDoConfigurationManagement($user);
 	}
 
+	public function canUserManageHosts(User $user) {
+		return $this->canUserDoConfigurationManagement($user);
+	}
+
 	public function canUserManageHost(User $user, Host $host) {
 		return $this->canUserDoConfigurationManagement($user);
 	}

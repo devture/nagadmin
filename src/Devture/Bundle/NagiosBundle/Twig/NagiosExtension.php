@@ -24,6 +24,8 @@ class NagiosExtension extends \Twig_Extension {
 			'devture_nagios_get_program_status' => new \Twig_Function_Method($this, 'getProgramStatus'),
 			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
 			'devture_nagios_can_user_manage_host' => new \Twig_Function_Method($this, 'canUserManageHost'),
+			'devture_nagios_can_user_manage_hosts' => new \Twig_Function_Method($this, 'canUserManageHosts'),
+			'devture_nagios_can_user_create_hosts' => new \Twig_Function_Method($this, 'canUserCreateHosts'),
 			'devture_nagios_can_user_manage_service' => new \Twig_Function_Method($this, 'canUserManageService'),
 			'devture_nagios_can_user_manage_contact' => new \Twig_Function_Method($this, 'canUserManageContact'),
 			'devture_nagios_get_distinct_groups' => new \Twig_Function_Method($this, 'getDistinctGroups'),
@@ -59,6 +61,14 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function canUserManageHost(User $user, Host $host) {
 		return $this->getAccessChecker()->canUserManageHost($user, $host);
+	}
+
+	public function canUserManageHosts(User $user) {
+		return $this->getAccessChecker()->canUserManageHosts($user);
+	}
+
+	public function canUserCreateHosts(User $user) {
+		return $this->getAccessChecker()->canUserCreateHosts($user);
 	}
 
 	public function canUserManageService(User $user, Service $service) {

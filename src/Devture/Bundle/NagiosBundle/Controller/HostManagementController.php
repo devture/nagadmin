@@ -9,6 +9,9 @@ use Devture\Bundle\NagiosBundle\Model\Command;
 class HostManagementController extends BaseController {
 
 	public function indexAction() {
+		if (!$this->getAccessChecker()->canUserManageHosts($this->getUser())) {
+			return $this->abort(401);
+		}
 		$items = $this->getHostRepository()->findBy(array(), array('sort' => array('name' => 1)));
 		return $this->renderView('DevtureNagiosBundle/host/index.html.twig', array('items' => $items));
 	}

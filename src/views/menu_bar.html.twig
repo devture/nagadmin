@@ -19,7 +19,9 @@
 			{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
 
 			{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
+		{% endif %}
 
+		{% if devture_nagios_can_user_manage_hosts(app.user) %}
 			{{ _self.menu_item('devture_nagios.host.', path('devture_nagios.host.manage'), 'Hosts', 'glyphicon glyphicon-th-large') }}
 		{% endif %}
 

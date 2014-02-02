@@ -1,14 +1,16 @@
 {% extends 'DevtureNagiosBundle/layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<div class="clearfix">
-		<a class="btn btn-default pull-right" href="{{ path('devture_nagios.host.add') }}">
-			<i class="glyphicon glyphicon-plus"></i>
-			Add new
-		</a>
-	</div>
+	{% if devture_nagios_can_user_create_hosts(app.user) %}
+		<div class="clearfix">
+			<a class="btn btn-default pull-right" href="{{ path('devture_nagios.host.add') }}">
+				<i class="glyphicon glyphicon-plus"></i>
+				Add new
+			</a>
+		</div>
 
-	<div class="top-spaced-minor"></div>
+		<div class="top-spaced-minor"></div>
+	{% endif %}
 
 	{% include 'DevtureNagiosBundle/host/list.html.twig' with {'items': items} %}
 {% endblock %}

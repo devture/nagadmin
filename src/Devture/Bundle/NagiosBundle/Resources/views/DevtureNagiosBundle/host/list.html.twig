@@ -11,7 +11,7 @@
 		</thead>
 		<tbody>
 		{% for entity in items %}
-			{% set link = path('devture_nagios.host.edit', {'id': entity.id}) %}
+			{% set link = path('devture_nagios.host.view', {'id': entity.id}) %}
 			<tr>
 				<td>
 					<a href="{{ link }}" class="btn-block">
