@@ -28,8 +28,8 @@ body {
 
 #footer {
 	color: #666464;
-	font-size: 12px;
 }
+#footer hr { margin: 40px 0; }
 
 .top-spaced-minor { margin-top: 7px; }
 
