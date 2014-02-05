@@ -2,6 +2,8 @@ body {
 	overflow-y: scroll;
 }
 
+pre { white-space: pre-wrap; }
+
 /* Make .warning work even on tables with .table-striped */
 .table > tbody > .warning > td { background-color: #fcf8e3 !important ; }
 
