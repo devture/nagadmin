@@ -46,7 +46,7 @@
 				<div class="col-lg-10">
 					{% for file in files %}
 						<strong>{{ file.path }}</strong>
-						<pre class="top-spaced-minor" style="max-height: 300px; overflow-y: auto;">{{ file.configuration }}</pre>
+						<pre class="top-spaced-minor" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap;">{{ file.configuration }}</pre>
 						{% if not loop.last %}<hr />{% endif %}
 					{% endfor %}
 				</div>
