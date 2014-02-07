@@ -34,11 +34,11 @@ nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePath
 
 nagadminApp.directive('hostsInfoSummary', function () {
 	var templateHtml = '';
-	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobstrusive">{{ ok }} ok</span>';
+	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobtrusive">{{ ok }} ok</span>';
 	templateHtml += ' ';
-	templateHtml += '<span ng-show="pending != 0" class="label label-default label-nagadmin-status label-nagadmin-default-unobstrusive">{{ pending }} pending</span>';
+	templateHtml += '<span ng-show="pending != 0" class="label label-default label-nagadmin-status label-nagadmin-default-unobtrusive">{{ pending }} pending</span>';
 	templateHtml += ' ';
-	templateHtml += '<span class="label label-danger label-nagadmin-status label-nagadmin-important-unobstrusive">{{ failing }} failing</span>';
+	templateHtml += '<span class="label label-danger label-nagadmin-status label-nagadmin-important-unobtrusive">{{ failing }} failing</span>';
 
 	return {
 		"restrict": "E",
