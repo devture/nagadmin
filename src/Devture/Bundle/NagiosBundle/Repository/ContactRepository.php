@@ -39,6 +39,18 @@ class ContactRepository extends BaseMongoRepository {
 		return 'contact';
 	}
 
+	public function ensureIndexes() {
+		$collection = $this->db->selectCollection($this->getCollectionName());
+
+		$collection->ensureIndex(array(
+			'serviceNotificationCommandId' => 1,
+		));
+
+		$collection->ensureIndex(array(
+			'timePeriodId' => 1,
+		));
+	}
+
 	/**
 	 * @see \Devture\Component\DBAL\Repository\BaseRepository::hydrateModel()
 	 */

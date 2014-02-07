@@ -220,6 +220,10 @@ class ServicesProvider implements ServiceProviderInterface {
 		$app['devture_nagios.console.command.check_status'] = function ($app) use ($config) {
 			return new ConsoleCommand\CheckStatusCommand($config['status_file_path'], $app);
 		};
+
+		$app['devture_nagios.console.command.init_database'] = function ($app) {
+			return new ConsoleCommand\InitDatabaseCommand($app);
+		};
 	}
 
 	private function registerControllers(Application $app) {
@@ -507,6 +511,7 @@ class ServicesProvider implements ServiceProviderInterface {
 			$app['console']->add($app['devture_nagios.console.command.send_notification.sms']);
 			$app['console']->add($app['devture_nagios.console.command.install']);
 			$app['console']->add($app['devture_nagios.console.command.check_status']);
+			$app['console']->add($app['devture_nagios.console.command.init_database']);
 		}
 
 		$app['twig.loader.filesystem']->addPath(dirname(__FILE__) . '/Resources/views/');

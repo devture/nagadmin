@@ -25,6 +25,14 @@ class HostRepository extends BaseMongoRepository {
 		return 'host';
 	}
 
+	public function ensureIndexes() {
+		$collection = $this->db->selectCollection($this->getCollectionName());
+
+		$collection->ensureIndex(array(
+			'name' => 1,
+		));
+	}
+
 	public function findByName($name) {
 		return $this->findOneBy(array('name' => $name));
 	}
