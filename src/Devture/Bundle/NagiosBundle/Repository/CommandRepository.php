@@ -24,6 +24,14 @@ class CommandRepository extends BaseMongoRepository {
 		return 'command';
 	}
 
+	public function ensureIndexes() {
+		$collection = $this->db->selectCollection($this->getCollectionName());
+
+		$collection->ensureIndex(array(
+			'type' => 1,
+		));
+	}
+
 	public function findAllByType($type) {
 		return $this->findBy(array('type' => $type), array());
 	}

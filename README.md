@@ -111,9 +111,13 @@ First the initial data set:
 	mongoimport -d nagadmin -c host --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/host.json
 	mongoimport -d nagadmin -c service --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/service.json
 
-Then run the installer, which customizes it a bit for your setup:
+Run the installer, which customizes it a bit for your setup:
 
 	php console.php install
+
+Optimize database performance by creating some indexes:
+
+	php console.php init-database
 
 
 ### Fix permissions

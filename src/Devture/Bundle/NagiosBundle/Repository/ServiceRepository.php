@@ -31,6 +31,22 @@ class ServiceRepository extends BaseMongoRepository {
 		return 'service';
 	}
 
+	public function ensureIndexes() {
+		$collection = $this->db->selectCollection($this->getCollectionName());
+
+		$collection->ensureIndex(array(
+			'hostId' => 1,
+		));
+
+		$collection->ensureIndex(array(
+			'commandId' => 1,
+		));
+
+		$collection->ensureIndex(array(
+			'contactsIds' => 1,
+		));
+	}
+
 	/**
 	 * @see \Devture\Component\DBAL\Repository\BaseRepository::hydrateModel()
 	 */
