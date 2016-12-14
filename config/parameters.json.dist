@@ -8,8 +8,6 @@
 
 	"UserBundle.password_token_salt": "salt here",
 	"UserBundle.cookie_signing_secret": "secret here",
-	"UserBundle.browser_id.enabled": true,
-	"UserBundle.browser_id.audience": "domain-name",
 
 	"NagiosBundle.log_file_path": "/var/log/nagios/nagios.log",
 	"NagiosBundle.status_file_path": "/var/nagios/status.dat",

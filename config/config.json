@@ -25,9 +25,7 @@
 			"sensitive": "Sensitive information - like Resource Variables, Configuration, system logs",
 			"devture_user": "User management - the ability to create/edit/delete user accounts",
 			"all": "ALL"
-		},
-		"browser_id.enabled": "%UserBundle.browser_id.enabled%",
-		"browser_id.audience": "%UserBundle.browser_id.audience%"
+		}
 	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",
