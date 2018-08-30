@@ -3,11 +3,11 @@
 	"description": "Web-configurator and frontend for Nagios",
 	"type": "project",
 	"keywords": ["nagios"],
-	"license": "BSD",
+	"license": "AGPL-3.0-only",
 	"authors": [
 		{
 			"name": "Slavi Pantaleev",
-			"email": "s.pantaleev@gmail.com"
+			"email": "slavi@devture.com"
 		}
 	],
 	"require": {
