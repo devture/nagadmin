@@ -25,8 +25,7 @@ class SendNotificationEmailCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$message = \Swift_Message::newInstance();
-		$message->setSubject($input->getArgument('subject'));
+		$message = new \Swift_Message($input->getArgument('subject'));
 		$message->setFrom($this->senderEmailAddress);
 		$message->setTo($input->getArgument('emailAddress'));
 		$message->setBody(file_get_contents('php://stdin'));
