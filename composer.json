@@ -24,7 +24,7 @@
 		"devture/silex-localization-bundle": "2.*",
 		"devture/silex-user-bundle": "6.1.*",
 		"devture/sms-sender": "1.3.*",
-		"devture/dbal": "1.*"
+		"devture/dbal": "1.2.*"
 	},
 	"autoload": {
 		"psr-0": {
