@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# This captures arguments, preserving quotes, so they can be forwarded to another shell.
+# See: https://stackoverflow.com/a/8723305
+C=''
+for i in "$@"; do
+    i="${i//\\/\\\\}"
+    C="$C \"${i//\"/\\\"}\""
+done
+
+docker_compose_run_flags='-T'
+if [ -t 1 ]; then
+	# Got tty
+	docker_compose_run_flags=''
+fi
+
+docker-compose -p devture-nagadmin \
+run $docker_compose_run_flags --rm --user='100:101' php sh -c \
+"/usr/local/bin/waitforit -host=mongodb -port=27017 -timeout=5 && php bin/console.php $C"

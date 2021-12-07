@@ -2,10 +2,9 @@
 namespace Devture\Bundle\NagiosBundle\Controller\Provider;
 
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 use Devture\Bundle\NagiosBundle\Model\Command;
 
-class ControllersProvider implements ControllerProviderInterface {
+class ControllersProvider implements \Silex\Api\ControllerProviderInterface {
 
 	public function connect(Application $app) {
 		$controllers = $app['controllers_factory'];

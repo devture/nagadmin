@@ -12,7 +12,7 @@ class SendNotificationSmsCommand extends Command {
 	private $smsSenderId;
 	private $container;
 
-	public function __construct($smsSenderId, \Pimple $container) {
+	public function __construct($smsSenderId, \Pimple\Container $container) {
 		parent::__construct('send-notification:sms');
 
 		$this->smsSenderId = $smsSenderId;
@@ -25,13 +25,15 @@ class SendNotificationSmsCommand extends Command {
 		$this->setDescription('Sends an SMS notification message.');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$phoneNumber = $input->getArgument('phoneNumber');
 		$messageText = $input->getArgument('message');
 
 		$message = new Message($this->smsSenderId, $phoneNumber, $messageText);
 
 		$this->getNotificationSmsGateway()->send($message);
+
+		return 0;
 	}
 
 	/**

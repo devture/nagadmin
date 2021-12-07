@@ -5,7 +5,6 @@ use Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile;
 use Devture\Bundle\NagiosBundle\Deployment\ObjectDefinition;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
-use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
 
 class AutoServiceDepsConfigurationExporter implements ConfigurationExporterInterface {
@@ -21,7 +20,7 @@ class AutoServiceDepsConfigurationExporter implements ConfigurationExporterInter
 	}
 
 	public function export() {
-		$configurationFile = new ConfigurationFile('configuration/auto_sevice_deps.cfg', ConfigurationFile::TYPE_CONFIGURATION_FILE);
+		$configurationFile = new ConfigurationFile('configuration/auto_service_deps.cfg', ConfigurationFile::TYPE_CONFIGURATION_FILE);
 
 		/* @var $host Host */
 		foreach ($this->hostRepository->findAll() as $host) {

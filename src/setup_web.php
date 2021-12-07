@@ -7,7 +7,7 @@ $app['twig']->addGlobal('layout', 'layout.html.twig');
 
 $app->mount('/', $app['devture_nagios.controllers_provider.management']);
 $app->mount('/api', $app['devture_nagios.controllers_provider.api']);
-$app['devture_user.access_control']->requireAuthForRoutePrefix('devture_nagios.');
+$app['devture_user.access_control']->requireAuthForRoutePrefix('devture_nagios.', $app['devture_nagios.public_routes']);
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.resource.', 'sensitive');
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.configuration.', 'sensitive');
 $app['devture_user.access_control']->requireRoleForRoutePrefix('devture_nagios.time_period.', 'configuration_management');

@@ -1,0 +1,64 @@
+version: '2.1'
+
+services:
+  mongodb:
+    image: docker.io/mongo:5.0.4-focal
+    restart: unless-stopped
+    volumes:
+    - ../nagadmin-containers-data/mongodb:/data/db:rw,cached
+    # This is a helper directory we use for import/export operations.
+    # See the `mongodb-dump` and `mongodb-import` Make targets.
+    - ./var/mongodb-io:/mongodb-io:rw,cached
+
+  nginx:
+    image: docker.io/nginx:1.21.4-alpine
+    restart: unless-stopped
+    ports:
+    - "127.0.0.1:20180:8080"
+    # Any random non-root user will do
+    user: 4000:4000
+    entrypoint: /bin/sh
+    command: -c 'nginx -g "daemon off;"'
+    working_dir: /public
+    volumes:
+    - ./etc/services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    - ./etc/services/nginx/vhost.conf:/etc/nginx/conf.d/default.conf:ro
+    - ./public:/public:ro,cached
+    tmpfs:
+      - /tmp
+
+  php:
+    build: ./etc/docker/php
+    image: devture/nagadmin-php:8.0.13
+    # We run PHP with the same user that Nagios runs with, because
+    # we need it to be able to write to the nagios.cmd file.
+    user: 100:101
+    restart: unless-stopped
+    stop_signal: QUIT
+    stop_grace_period: 15s
+    volumes:
+    - ./:/code:rw,cached
+
+  mailer:
+    image: docker.io/devture/exim-relay:4.95-r0
+    restart: unless-stopped
+    user: 100:101
+    tmpfs:
+      - /var/spool/exim
+    environment:
+      HOSTNAME: ${HOSTNAME}
+      DISABLE_SENDER_VERIFICATION: 1
+
+  nagios:
+    image: docker.io/manios/nagios:4.4.6
+    restart: unless-stopped
+    ports:
+    - "127.0.0.1:20188:80"
+    volumes:
+    - ./etc/services/nagios/etc:/opt/nagios/etc:rw,cached
+    - ./var/nagios/var:/opt/nagios/var:rw,cached
+    - ./var/nagadmin-generated-config:/nagadmin-generated-config:ro,cached
+    environment:
+      NAGIOSADMIN_USER: ${NAGIOSADMIN_USER}
+      NAGIOSADMIN_PASS: ${NAGIOSADMIN_PASS}
+      TZ: ${TZ}

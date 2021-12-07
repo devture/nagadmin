@@ -11,7 +11,7 @@ class SendNotificationEmailCommand extends Command {
 	private $senderEmailAddress;
 	private $container;
 
-	public function __construct($senderEmailAddress, \Pimple $container) {
+	public function __construct($senderEmailAddress, \Pimple\Container $container) {
 		parent::__construct('send-notification:email');
 
 		$this->senderEmailAddress = $senderEmailAddress;
@@ -24,13 +24,15 @@ class SendNotificationEmailCommand extends Command {
 		$this->setDescription('Sends an Email notification message.');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$message = new \Swift_Message($input->getArgument('subject'));
 		$message->setFrom($this->senderEmailAddress);
 		$message->setTo($input->getArgument('emailAddress'));
 		$message->setBody(file_get_contents('php://stdin'));
 
 		$this->getNotificationEmailMailer()->send($message);
+
+		return 0;
 	}
 
 	/**

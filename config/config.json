@@ -2,6 +2,9 @@
 	"trusted_proxies": "%trusted_proxies%",
 	"project_name": "%project_name%",
 	"debug": "%is_debug%",
+	"MongoDBProviderConfig": {
+		"server": "%MongoDBProviderConfig.server%"
+	},
 	"mongo": {
 		"db_name": "%db_name%"
 	},
@@ -29,12 +32,11 @@
 	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",
-		"log_file_path": "%NagiosBundle.log_file_path%",
-		"status_file_path": "%NagiosBundle.status_file_path%",
-		"command_file_path": "%NagiosBundle.command_file_path%",
+		"log_file_path": "/code/var/nagios/var/nagios.log",
+		"status_file_path": "/code/var/nagios/var/status.dat",
+		"command_file_path": "/code/var/nagios/var/rw/nagios.cmd",
 		"deployment_handler": {
-			"path": "%NagiosBundle.deployment_handler.path%",
-			"post_deployment_command": "%NagiosBundle.deployment_handler.post_deployment_command%"
+			"path": "/code/var/nagadmin-generated-config/"
 		},
 		"defaults": {
 			"service": {
@@ -45,6 +47,7 @@
 			}
 		},
 		"notifications": {
+			"api_secret": "%NagiosBundle.notifications.api_secret%",
 			"email": {
 				"sender_email_address": "%NagiosBundle.notifications.email.sender_email_address%",
 				"host": "%NagiosBundle.notifications.email.host%",

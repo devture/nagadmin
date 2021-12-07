@@ -3,7 +3,6 @@ namespace Devture\Bundle\NagiosBundle\ConsoleCommand;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CheckStatusCommand extends Command {
@@ -16,14 +15,14 @@ class CheckStatusCommand extends Command {
 	private $statusFilePath;
 	private $container;
 
-	public function __construct($statusFilePath, \Pimple $container) {
+	public function __construct($statusFilePath, \Pimple\Container $container) {
 		parent::__construct('check:status');
 
 		$this->statusFilePath = $statusFilePath;
 		$this->container = $container;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$info = $this->getStatusManager()->getInfoStatus();
 		$program = $this->getStatusManager()->getProgramStatus();
 
@@ -47,13 +46,15 @@ class CheckStatusCommand extends Command {
 			return self::STATUS_WARNING;
 		}
 
-		return $output->write(sprintf(
+		$output->write(sprintf(
 			"Nagios %s (PID: %d), up since %s. Status file updated: %s",
 			$info->getCurrentVersion(),
 			$program->getPid(),
 			$date($program->getStartTime()),
 			$date($info->getCreationTime())
 		));
+
+		return self::STATUS_OK;
 	}
 
 	/**

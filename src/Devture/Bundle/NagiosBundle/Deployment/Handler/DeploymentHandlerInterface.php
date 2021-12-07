@@ -6,9 +6,8 @@ use Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException;
 interface DeploymentHandlerInterface {
 
 	/**
-	 * @param array $configurationFiles
 	 * @throws DeploymentFailedException
 	 */
-	public function deploy(array $configurationFiles);
+	public function deploy(array $configurationFiles, bool $reloadNagios): void;
 
 }

@@ -7,7 +7,7 @@ abstract class ContainerAwareSubscriber implements EventSubscriberInterface {
 
 	protected $container;
 
-	public function __construct(\Pimple $container) {
+	public function __construct(\Pimple\Container $container) {
 		$this->container = $container;
 	}
 

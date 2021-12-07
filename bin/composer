@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# This captures arguments, preserving quotes, so they can be forwarded to another shell.
+# See: https://stackoverflow.com/a/8723305
+C=''
+for i in "$@"; do
+    i="${i//\\/\\\\}"
+    C="$C \"${i//\"/\\\"}\""
+done
+
+docker_run_flags=''
+if [ -t 1 ]; then
+	# Got tty
+	docker_run_flags='-it'
+fi
+
+docker run \
+	$docker_run_flags \
+	--rm \
+	-e UID=`id -u` \
+	-e GID=`id -g` \
+	--mount type=bind,src=$HOME/.cache,dst=/cache \
+	--mount type=bind,src=`pwd`,dst=/app \
+	--tmpfs=/home/user \
+	--entrypoint=/bin/sh \
+	docker.io/composer:2.1.14 -c \
+	"/bin/sh /app/etc/services/composer/init.sh && su -l user -c 'cd /app; COMPOSER_CACHE_DIR=/cache/composer composer $C'"

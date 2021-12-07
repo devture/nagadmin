@@ -10,20 +10,25 @@
 			"email": "slavi@devture.com"
 		}
 	],
+	"provide" : {
+		"ext-mongodb" : "1.11.*"
+	},
 	"require": {
-		"silex/silex": "1.3.*",
-		"twig/twig": "1.35.*",
-		"symfony/console": "4.1.*",
-		"symfony/finder": "4.1.*",
-		"symfony/process": "4.1.*",
+		"silex/silex": "2.3.*",
+		"twig/twig": "2.14.*",
+		"symfony/console": "5.4.*",
+		"symfony/finder": "5.4.*",
+		"symfony/process": "5.4.*",
+		"symfony/twig-bridge": "^4.0",
+		"symfony/var-dumper": "5.4.*",
 		"swiftmailer/swiftmailer": "6.1.*",
 		"alcaeus/mongo-php-adapter": "1.0",
-		"devture/silex-provider-doctrine-mongodb": "1.*",
-		"devture/silex-provider-config": "1.*",
-		"devture/silex-framework-bundle": "1.*",
-		"devture/silex-localization-bundle": "2.*",
-		"devture/silex-user-bundle": "6.1.*",
-		"devture/sms-sender": "1.3.*",
+		"devture/silex-provider-config": "2.*",
+		"devture/silex-provider-doctrine-mongodb": "2.*",
+		"devture/silex-framework-bundle": "2.*",
+		"devture/silex-localization-bundle": "3.*",
+		"devture/silex-user-bundle": "7.*",
+		"devture/sms-sender": "1.5.*",
 		"devture/dbal": "1.2.*"
 	},
 	"autoload": {

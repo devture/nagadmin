@@ -33,7 +33,7 @@ class ConfigurationManagementController extends BaseController {
 
 		$viewData = array('error' => null);
 		try {
-			$this->getDeploymentHandler()->deploy($files);
+			$this->getDeploymentHandler()->deploy($files, true);
 		} catch (DeploymentFailedException $e) {
 			$viewData['error'] = $e->getMessage();
 		}

@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Website\Twig\Extension;
 
-class StaticFileStamperExtension extends \Twig_Extension {
+class StaticFileStamperExtension extends \Twig\Extension\AbstractExtension {
 
 	protected $basePath;
 	protected $baseUri;
@@ -17,7 +17,7 @@ class StaticFileStamperExtension extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
-			'static_url' => new \Twig_Function_Method($this, 'getStaticUrl'),
+			new \Twig\TwigFunction('static_url', [$this, 'getStaticUrl']),
 		);
 	}
 

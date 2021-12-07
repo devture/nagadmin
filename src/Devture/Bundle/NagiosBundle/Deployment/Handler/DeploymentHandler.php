@@ -1,27 +1,27 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Deployment\Handler;
 
-use Symfony\Component\Process\Process;
 use Devture\Bundle\NagiosBundle\Deployment\ConfigurationWriter;
 use Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException;
+use Devture\Bundle\NagiosBundle\NagiosCommand\Submitter;
 
 class DeploymentHandler implements DeploymentHandlerInterface {
 
 	private $writer;
 	private $path;
-	private $postDeploymentCmd;
+	private $submitter;
 
-	public function __construct(ConfigurationWriter $writer, $path, $postDeploymentCmd) {
+	public function __construct(ConfigurationWriter $writer, $path, Submitter $submitter) {
 		$this->writer = $writer;
 		$this->path = $path;
-		$this->postDeploymentCmd = $postDeploymentCmd;
+		$this->submitter = $submitter;
 	}
 
 	/**
 	 * @param array $configurationFiles
 	 * @throws DeploymentFailedException
 	 */
-	public function deploy(array $configurationFiles) {
+	public function deploy(array $configurationFiles, bool $reloadNagios): void {
 		if (!file_exists($this->path)) {
 			throw new DeploymentFailedException('Cannot deploy to non-existent path `' . $this->path . '`');
 		}
@@ -34,15 +34,9 @@ class DeploymentHandler implements DeploymentHandlerInterface {
 
 		$this->writer->write($this->path, $configurationFiles);
 
-		try {
-			$process = new Process($this->postDeploymentCmd . ' 2>&1');
-			$process->setTimeout(60);
-			$process->run();
-			if (!$process->isSuccessful()) {
-				throw new \RuntimeException($process->getOutput());
-			}
-		} catch (\RuntimeException $e) {
-			throw new DeploymentFailedException($e->getMessage(), null, $e);
+		if ($reloadNagios) {
+			$command = sprintf('[%d] SHUTDOWN_PROGRAM', time());
+			$this->submitter->submit($command);
 		}
 	}
 

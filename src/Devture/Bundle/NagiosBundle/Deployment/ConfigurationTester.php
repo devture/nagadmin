@@ -29,11 +29,15 @@ class ConfigurationTester {
 		$this->writer->write($path, $configurationFiles);
 
 		try {
-			$process = new Process('nagios --verify-config ' . escapeshellarg($path . '/nagios.cfg') . ' 2>&1');
+			// This check is peformend using the Nagios installation in the PHP container.
+			// It's not the actual Nagios that runs separately.
+
+			$process = new Process(['nagios', '--verify-config', $path . '/nagios.cfg']);
 			$process->setTimeout(10);
+			$process->enableOutput();
 			$process->run();
 			if (!$process->isSuccessful()) {
-				throw new \RuntimeException($process->getOutput());
+				throw new \RuntimeException('Process failed: ' . $process->getOutput());
 			}
 			$isValid = true;
 			$checkOutput = $process->getOutput();

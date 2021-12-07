@@ -6,11 +6,11 @@ use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Contact;
 
-class NagiosExtension extends \Twig_Extension {
+class NagiosExtension extends \Twig\Extension\AbstractExtension {
 
 	private $container;
 
-	public function __construct(\Pimple $container) {
+	public function __construct(\Pimple\Container $container) {
 		$this->container = $container;
 	}
 
@@ -20,26 +20,26 @@ class NagiosExtension extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
-			'devture_nagios_get_info_status' => new \Twig_Function_Method($this, 'getInfoStatus'),
-			'devture_nagios_get_program_status' => new \Twig_Function_Method($this, 'getProgramStatus'),
-			'devture_nagios_get_service_status' => new \Twig_Function_Method($this, 'getServiceStatus'),
-			'devture_nagios_can_user_manage_host' => new \Twig_Function_Method($this, 'canUserManageHost'),
-			'devture_nagios_can_user_manage_hosts' => new \Twig_Function_Method($this, 'canUserManageHosts'),
-			'devture_nagios_can_user_create_hosts' => new \Twig_Function_Method($this, 'canUserCreateHosts'),
-			'devture_nagios_can_user_manage_service' => new \Twig_Function_Method($this, 'canUserManageService'),
-			'devture_nagios_can_user_manage_contact' => new \Twig_Function_Method($this, 'canUserManageContact'),
-			'devture_nagios_can_user_manage_contacts' => new \Twig_Function_Method($this, 'canUserManageContacts'),
-			'devture_nagios_can_user_create_contacts' => new \Twig_Function_Method($this, 'canUserCreateContacts'),
-			'devture_nagios_can_user_do_configuration_management' => new \Twig_Function_Method($this, 'canUserDoConfigurationManagement'),
-			'devture_nagios_get_distinct_groups' => new \Twig_Function_Method($this, 'getDistinctGroups'),
-			'devture_nagios_count_host_services' => new \Twig_Function_Method($this, 'getHostServicesCount'),
+			new \Twig\TwigFunction('devture_nagios_get_info_status', [$this, 'getInfoStatus']),
+			new \Twig\TwigFunction('devture_nagios_get_program_status', [$this, 'getProgramStatus']),
+			new \Twig\TwigFunction('devture_nagios_get_service_status', [$this, 'getServiceStatus']),
+			new \Twig\TwigFunction('devture_nagios_can_user_manage_host', [$this, 'canUserManageHost']),
+			new \Twig\TwigFunction('devture_nagios_can_user_manage_hosts', [$this, 'canUserManageHosts']),
+			new \Twig\TwigFunction('devture_nagios_can_user_create_hosts', [$this, 'canUserCreateHosts']),
+			new \Twig\TwigFunction('devture_nagios_can_user_manage_service', [$this, 'canUserManageService']),
+			new \Twig\TwigFunction('devture_nagios_can_user_manage_contact', [$this, 'canUserManageContact']),
+			new \Twig\TwigFunction('devture_nagios_can_user_manage_contacts', [$this, 'canUserManageContacts']),
+			new \Twig\TwigFunction('devture_nagios_can_user_create_contacts', [$this, 'canUserCreateContacts']),
+			new \Twig\TwigFunction('devture_nagios_can_user_do_configuration_management', [$this, 'canUserDoConfigurationManagement']),
+			new \Twig\TwigFunction('devture_nagios_get_distinct_groups', [$this, 'getDistinctGroups']),
+			new \Twig\TwigFunction('devture_nagios_count_host_services', [$this, 'getHostServicesCount']),
 		);
 	}
 
 	public function getFilters() {
 		return array(
-			'devture_nagios_colorize' => new \Twig_Filter_Method($this, 'colorize'),
-			'contact_api_model_export' => new \Twig_Filter_Method($this, 'exportContactApiModel'),
+			new \Twig\TwigFilter('devture_nagios_colorize', [$this, 'colorize']),
+			new \Twig\TwigFilter('contact_api_model_export', [$this, 'exportContactApiModel']),
 		);
 	}
 

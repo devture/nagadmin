@@ -1,6 +1,6 @@
 # Nagadmin: web-configurator and frontend for Nagios
 
-Nagadmin is a web-configurator for configuring a [Nagios](http://nagios.com/) installation.
+Nagadmin is a web-configurator for configuring a [Nagios](https://www.nagios.com) installation.
 It also serves as a frontend - a place where you can see the status of your services.
 
 It's not meant to support all Nagios features.
@@ -14,7 +14,7 @@ If your requirements are complicated, you may need to look into some other solut
 --------------------
 
 
-## Why Nagadmin instead of [some other solution]?
+## Why Nagadmin instead of "some other solution"?
 
 There are lots of web-configurator systems that aim to make Nagios installations easy to configure from the web.
 Editing Nagios configuration files may be inconvenient (requires terminal access),
@@ -22,12 +22,12 @@ and more importantly does not show a good overview of what's really configured.
 
 None of the existing Nagios configurator systems seemed to achieve the goals of:
 
-- providing a simple user-interface that's easier than "ssh to the nagios host -> edit raw config file"
-- providing a beautiful and pleasant user-interface that also works on mobile devices
-- providing both a configuration and frontend tool in one
-- providing advanced access control, so that many users can see and potentially do different things
-- optimizing for the common use-case, by hiding certain complex Nagios features
-- giving you a good overview of the current configuration and status
+- providing a simple user-interface that's **easier than "SSH into the Nagios host & edit raw config files"**
+- providing a **beautiful and pleasant user-interface** that also works on mobile devices
+- providing both a **configuration and frontend tool in one**
+- providing **advanced access control**, so that many users can see and potentially do different things
+- **optimizing for the common use-case**, by hiding certain complex Nagios features
+- giving you a **good overview of the current configuration and status**
 
 
 --------------------
@@ -35,41 +35,18 @@ None of the existing Nagios configurator systems seemed to achieve the goals of:
 
 ## Installation
 
-The instructions below assume you're installing on a modern linux distribution (like Archlinux),
-which uses systemd and the http user is `http`.
 
-Installing on other distros only requires minor changes.
+### Prerequisites
 
-
-### Get all the prerequisites
-
-- [Nagios](http://nagios.com/)
-
-- The Nagios plugins
-
-- [MongoDB](http://www.mongodb.org/)
-
-- sudo
-
-- PHP 5.4+ (5.5+ is recommended and will make your life much easier)
-
-- The php-mongo/php-pecl-mongo extension - for connecting to MongoDB
-
-- [git](http://git-scm.com/) - for getting the source code
-
-- [composer](http://getcomposer.org/) - for installing PHP libraries
+- Docker
+- Docker Compose (v1 or v2)
 
 
 ### Download the source code and go into the main directory
 
 	cd /srv/http
-	git clone <repository url> <your vhost name>
-	cd <your vhost name>
-
-
-### Install the dependencies with the help of composer
-
-	php composer.phar install
+	git clone <repository url> nagadmin
+	cd nagadmin
 
 
 ### Configure
@@ -77,114 +54,75 @@ Installing on other distros only requires minor changes.
 Start by copying the sample configuration parameters file:
 
 	cp config/parameters.json.dist config/parameters.json
+	cp .env.dist .env
 
-You may need to adjust some paths, as the Nagios status/command/log files are in a different directory for diferent distributions.
-init.d-based systems need some command changes as well.
-
-Do not worry about permissions or the existence of paths yet - we handle that below.
-If you don't understand something, leave the default value and carry on.
-
-But **be sure to edit the file** - some things need to be adjusted in all cases:
-
-	vim config/parameters.json
+Now modify `config/parameters.json` and `.env` to your liking.
 
 
-### Hook with Nagios
+### Run for the first time
 
-Edit the main Nagios configuration file: `/etc/nagios/nagios.cfg`.
+```sh
+make run
+```
 
-Comment all existing `cfg_file` directives and add a new `cfg_dir` directive:
-
-	cfg_dir=/etc/nagios/nagadmin-generated/configuration/
-
-Also comment the existing `resource_file` directive and add a new one:
-
-	resource_file=/etc/nagios/nagadmin-generated/resource.cfg
+Not all services will run well yet. Nagios will encounter some errors, because it can't find some of its configuration yet.
+We resolve this below during the [Installation](#install) step.
 
 
-### Import the database
+### Initialize the database
 
-First the initial data set:
+Run the following command to initialize the database (initial data-set import and databse indexes creation):
 
-	mongoimport -d nagadmin -c time_period --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/time_period.json
-	mongoimport -d nagadmin -c command --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/command.json
-	mongoimport -d nagadmin -c host --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/host.json
-	mongoimport -d nagadmin -c service --jsonArray < src/Devture/Bundle/NagiosBundle/Resources/database/service.json
-
-Run the installer, which customizes it a bit for your setup:
-
-	php console.php install
-
-Optimize database performance by creating some indexes:
-
-	php console.php init-database
+```sh
+make init-database
+```
 
 
-### Fix permissions
+### Install
 
-#### Allow Nagios to access this system
+Run the following command to set up Resource Variables and install the initial Nagios configuration:
 
-The `nagios` user needs to access this application's directory in order to be able to send notifications.
-Running `php console.php` with the `nagios` user should not result in an error.
-A way to do that is to add the `http` group as a supplementary group for the `nagios` user:
+```sh
+make install
+```
 
-	usermod -a http nagios
-
-
-#### Allow the http user to write a new configuration
-
-Create the path defined in `config/parameters.json` as `NagiosBundle.deployment_handler.path` and fix its permissions:
-
-	mkdir /etc/nagios/nagadmin-generated
-	chown http:nagios /etc/nagios/nagadmin-generated
-	chmod 750 /etc/nagios/nagadmin-generated
-
-The web interface should now be able to save the Nagios configuration files that it generates.
+Nagios should now properly start and run.
 
 
-#### Allow the http user to reload the Nagios daemon
-
-Now that the `http` can write a new configuration, we need to have it be able to tell Nagios to reload itself, so it can start using it.
-Make sure the `http` user can execute the command defined in `config/parameters.json` as `NagiosBundle.deployment_handler.post_deployment_command`.
-Run `visudo` and add some new rules:
-
-	http ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nagios
-	Defaults:http   !requiretty
-
-
-### Set up the web server
+### Create your first user
 
 Create a new administrator user account for you:
 
-	php console.php devture-user:add "username-here" "email-here"
+```sh
+./bin/container-console devture-user:add USERNAME_HERE EMAIL_ADDRESS_HERE
+```
 
-Make the cache directory writable by the web server user:
-
-	chown http:http cache
-
-Set up your web server vhost (see the resources/webserver directory for examples).
+You'll be asked for a password, etc.
 
 
-### Deploy the initial configuration
+### Accessing Nagadmin and Nagios
 
-Open the web interface, log in with your account, go to Configuration and hit the Deploy button.
-This should create the initial configuration in `/etc/nagios/nagadmin-generated`
+Use a web browser to access Nagadmin at this URL: http://nagadmin.127.0.0.1.nip.io:20180
 
+You should be able to log in with the user that you created in the previous step.
 
-### Restart Nagios and make sure it starts with the system
+You can also access Nagios at this URL: http://nagadmin.127.0.0.1.nip.io:20189
 
-On a systemd-based system:
-
-	/usr/bin/systemctl restart nagios
-	/usr/bin/sytemctl enable nagios
+You need to authenticate using the username/password you've specified in `.env` (`NAGIOSADMIN_USER` and `NAGIOSADMIN_PASS`).
 
 
 ### Verify that it all works
 
 Run the check command to see if things are running correctly:
 
-	php console.php check:status
+```sh
+./bin/container-console check:status
+```
 
+
+### Set up a reverse-proxy
+
+See `resources/webserver`. You may also wish to adjust the `%trusted_proxies%` parameter in `config/parameters.json`.
 
 --------------------
 
@@ -205,8 +143,7 @@ It can be used as a simple alternative to the default Nagios CGI interface.
 
 ### Can I import my existing Nagios configuration files into Nagadmin?
 
-Not yet, but hopefully soon.
-That shouldn't stop you from giving Nagadmin a spin.
+No. You'd need to start from scratch.
 
 
 ### What are the plans for Nagadmin's future?
@@ -218,30 +155,24 @@ Community members are free to make improvements to the existing codebase.
 
 ### What is Nagadmin written in?
 
-Nagadmin is written in [PHP](http://php.net/) and uses the [Silex microframework](http://silex.sensiolabs.org/).
+Nagadmin is written in [PHP](https://php.net) and uses the [Silex microframework](https://github.com/silexphp/Silex).
 
 
 ### What are the system requirements?
 
-You need Nagios 3.x or 4.x to consume the generated configuration files and PHP 5.4+ to power the web-configurator.
+We require an x86-84 (amd64) Linux server with Docker and Docker Compose regardless of the distribution.
+
+All services run in containers.
 
 
 ### Can I install the web-configurator on another machine (not the one running Nagios)?
 
-Probably. But that's more complicated and hasn't been tested:
-
-1. You need to also install Nagios on the machine that runs the web-configurator
-(the `nagios` executable is needed to verify the generated configuration files, before deploying)
-
-2. You need to set up a post-deployment command (`NagiosBundle.deployment_handler.post_deployment_command` in `config/parameters.json`)
-to move the locally generated files to the actual Nagios machine and reload/restart the remote Nagios daemon.
-
-3. You need to set up a way (NFS?) to access the Nagios status, command and log files specified in `config/parameters.json`.
+No. Nagios only runs in a container as part of this setup.
 
 
 ### I'm not running Nagios, but a compatible system (Icinga, Shinken, Centreon). Can I use this?
 
-Probably. Give it a try. If/when it fails somewhere, tell us about it and we can work on a fix.
+Nagadmin only works with Nagios. Some of these systems are similar, so you may be able to migrate your existing setup to Nagios (powered by Nagadmin).
 
 
 ### I need to check thousands of services. Can I use this?
@@ -280,7 +211,7 @@ This keeps things simple, by removing the complex inheritance model.
 
 That's an advanced feature.
 
-Nagadmin supports automatic service dependencies though.
+Nagadmin supports automatic service dependencies though (see the `NagiosBundle.auto_service_dependency.master_service_regexes` parameter in `config/parameters.json`).
 
 A service that has a name "ping" or "host-alive" (case-insensitive) is automatically made a parent service of all other
 services on the same host.
@@ -302,9 +233,7 @@ That's considered an advanced feature, outside the scope of what Nagadmin aims t
 
 ### Existing configuration files cannot be imported
 
-This is definitely something we wish to improve upon.
-It would make it much easier to get started with Nagadmin if you've been doing things manually until now,
-or to let you migrate from another system.
+If you've been using Nagios by configuring it manually, you'd need to replicate all your existing configuration again via Nagadmin's UI.
 
 
 ### The system doesn't play well with thousands of services

@@ -84,7 +84,7 @@ class BaseController extends \Devture\Bundle\FrameworkBundle\Controller\BaseCont
 		$files = $this->getDeploymentConfigurationCollector()->collect();
 		list($isValid, $_checkOutput) = $this->getDeploymentConfigurationTester()->test($files);
 		if ($isValid) {
-			$this->getDeploymentHandler()->deploy($files);
+			$this->getDeploymentHandler()->deploy($files, true);
 		}
 	}
 

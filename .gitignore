@@ -1,4 +1,5 @@
-vendor
-cache/*
-!cache/.gitkeep
-config/parameters.json
+/vendor
+/var
+/etc/services/nagios/etc/htpasswd.users
+/config/parameters.json
+/.env

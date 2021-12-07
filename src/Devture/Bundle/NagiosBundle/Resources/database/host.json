@@ -1,1 +1,1 @@
-[{ "_id" : { "$oid" : "5086fbbd3c03e1af5a000000" }, "name" : "nagadmin", "address" : "localhost", "groups" : [ "linux-servers" ] }]
+[{"_id":{"$oid":"5086fbbd3c03e1af5a000000"},"name":"nagadmin","address":"nginx","groups":["linux-servers"]}]

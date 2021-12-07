@@ -2,10 +2,9 @@
 namespace Devture\Bundle\NagiosBundle\Controller\Provider;
 
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 use Devture\Bundle\NagiosBundle\Model\Command;
 
-class ApiControllersProvider implements ControllerProviderInterface {
+class ApiControllersProvider implements \Silex\Api\ControllerProviderInterface {
 
 	public function connect(Application $app) {
 		$controllers = $app['controllers_factory'];
@@ -33,6 +32,12 @@ class ApiControllersProvider implements ControllerProviderInterface {
 		$controllers->get('/logs/{ifNewerThanId}', 'devture_nagios.controller.log.api:listAction')
 			->value('ifNewerThanId', null)
 			->bind($namespace . '.api.log.list');
+
+		$controllers->post('/notification/send-sms', 'devture_nagios.controller.notification.api:sendSms')
+			->bind($namespace . '.api.notification.send_sms');
+
+			$controllers->post('/notification/send-email', 'devture_nagios.controller.notification.api:sendEmail')
+				->bind($namespace . '.api.notification.send_email');
 
 		return $controllers;
 	}

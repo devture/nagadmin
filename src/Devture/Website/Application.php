@@ -1,6 +1,8 @@
 <?php
 namespace Devture\Website;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class Application extends \Silex\Application {
 
 	protected $basePath;
@@ -32,14 +34,14 @@ class Application extends \Silex\Application {
 		$app = $this;
 
 		if ($this['config']['trusted_proxies']) {
-			\Symfony\Component\HttpFoundation\Request::setTrustedProxies($this['config']['trusted_proxies']);
+			Request::setTrustedProxies($this['config']['trusted_proxies'], Request::HEADER_X_FORWARDED_ALL);
 		}
 
 		$app['app_base_path'] = $this->basePath;
 
 		$app->register(new \Silex\Provider\TwigServiceProvider(), array(
 			'twig.options' => array(
-				'cache' => $this->basePath . '/cache/twig',
+				'cache' => $this->basePath . '/var/cache/twig',
 				'auto_reload' => $this['debug'],
 				'strict_variables' => true
 			),
@@ -48,11 +50,11 @@ class Application extends \Silex\Application {
 
 		$app->register(new \Silex\Provider\SwiftmailerServiceProvider());
 
-		$app->register(new \Devture\SilexProvider\DoctrineMongoDB\ServicesProvider('mongodb', array()));
+		$app->register(new \Devture\SilexProvider\DoctrineMongoDB\ServicesProvider('mongodb', $this['config']['MongoDBProviderConfig']));
 
-		$app['mongodb.database'] = $app->share(function ($app) {
+		$app['mongodb.database'] = function ($app) {
 			return $app['mongodb.connection']->selectDatabase($app['config']['mongo']['db_name']);
-		});
+		};
 
 		$app->register(new \Devture\Bundle\FrameworkBundle\ServicesProvider($this['config']['FrameworkBundle']));
 		$app->register(new \Devture\Bundle\LocalizationBundle\ServicesProvider($app['config']['LocalizationBundle']));

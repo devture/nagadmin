@@ -3,44 +3,61 @@ namespace Devture\Bundle\NagiosBundle\Install;
 
 class Installer {
 
-	private $container;
-
-	public function __construct(\Pimple $container) {
-		$this->container = $container;
-	}
-
-	public function install() {
-		$resource = $this->getResourceRepository()->getResource();
-		$resource->setVariable('$USER1$', $this->detectNagiosPluginsPath());
-		$resource->setVariable('$USER2$', $this->getAppBasePath());
-		$this->getResourceRepository()->update($resource);
-	}
-
-	private function detectNagiosPluginsPath() {
-		$candidates = array(
-			'/usr/share/nagios/libexec',
-			'/usr/lib64/nagios/plugins',
-			'/usr/lib/nagios/plugins',
-		);
-
-		foreach ($candidates as $path) {
-			if (file_exists($path)) {
-				return $path;
-			}
-		}
-
-		return '/dev/null';
+	public function __construct(
+		private \Pimple\Container $container,
+		private string $notificationApiSecret,
+	) {
 	}
 
 	/**
-	 * @return \Devture\Bundle\NagiosBundle\Repository\ResourceRepository
+	 * @throws \RuntimeException
+	 * @throws \Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException
 	 */
-	private function getResourceRepository() {
+	public function install(): void {
+		$this->updateResourceVariables();
+
+		$this->deploy();
+	}
+
+	private function updateResourceVariables(): void {
+		$resource = $this->getResourceRepository()->getResource();
+		$resource->setVariable('$USER1$', '/opt/nagios/libexec');
+		$resource->setVariable('$USER2$', $this->notificationApiSecret);
+		$this->getResourceRepository()->update($resource);
+	}
+
+	/**
+	 * @throws \RuntimeException
+	 * @throws \Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException
+	 */
+	private function deploy(): void {
+		$files = $this->getDeploymentConfigurationCollector()->collect();
+
+		list($isValid, $checkOutput) = $this->getDeploymentConfigurationTester()->test($files);
+
+		if (!$isValid) {
+			dd($checkOutput);
+			throw new \RuntimeException(sprintf('Configuration failed validation: %s', $checkOutput));
+		}
+
+		// This may throw
+		$this->getDeploymentHandler()->deploy($files, false);
+	}
+
+	private function getResourceRepository(): \Devture\Bundle\NagiosBundle\Repository\ResourceRepository {
 		return $this->container['devture_nagios.resource.repository'];
 	}
 
-	private function getAppBasePath() {
-		return $this->container['app_base_path'];
+	private function getDeploymentConfigurationCollector(): \Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector {
+		return $this->container['devture_nagios.deployment.configuration_collector'];
+	}
+
+	private function getDeploymentConfigurationTester(): \Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester {
+		return $this->container['devture_nagios.deployment.configuration_tester'];
+	}
+
+	private function getDeploymentHandler(): \Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandlerInterface {
+		return $this->container['devture_nagios.deployment.handler'];
 	}
 
 }

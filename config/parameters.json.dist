@@ -2,32 +2,34 @@
 	"is_debug": false,
 	"trusted_proxies": [],
 	"project_name": "name-here",
+
+	"MongoDBProviderConfig.server": "mongodb://mongodb",
 	"db_name": "nagadmin",
 
-	"FrameworkBundle.token_secret": "secret here",
+	"FrameworkBundle.token_secret": "SECRET_HERE",
 
-	"UserBundle.password_token_salt": "salt here",
-	"UserBundle.cookie_signing_secret": "secret here",
+	"UserBundle.password_token_salt": "SALT_HERE",
+	"UserBundle.cookie_signing_secret": "SECRET_HERE",
 
-	"NagiosBundle.log_file_path": "/var/log/nagios/nagios.log",
-	"NagiosBundle.status_file_path": "/var/nagios/status.dat",
-	"NagiosBundle.command_file_path": "/var/nagios/rw/nagios.cmd",
-	"NagiosBundle.deployment_handler.path": "/etc/nagios/nagadmin-generated/",
-	"NagiosBundle.deployment_handler.post_deployment_command": "sudo /usr/sbin/systemctl reload nagios",
 	"NagiosBundle.defaults.service.max_check_attempts": 5,
 	"NagiosBundle.defaults.service.check_interval": 10,
 	"NagiosBundle.defaults.service.retry_interval": 1,
 	"NagiosBundle.defaults.service.notification_interval": 60,
+
+	"NagiosBundle.notifications.api_secret": "SECRET_HERE",
+
 	"NagiosBundle.notifications.email.sender_email_address": "nagios@localhost",
-	"NagiosBundle.notifications.email.host": "localhost",
-	"NagiosBundle.notifications.email.port": 25,
+	"NagiosBundle.notifications.email.host": "mailer",
+	"NagiosBundle.notifications.email.port": 8025,
 	"NagiosBundle.notifications.email.username": "",
 	"NagiosBundle.notifications.email.password": "",
 	"NagiosBundle.notifications.email.encryption": null,
 	"NagiosBundle.notifications.email.auth_mode": null,
+
 	"NagiosBundle.notifications.sms.gateway_name": "nexmo",
 	"NagiosBundle.notifications.sms.sender_id": "nagios",
 	"NagiosBundle.notifications.sms.gateway_config.username": "username",
 	"NagiosBundle.notifications.sms.gateway_config.password": "password",
+
 	"NagiosBundle.auto_service_dependency.master_service_regexes": ["/^ping$/i", "/host-?alive/i"]
 }

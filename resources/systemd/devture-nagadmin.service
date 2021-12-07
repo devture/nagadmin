@@ -1,0 +1,21 @@
+[Unit]
+Description=Devture Nagadmin
+Requires=docker.service
+After=docker.service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+User=web
+WorkingDirectory=/srv/http/nagadmin
+ExecStartPre=-/usr/bin/make stop
+
+ExecStart=/usr/bin/make run
+
+ExecStop=-/usr/bin/make stop
+
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
