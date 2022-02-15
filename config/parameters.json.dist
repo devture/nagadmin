@@ -11,6 +11,8 @@
 	"UserBundle.password_token_salt": "SALT_HERE",
 	"UserBundle.cookie_signing_secret": "SECRET_HERE",
 
+	"NagiosBundle.nagios_url": "http://nagadmin.127.0.0.1.nip.io:20188",
+
 	"NagiosBundle.defaults.service.max_check_attempts": 5,
 	"NagiosBundle.defaults.service.check_interval": 10,
 	"NagiosBundle.defaults.service.retry_interval": 1,

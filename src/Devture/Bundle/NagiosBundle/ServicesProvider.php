@@ -16,6 +16,8 @@ class ServicesProvider implements \Pimple\ServiceProviderInterface, \Silex\Api\B
 
 		$container['devture_nagios.bundle_path'] = dirname(__FILE__);
 
+		$container['devture_nagios.nagios_url'] = $config['nagios_url'];
+
 		$container['devture_nagios.colors'] = array('#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888',);
 
 		$container['devture_nagios.db'] = function ($container) use ($config) {

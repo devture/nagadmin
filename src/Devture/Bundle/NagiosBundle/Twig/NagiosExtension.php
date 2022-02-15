@@ -23,6 +23,7 @@ class NagiosExtension extends \Twig\Extension\AbstractExtension {
 			new \Twig\TwigFunction('devture_nagios_get_info_status', [$this, 'getInfoStatus']),
 			new \Twig\TwigFunction('devture_nagios_get_program_status', [$this, 'getProgramStatus']),
 			new \Twig\TwigFunction('devture_nagios_get_service_status', [$this, 'getServiceStatus']),
+			new \Twig\TwigFunction('devture_nagios_get_nagios_url', [$this, 'getNagiosUrl']),
 			new \Twig\TwigFunction('devture_nagios_can_user_manage_host', [$this, 'canUserManageHost']),
 			new \Twig\TwigFunction('devture_nagios_can_user_manage_hosts', [$this, 'canUserManageHosts']),
 			new \Twig\TwigFunction('devture_nagios_can_user_create_hosts', [$this, 'canUserCreateHosts']),
@@ -61,6 +62,10 @@ class NagiosExtension extends \Twig\Extension\AbstractExtension {
 
 	public function getServiceStatus(Service $service) {
 		return $this->getStatusManager()->getServiceStatus($service);
+	}
+
+	public function getNagiosUrl(): string {
+		return $this->container['devture_nagios.nagios_url'];
 	}
 
 	public function canUserManageHost(User $user, Host $host) {

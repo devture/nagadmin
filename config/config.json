@@ -35,6 +35,7 @@
 		"log_file_path": "/code/var/nagios/var/nagios.log",
 		"status_file_path": "/code/var/nagios/var/status.dat",
 		"command_file_path": "/code/var/nagios/var/rw/nagios.cmd",
+		"nagios_url": "%NagiosBundle.nagios_url%",
 		"deployment_handler": {
 			"path": "/code/var/nagadmin-generated-config/"
 		},
