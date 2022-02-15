@@ -14,7 +14,7 @@ services:
     image: docker.io/nginx:1.21.6-alpine
     restart: unless-stopped
     ports:
-    - "127.0.0.1:20180:8080"
+    - "${NGINX_HTTP_BIND_ADDRESS}:8080"
     # Any random non-root user will do
     user: 4000:4000
     entrypoint: /bin/sh
@@ -55,7 +55,7 @@ services:
     image: docker.io/manios/nagios:build9
     restart: unless-stopped
     ports:
-    - "127.0.0.1:20188:80"
+    - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
     volumes:
     - ./etc/services/nagios/etc:/opt/nagios/etc:rw,cached
     - ./var/nagios/var:/opt/nagios/var:rw,cached
