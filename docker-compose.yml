@@ -50,7 +50,9 @@ services:
       DISABLE_SENDER_VERIFICATION: 1
 
   nagios:
-    image: docker.io/manios/nagios:4.4.6
+    # This is Nagios v4.4.6.
+    # See https://github.com/manios/docker-nagios/blob/build9/CHANGELOG.md#build-9-2022-01-07
+    image: docker.io/manios/nagios:build9
     restart: unless-stopped
     ports:
     - "127.0.0.1:20188:80"
