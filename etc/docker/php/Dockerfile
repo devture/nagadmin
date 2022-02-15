@@ -1,4 +1,4 @@
-FROM docker.io/php:8.0.13-fpm-alpine3.15
+FROM docker.io/php:8.0.15-fpm-alpine3.15
 
 WORKDIR /code
 

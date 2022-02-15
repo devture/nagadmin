@@ -23,5 +23,5 @@ docker run \
 	--mount type=bind,src=`pwd`,dst=/app \
 	--tmpfs=/home/user \
 	--entrypoint=/bin/sh \
-	docker.io/composer:2.1.14 -c \
+	docker.io/composer:2.2.6 -c \
 	"/bin/sh /app/etc/services/composer/init.sh && su -l user -c 'cd /app; COMPOSER_CACHE_DIR=/cache/composer composer $C'"

@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   mongodb:
-    image: docker.io/mongo:5.0.4-focal
+    image: docker.io/mongo:5.0.6-focal
     restart: unless-stopped
     volumes:
     - ../nagadmin-containers-data/mongodb:/data/db:rw,cached
@@ -11,7 +11,7 @@ services:
     - ./var/mongodb-io:/mongodb-io:rw,cached
 
   nginx:
-    image: docker.io/nginx:1.21.4-alpine
+    image: docker.io/nginx:1.21.6-alpine
     restart: unless-stopped
     ports:
     - "127.0.0.1:20180:8080"
@@ -29,7 +29,7 @@ services:
 
   php:
     build: ./etc/docker/php
-    image: devture/nagadmin-php:8.0.13
+    image: devture/nagadmin-php:8.0.15
     # We run PHP with the same user that Nagios runs with, because
     # we need it to be able to write to the nagios.cmd file.
     user: 100:101
@@ -40,7 +40,7 @@ services:
     - ./:/code:rw,cached
 
   mailer:
-    image: docker.io/devture/exim-relay:4.95-r0
+    image: docker.io/devture/exim-relay:4.95-r0-2
     restart: unless-stopped
     user: 100:101
     tmpfs:
