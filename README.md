@@ -106,7 +106,7 @@ Use a web browser to access Nagadmin at this URL: http://nagadmin.127.0.0.1.nip.
 
 You should be able to log in with the user that you created in the previous step.
 
-You can also access Nagios at this URL: http://nagadmin.127.0.0.1.nip.io:20189
+You can also access Nagios at this URL: http://nagadmin.127.0.0.1.nip.io:20188
 
 You need to authenticate using the username/password you've specified in `.env` (`NAGIOSADMIN_USER` and `NAGIOSADMIN_PASS`).
 
