@@ -20,10 +20,20 @@ security:
         main:
             lazy: true
             provider: nagadmin_users
+            form_login:
+                login_path: login
+                check_path: login
+                enable_csrf: true
+            logout:
+                path: logout
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week
+                samesite: lax
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
 
 when@test:
     security:
