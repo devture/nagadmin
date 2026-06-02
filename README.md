@@ -40,6 +40,7 @@ None of the existing Nagios configurator systems seemed to achieve the goals of:
 
 - Docker
 - Docker Compose (v1 or v2)
+- [just](https://github.com/casey/just) (command runner)
 
 
 ### Download the source code and go into the main directory
@@ -62,7 +63,7 @@ Now modify `config/parameters.json` and `.env` to your liking.
 ### Run for the first time
 
 ```sh
-make run
+just run
 ```
 
 Not all services will run well yet. Nagios will encounter some errors, because it can't find some of its configuration yet.
@@ -74,7 +75,7 @@ We resolve this below during the [Installation](#install) step.
 Run the following command to initialize the database (initial data-set import and databse indexes creation):
 
 ```sh
-make init-database
+just init-database
 ```
 
 
@@ -83,7 +84,7 @@ make init-database
 Run the following command to set up Resource Variables and install the initial Nagios configuration:
 
 ```sh
-make install
+just install
 ```
 
 Nagios should now properly start and run.
