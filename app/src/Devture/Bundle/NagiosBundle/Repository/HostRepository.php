@@ -50,7 +50,7 @@ class HostRepository extends BaseMongoRepository {
 
 	public function delete($object) {
 		$this->validateModelClass($object);
-		$this->dispatcher->dispatch(Events::BEFORE_HOST_DELETE, new ModelEvent($object));
+		$this->dispatcher->dispatch(new ModelEvent($object), Events::BEFORE_HOST_DELETE);
 		parent::delete($object);
 	}
 

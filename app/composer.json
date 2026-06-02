@@ -29,7 +29,10 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Devture\\Component\\DBAL\\": "src/Devture/Component/DBAL/",
+            "Devture\\Bundle\\NagiosBundle\\": "src/Devture/Bundle/NagiosBundle/",
+            "Devture\\Bundle\\UserBundle\\": "src/Devture/Bundle/UserBundle/"
         }
     },
     "autoload-dev": {

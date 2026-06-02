@@ -38,7 +38,7 @@ class CommandRepository extends BaseMongoRepository {
 
 	public function delete($object) {
 		$this->validateModelClass($object);
-		$this->dispatcher->dispatch(Events::BEFORE_COMMAND_DELETE, new ModelEvent($object));
+		$this->dispatcher->dispatch(new ModelEvent($object), Events::BEFORE_COMMAND_DELETE);
 		parent::delete($object);
 	}
 

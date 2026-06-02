@@ -20,6 +20,11 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+        # The ported domain code under src/Devture/ lives in its own namespaces
+        # (not App\), so it must be excluded from App\ autodiscovery. It autoloads
+        # via composer PSR-4 and is wired explicitly where needed.
+        exclude:
+            - '../src/Devture/'
 
     # The MongoDB connection. The `array` type map makes find()/findOne() return
     # plain PHP arrays (not BSONDocument/BSONArray objects), matching what the

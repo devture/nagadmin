@@ -105,7 +105,7 @@ class ContactRepository extends BaseMongoRepository {
 
 	public function delete($object) {
 		$this->validateModelClass($object);
-		$this->dispatcher->dispatch(Events::BEFORE_CONTACT_DELETE, new ModelEvent($object));
+		$this->dispatcher->dispatch(new ModelEvent($object), Events::BEFORE_CONTACT_DELETE);
 		parent::delete($object);
 	}
 
