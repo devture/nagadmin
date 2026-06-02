@@ -1,4 +1,4 @@
-FROM docker.io/php:8.0.15-fpm-alpine3.15
+FROM docker.io/php:8.4-fpm-alpine
 
 WORKDIR /code
 
@@ -17,11 +17,13 @@ RUN set -xe \
 ### MongoDB
 ######
 
-# The mongodb extension is pinned, because newer releases (1.21+ / 2.x) require PHP >= 8.1,
-# while this image is still on PHP 8.0. 1.20.1 is the last release compatible with PHP 8.0.
+# The mongodb extension is pinned to the 1.x line. The legacy `alcaeus/mongo-php-adapter`
+# (which bridges the old ext-mongo API to ext-mongodb) references the `RP_PRIMARY` read
+# preference constant, which ext-mongodb 2.x removed. 1.21.5 is the last 1.x release and
+# supports modern PHP. (This whole legacy Mongo layer goes away with the Symfony rewrite.)
 RUN \
     apk add --no-cache --virtual .mongodb-ext-build-deps openssl-dev autoconf gcc g++ make && \
-    pecl install mongodb-1.20.1 && \
+    pecl install mongodb-1.21.5 && \
     echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini && \
     pecl clear-cache && \
     apk del .mongodb-ext-build-deps
