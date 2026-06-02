@@ -67,8 +67,11 @@ test -d "${mongodb_data_path}" || exit 1
 echo "🔎 Abort if old MongoDB backup directory (${mongodb_data_backup_path}) already exists"
 test ! -d "${mongodb_data_backup_path}" || exit 1
 
-echo "🔎 Abort if services are not up"
-run_just docker-compose "ps" | grep -q "Up" || exit 1
+echo "🔎 Abort if the MongoDB container is not running"
+# `ps -q <service>` prints the running container's id (and nothing if it's not running).
+# This is robust across docker-compose versions, unlike grepping the STATUS column text
+# (which differs between versions: "Up ..." vs "running").
+test -n "$(run_just docker-compose "ps -q mongodb")" || exit 1
 
 echo "🔃 Ensure the (new) MongoDB container image is pulled..."
 run_just docker-compose "pull mongodb"
