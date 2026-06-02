@@ -73,6 +73,11 @@ services:
     # The contact repository depends on the user repository via its interface.
     Devture\Bundle\UserBundle\Repository\UserRepositoryInterface: '@Devture\Bundle\NagiosBundle\Repository\UserRepository'
 
+    # Fine-grained, per-entity access rules (host/service/contact/log
+    # visibility and management). Stateless; bridged into Symfony's
+    # authorization layer by App\Security\Voter\NagiosAccessVoter.
+    Devture\Bundle\NagiosBundle\Helper\AccessChecker: ~
+
     # The Nagios configuration generator: exporters (one per config file),
     # the writer, and the collector that runs the exporters in order.
     Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter: ~
