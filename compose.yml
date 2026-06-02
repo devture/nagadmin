@@ -9,7 +9,7 @@ services:
     - ./var/mongodb-io:/mongodb-io:rw,cached
 
   nginx:
-    image: docker.io/nginx:1.21.6-alpine
+    image: docker.io/nginx:1.31.1-alpine
     restart: unless-stopped
     ports:
     - "${NGINX_HTTP_BIND_ADDRESS}:8080"
@@ -38,7 +38,7 @@ services:
     - ./:/code:rw,cached
 
   mailer:
-    image: docker.io/devture/exim-relay:4.95-r0-2
+    image: docker.io/devture/exim-relay:4.98-r0-4
     restart: unless-stopped
     user: 100:101
     tmpfs:
