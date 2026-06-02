@@ -48,8 +48,6 @@ class Application extends \Silex\Application {
 			'twig.path' => array($this->basePath . '/src/views'),
 		));
 
-		$app->register(new \Silex\Provider\SwiftmailerServiceProvider());
-
 		$app['mongodb.client'] = function ($app) {
 			return new \MongoDB\Client($app['config']['MongoDBProviderConfig']['server']);
 		};
