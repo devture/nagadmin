@@ -41,14 +41,18 @@ init-database: _var-mongodb-io
 install:
 	./bin/container-console install
 
+# Starts a MongoDB shell
+mongodb-shell: (docker-compose "exec mongodb sh -c 'mongosh nagadmin'")
+
 # Creates a new gzipped MongoDB database dump (stored in `var/mongodb-io/latest-dump`)
-mongodb-dump: _var-mongodb-io
-	@docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump"
-	@docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump"
+mongodb-dump: _var-mongodb-io (docker-compose "exec -T mongodb sh -c 'rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump'") (docker-compose "exec -T mongodb sh -c 'mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump'")
 
 # Imports a gzipped MongoDB database dump (found in `var/mongodb-io/import`)
-mongodb-import: _var-mongodb-io
-	docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "mongorestore --gzip --dir=/mongodb-io/import"
+mongodb-import: _var-mongodb-io (docker-compose "exec -T mongodb sh -c 'mongorestore --gzip --dir=/mongodb-io/import'")
+
+# Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
+mongodb-upgrade: _var-mongodb-io
+	{{ justfile_directory() }}/bin/mongodb-upgrade.sh {{ justfile_directory() }} {{ just_executable() }}
 
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
 
