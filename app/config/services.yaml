@@ -9,6 +9,7 @@
 parameters:
     nagadmin.mongodb.uri: '%env(MONGODB_URI)%'
     nagadmin.mongodb.db: '%env(MONGODB_DB)%'
+    nagadmin.notifications.api_secret: '%env(NAGADMIN_NOTIFICATION_API_SECRET)%'
     # Service-name patterns whose matches are treated as "master" services that
     # others depend on (same default as the legacy config.json).
     nagadmin.auto_service_dependency.master_service_regexes:
@@ -126,6 +127,11 @@ services:
     Devture\Bundle\NagiosBundle\Log\Fetcher:
         arguments:
             $logFilePath: '%nagadmin.nagios.log_file_path%'
+
+    # Initial installation: sets resource variables and deploys the configuration.
+    Devture\Bundle\NagiosBundle\Install\Installer:
+        arguments:
+            $notificationApiSecret: '%nagadmin.notifications.api_secret%'
 
     # Model lifecycle subscribers, performing cascade updates/deletes. They resolve
     # their repositories lazily through a service locator (so the dispatcher can be

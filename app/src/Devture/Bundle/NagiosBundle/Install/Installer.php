@@ -1,10 +1,18 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Install;
 
+use Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector;
+use Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester;
+use Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandlerInterface;
+use Devture\Bundle\NagiosBundle\Repository\ResourceRepository;
+
 class Installer {
 
 	public function __construct(
-		private \Pimple\Container $container,
+		private ResourceRepository $resourceRepository,
+		private ConfigurationCollector $collector,
+		private ConfigurationTester $tester,
+		private DeploymentHandlerInterface $handler,
 		private string $notificationApiSecret,
 	) {
 	}
@@ -20,10 +28,10 @@ class Installer {
 	}
 
 	private function updateResourceVariables(): void {
-		$resource = $this->getResourceRepository()->getResource();
+		$resource = $this->resourceRepository->getResource();
 		$resource->setVariable('$USER1$', '/opt/nagios/libexec');
 		$resource->setVariable('$USER2$', $this->notificationApiSecret);
-		$this->getResourceRepository()->update($resource);
+		$this->resourceRepository->update($resource);
 	}
 
 	/**
@@ -31,33 +39,16 @@ class Installer {
 	 * @throws \Devture\Bundle\NagiosBundle\Exception\DeploymentFailedException
 	 */
 	private function deploy(): void {
-		$files = $this->getDeploymentConfigurationCollector()->collect();
+		$files = $this->collector->collect();
 
-		list($isValid, $checkOutput) = $this->getDeploymentConfigurationTester()->test($files);
+		list($isValid, $checkOutput) = $this->tester->test($files);
 
 		if (!$isValid) {
-			dd($checkOutput);
 			throw new \RuntimeException(sprintf('Configuration failed validation: %s', $checkOutput));
 		}
 
 		// This may throw
-		$this->getDeploymentHandler()->deploy($files, false);
-	}
-
-	private function getResourceRepository(): \Devture\Bundle\NagiosBundle\Repository\ResourceRepository {
-		return $this->container['devture_nagios.resource.repository'];
-	}
-
-	private function getDeploymentConfigurationCollector(): \Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector {
-		return $this->container['devture_nagios.deployment.configuration_collector'];
-	}
-
-	private function getDeploymentConfigurationTester(): \Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester {
-		return $this->container['devture_nagios.deployment.configuration_tester'];
-	}
-
-	private function getDeploymentHandler(): \Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandlerInterface {
-		return $this->container['devture_nagios.deployment.handler'];
+		$this->handler->deploy($files, false);
 	}
 
 }
