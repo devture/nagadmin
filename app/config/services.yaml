@@ -9,6 +9,11 @@
 parameters:
     nagadmin.mongodb.uri: '%env(MONGODB_URI)%'
     nagadmin.mongodb.db: '%env(MONGODB_DB)%'
+    # Service-name patterns whose matches are treated as "master" services that
+    # others depend on (same default as the legacy config.json).
+    nagadmin.auto_service_dependency.master_service_regexes:
+        - '/^ping$/i'
+        - '/host-?alive/i'
 
 services:
     # default configuration for services in *this* file
@@ -65,6 +70,34 @@ services:
 
     # The contact repository depends on the user repository via its interface.
     Devture\Bundle\UserBundle\Repository\UserRepositoryInterface: '@Devture\Bundle\NagiosBundle\Repository\UserRepository'
+
+    # The Nagios configuration generator: exporters (one per config file),
+    # the writer, and the collector that runs the exporters in order.
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ResourceFileConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\TimePeriodsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ContactsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\CommandsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\HostGroupsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\HostsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ServicesConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\AutoServiceDepsConfigurationExporter:
+        arguments:
+            $masterServicesRegexes: '%nagadmin.auto_service_dependency.master_service_regexes%'
+
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationWriter: ~
+
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
+        calls:
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ResourceFileConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\TimePeriodsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ContactsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\CommandsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\HostGroupsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\HostsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ServicesConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\AutoServiceDepsConfigurationExporter']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
