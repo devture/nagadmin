@@ -1358,4 +1358,9 @@ allow_empty_hostgroup_assignment=0
 #   rampup_change   # of jobs to add to jobs_limit when ramping up
 
 #loadctl_options=jobs_max=100;backoff_limit=10;rampup_change=5
-use_timezone=Europe/Sofia
+
+# NOTE: `use_timezone` is intentionally NOT set here.
+# The container entrypoint sets it from the `TZ` environment variable (see `.env`)
+# at startup, writing it into the live (untracked) copy of this file under
+# `var/container-data/nagios/etc/`. Keeping it out of this tracked template is what
+# prevents the container from creating permanent git drift on every start.

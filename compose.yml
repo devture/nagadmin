@@ -58,7 +58,12 @@ services:
     ports:
     - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
     volumes:
-    - ./etc/services/nagios/etc:/opt/nagios/etc:rw,cached
+    # The live Nagios base config (nagios.cfg, cgi.cfg, htpasswd.users) is seeded from the
+    # `.dist` templates in etc/services/nagios/etc/ into this untracked directory on first run
+    # (see the `_var-container-data-nagios-etc` just recipe). It is mounted read-write because
+    # the container entrypoint writes to it (use_timezone, htpasswd.users) — keeping those
+    # mutations out of the git-tracked tree.
+    - ./var/container-data/nagios/etc:/opt/nagios/etc:rw,cached
     - ./var/container-data/nagios/var:/opt/nagios/var:rw,cached
     - ./var/container-data/nagadmin-generated-config:/nagadmin-generated-config:ro,cached
     environment:

@@ -64,7 +64,7 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc
 
 # The Twig cache, written by the php container (runs as {{ container_user }}).
 _var-cache: (_ensure_dir_prepared_recursive "var/cache")
@@ -87,6 +87,19 @@ _var-nagadmin-generated-config: (_ensure_dir_created "var/container-data/nagadmi
 
 # The Nagios var directory (state/retention); written by the nagios container.
 _var-nagios-var: (_ensure_dir_prepared_recursive "var/container-data/nagios/var")
+
+# The live Nagios base config dir mounted at /opt/nagios/etc. Seeded from the `.dist`
+# templates in etc/services/nagios/etc/ on first run (only copying a file if it's missing,
+# so the container's runtime changes — use_timezone, htpasswd.users — are preserved across
+# runs). The whole dir is owned by {{ container_user }}, as the container writes into it.
+_var-container-data-nagios-etc: (_ensure_dir_created "var/container-data/nagios/etc")
+	#!/bin/sh
+	for f in nagios.cfg cgi.cfg; do
+		if [ ! -f "var/container-data/nagios/etc/$f" ]; then
+			cp "etc/services/nagios/etc/$f.dist" "var/container-data/nagios/etc/$f"
+		fi
+	done
+	{{ just_executable() }} --justfile {{ justfile() }} _ensure_dir_prepared_recursive "var/container-data/nagios/etc"
 
 # Internal - ensures a directory exists (created if missing).
 _ensure_dir_created path:
