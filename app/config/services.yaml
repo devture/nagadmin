@@ -14,6 +14,12 @@ parameters:
     nagadmin.auto_service_dependency.master_service_regexes:
         - '/^ping$/i'
         - '/host-?alive/i'
+    # Nagios runtime file paths (shared bind-mounted volume, fixed by the container layout).
+    nagadmin.nagios.log_file_path: '/code/var/container-data/nagios/var/nagios.log'
+    nagadmin.nagios.status_file_path: '/code/var/container-data/nagios/var/status.dat'
+    nagadmin.nagios.command_file_path: '/code/var/container-data/nagios/var/rw/nagios.cmd'
+    # Where the generated configuration is deployed (mounted read-only into the Nagios container).
+    nagadmin.deployment.path: '/code/var/container-data/nagadmin-generated-config/'
 
 services:
     # default configuration for services in *this* file
@@ -44,11 +50,6 @@ services:
             $databaseName: '%nagadmin.mongodb.db%'
             $options:
                 typeMap: { root: array, document: array, array: array }
-
-    # A dedicated dispatcher for model lifecycle events (cascade updates/deletes).
-    # The subscribers that act on these events are wired in a later step.
-    nagadmin.model_event_dispatcher:
-        class: Symfony\Component\EventDispatcher\EventDispatcher
 
     # The Nagios repositories. Concrete-typed dependencies (sibling repositories,
     # the MongoDB database) autowire; the model-event dispatcher is bound explicitly.
@@ -98,6 +99,64 @@ services:
             - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\HostsConfigurationExporter']
             - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ServicesConfigurationExporter']
             - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\AutoServiceDepsConfigurationExporter']
+
+    # Configuration validation (runs `nagios --verify-config` in this container) and
+    # deployment (writes the config and, optionally, asks Nagios to reload).
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester:
+        arguments:
+            $mainFileTemplatePath: '%kernel.project_dir%/src/Devture/Bundle/NagiosBundle/Resources/nagios_templates/nagios.cfg'
+    Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandler:
+        arguments:
+            $path: '%nagadmin.deployment.path%'
+    Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandlerInterface: '@Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandler'
+
+    # Submitting external commands to Nagios via its command pipe.
+    Devture\Bundle\NagiosBundle\NagiosCommand\Submitter:
+        arguments:
+            $commandFilePath: '%nagadmin.nagios.command_file_path%'
+    Devture\Bundle\NagiosBundle\NagiosCommand\Manager: ~
+
+    # Reading Nagios' live status (status.dat).
+    Devture\Bundle\NagiosBundle\Status\Fetcher:
+        arguments:
+            $statusFilePath: '%nagadmin.nagios.status_file_path%'
+    Devture\Bundle\NagiosBundle\Status\Manager: ~
+
+    # Reading the Nagios log.
+    Devture\Bundle\NagiosBundle\Log\Fetcher:
+        arguments:
+            $logFilePath: '%nagadmin.nagios.log_file_path%'
+
+    # Model lifecycle subscribers, performing cascade updates/deletes. They resolve
+    # their repositories lazily through a service locator (so the dispatcher can be
+    # built without forcing the repository graph, which depends back on it).
+    Devture\Bundle\NagiosBundle\Event\Subscriber\HostEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\ContactEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\CommandEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+                devture_nagios.contact.repository: '@Devture\Bundle\NagiosBundle\Repository\ContactRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\TimePeriodEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.contact.repository: '@Devture\Bundle\NagiosBundle\Repository\ContactRepository'
+
+    # The model-event dispatcher gets the subscribers registered on it. Subscribers
+    # are listed above and added here (the repositories dispatch model events to it).
+    nagadmin.model_event_dispatcher:
+        class: Symfony\Component\EventDispatcher\EventDispatcher
+        calls:
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\HostEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\ContactEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\CommandEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\TimePeriodEventsSubscriber']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

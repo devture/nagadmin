@@ -9,7 +9,7 @@ use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
 
 class CommandEventsSubscriber extends ContainerAwareSubscriber {
 
-	public static function getSubscribedEvents() {
+	public static function getSubscribedEvents(): array {
 		return array(
 			Events::BEFORE_COMMAND_DELETE => 'onBeforeCommandDelete',
 		);

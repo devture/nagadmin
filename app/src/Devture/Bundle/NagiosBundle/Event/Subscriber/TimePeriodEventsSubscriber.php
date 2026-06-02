@@ -8,7 +8,7 @@ use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
 
 class TimePeriodEventsSubscriber extends ContainerAwareSubscriber {
 
-	public static function getSubscribedEvents() {
+	public static function getSubscribedEvents(): array {
 		return array(
 			Events::BEFORE_TIME_PERIOD_DELETE => 'onBeforeTimePeriodDelete',
 		);
