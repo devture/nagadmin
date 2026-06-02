@@ -12,6 +12,16 @@ security:
         nagadmin_users:
             id: App\Security\UserProvider
 
+    # The legacy master role 'all' (User::ROLE_MASTER, mapped to ROLE_ALL)
+    # grants global access, so it expands to every other role.
+    role_hierarchy:
+        ROLE_ALL:
+            - ROLE_OVERSEER
+            - ROLE_CONFIGURATION_MANAGEMENT
+            - ROLE_SENSITIVE
+            - ROLE_DEVTURE_USER
+            - ROLE_USER
+
     firewalls:
         dev:
             # Ensure dev tools and static assets are always allowed
@@ -31,9 +41,24 @@ security:
                 lifetime: 604800 # 1 week
                 samesite: lax
 
-    # Note: Only the *first* matching rule is applied
+    # Note: Only the *first* matching rule is applied.
+    #
+    # These mirror the legacy route-prefix protection rules (old setup_web.php):
+    # resource/configuration management is "sensitive", time-period/command
+    # management needs "configuration_management", and user management needs
+    # the "devture_user" role. The trailing catch-all puts the rest of the app
+    # behind authentication, as the legacy app did for every route.
+    #
+    # The /api endpoints (notification API, authenticated by a shared secret
+    # rather than a user session) get their own treatment when they are ported.
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/resource, roles: ROLE_SENSITIVE }
+        - { path: ^/configuration, roles: ROLE_SENSITIVE }
+        - { path: ^/time-period, roles: ROLE_CONFIGURATION_MANAGEMENT }
+        - { path: ^/command, roles: ROLE_CONFIGURATION_MANAGEMENT }
+        - { path: ^/user, roles: ROLE_DEVTURE_USER }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:
