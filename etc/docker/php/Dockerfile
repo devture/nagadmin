@@ -1,10 +1,11 @@
-FROM docker.io/php:8.4-fpm-alpine
+FROM docker.io/php:8.5-fpm-alpine
 
 WORKDIR /code
 
 RUN chown www-data:www-data /code
 
-RUN docker-php-ext-install opcache
+# OPcache is bundled and enabled by default in the php:8.5 base image
+# (no longer a separately-installable shared extension as on 8.4).
 
 # Allows for us to wait on MongoDB to start, before running commands in the PHP container.
 # See `./bin/container-console`.
@@ -17,13 +18,11 @@ RUN set -xe \
 ### MongoDB
 ######
 
-# The mongodb extension is pinned to the 1.x line. The legacy `alcaeus/mongo-php-adapter`
-# (which bridges the old ext-mongo API to ext-mongodb) references the `RP_PRIMARY` read
-# preference constant, which ext-mongodb 2.x removed. 1.21.5 is the last 1.x release and
-# supports modern PHP. (This whole legacy Mongo layer goes away with the Symfony rewrite.)
+# ext-mongodb 2.x pairs with the native mongodb/mongodb 2.x library (see composer.json).
+# The legacy alcaeus/doctrine-mongodb stack that required ext-mongodb 1.x is gone.
 RUN \
     apk add --no-cache --virtual .mongodb-ext-build-deps openssl-dev autoconf gcc g++ make && \
-    pecl install mongodb-1.21.5 && \
+    pecl install mongodb-2.3.3 && \
     echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini && \
     pecl clear-cache && \
     apk del .mongodb-ext-build-deps

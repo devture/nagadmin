@@ -11,7 +11,7 @@
 		}
 	],
 	"provide" : {
-		"ext-mongodb" : "1.21.*"
+		"ext-mongodb" : "2.3.*"
 	},
 	"require": {
 		"silex/silex": "2.3.*",
@@ -22,7 +22,7 @@
 		"symfony/twig-bridge": "^4.0",
 		"symfony/var-dumper": "5.4.*",
 		"swiftmailer/swiftmailer": "6.1.*",
-		"mongodb/mongodb": "1.21.*",
+		"mongodb/mongodb": "2.3.*",
 		"devture/silex-provider-config": "2.*",
 		"devture/silex-framework-bundle": "2.*",
 		"devture/silex-localization-bundle": "3.*",
