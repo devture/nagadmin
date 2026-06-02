@@ -40,5 +40,31 @@ services:
             $options:
                 typeMap: { root: array, document: array, array: array }
 
+    # A dedicated dispatcher for model lifecycle events (cascade updates/deletes).
+    # The subscribers that act on these events are wired in a later step.
+    nagadmin.model_event_dispatcher:
+        class: Symfony\Component\EventDispatcher\EventDispatcher
+
+    # The Nagios repositories. Concrete-typed dependencies (sibling repositories,
+    # the MongoDB database) autowire; the model-event dispatcher is bound explicitly.
+    Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\CommandRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\HostRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\ContactRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\ServiceRepository: ~
+    Devture\Bundle\NagiosBundle\Repository\ResourceRepository: ~
+    Devture\Bundle\NagiosBundle\Repository\UserRepository: ~
+
+    # The contact repository depends on the user repository via its interface.
+    Devture\Bundle\UserBundle\Repository\UserRepositoryInterface: '@Devture\Bundle\NagiosBundle\Repository\UserRepository'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
