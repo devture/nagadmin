@@ -17,9 +17,11 @@ RUN set -xe \
 ### MongoDB
 ######
 
+# The mongodb extension is pinned, because newer releases (1.21+ / 2.x) require PHP >= 8.1,
+# while this image is still on PHP 8.0. 1.20.1 is the last release compatible with PHP 8.0.
 RUN \
     apk add --no-cache --virtual .mongodb-ext-build-deps openssl-dev autoconf gcc g++ make && \
-    pecl install mongodb && \
+    pecl install mongodb-1.20.1 && \
     echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini && \
     pecl clear-cache && \
     apk del .mongodb-ext-build-deps
