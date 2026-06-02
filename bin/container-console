@@ -14,6 +14,6 @@ if [ -t 1 ]; then
 	docker_compose_run_flags=''
 fi
 
-docker-compose -p devture-nagadmin \
+docker compose -f compose.yml -p devture-nagadmin \
 run $docker_compose_run_flags --rm --user='100:101' php sh -c \
 "/usr/local/bin/waitforit -host=mongodb -port=27017 -timeout=5 && php bin/console.php $C"

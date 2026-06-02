@@ -1,5 +1,3 @@
-version: '2.1'
-
 services:
   mongodb:
     image: docker.io/mongo:5.0.6-focal
@@ -7,7 +5,7 @@ services:
     volumes:
     - ../nagadmin-containers-data/mongodb:/data/db:rw,cached
     # This is a helper directory we use for import/export operations.
-    # See the `mongodb-dump` and `mongodb-import` Make targets.
+    # See the `mongodb-dump` and `mongodb-import` just recipes.
     - ./var/mongodb-io:/mongodb-io:rw,cached
 
   nginx:

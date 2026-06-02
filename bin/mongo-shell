@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose -p devture-nagadmin exec mongodb sh -c "mongosh nagadmin"
+docker compose -f compose.yml -p devture-nagadmin exec mongodb sh -c "mongosh nagadmin"

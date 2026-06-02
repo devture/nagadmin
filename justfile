@@ -13,16 +13,13 @@ default:
 	@{{ just_executable() }} --list --justfile {{ justfile() }}
 
 # Runs all components (in the foreground)
-run: _prepare_deps _prepare_run
-	docker-compose -p {{ project_name }} up
+run: _prepare_deps _prepare_run (docker-compose "up")
 
 # Runs all components (in the background)
-run-bg: _prepare_deps _prepare_run
-	docker-compose -p {{ project_name }} up -d
+run-bg: _prepare_deps _prepare_run (docker-compose "up -d")
 
 # Stops all components
-stop:
-	docker-compose -p {{ project_name }} down
+stop: (docker-compose "down")
 
 # Installs PHP dependencies via composer
 composer-install:
@@ -34,10 +31,10 @@ composer-update:
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
-	docker-compose -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
-	docker-compose -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
-	docker-compose -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
-	docker-compose -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
 	./bin/container-console init-database
 
 # Performs initial installation and Nagios configuration deployment
@@ -46,14 +43,18 @@ install:
 
 # Creates a new gzipped MongoDB database dump (stored in `var/mongodb-io/latest-dump`)
 mongodb-dump: _var-mongodb-io
-	@docker-compose -p {{ project_name }} exec -T mongodb sh -c "rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump"
-	@docker-compose -p {{ project_name }} exec -T mongodb sh -c "mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump"
+	@docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump"
+	@docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump"
 
 # Imports a gzipped MongoDB database dump (found in `var/mongodb-io/import`)
 mongodb-import: _var-mongodb-io
-	docker-compose -p {{ project_name }} exec -T mongodb sh -c "mongorestore --gzip --dir=/mongodb-io/import"
+	docker compose -f compose.yml -p {{ project_name }} exec -T mongodb sh -c "mongorestore --gzip --dir=/mongodb-io/import"
 
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
+
+# Internal - runs a `docker compose` command against this project's compose file
+docker-compose *extra_args:
+	docker compose -f compose.yml -p {{ project_name }} {{ extra_args }}
 
 # Internal - makes sure PHP dependencies are installed
 _prepare_deps:
