@@ -1,5 +1,13 @@
 project_name := "devture-nagadmin"
 
+# A small throwaway image used for preparing `var/` directory ownership.
+alpine_container_image := "docker.io/alpine:3.23.4"
+
+# The uid:gid that the php and nagios containers run as (the nagios user inside the
+# manios/nagios image). The php container must own the `var/` directories it writes
+# to (the Twig cache and the generated Nagios configuration).
+container_user := "100:101"
+
 # show help by default
 default:
 	@{{ just_executable() }} --list --justfile {{ justfile() }}
@@ -54,26 +62,40 @@ _prepare_deps:
 		{{ just_executable() }} --justfile {{ justfile() }} composer-install
 	fi
 
-# Internal - makes sure the runtime directories exist
+# Internal - makes sure the runtime directories exist and have the correct ownership
 _prepare_run: _var-cache _var-mongodb-io _var-nagadmin-generated-config _var-nagios-var
 
-_var-mongodb-io:
-	mkdir -p var/mongodb-io
+# The Twig cache, written by the php container (runs as {{ container_user }}).
+_var-cache: (_ensure_dir_prepared_recursive "var/cache")
 
-_var-cache:
-	#!/bin/sh
-	if [ ! -d var/cache ]; then
-		mkdir -p var/cache
-		docker-compose -p {{ project_name }} run --rm --no-deps --user=0:0 php chown 100:101 /code/var/cache -R
-	fi
+# Used for MongoDB dump/import I/O; written by the mongodb container (runs as root).
+_var-mongodb-io: (_ensure_dir_created "var/mongodb-io")
 
-_var-nagadmin-generated-config:
+# The generated Nagios configuration, written by the php container (runs as {{ container_user }}).
+# The php container writes both into this directory (resource.cfg) and its `configuration/`
+# subdirectory, so the whole tree (including this parent dir) must be owned by it.
+_var-nagadmin-generated-config: (_ensure_dir_created "var/nagadmin-generated-config/configuration")
 	#!/bin/sh
-	if [ ! -d var/nagadmin-generated-config ]; then
-		mkdir -p var/nagadmin-generated-config/configuration
+	if [ ! -f var/nagadmin-generated-config/resource.cfg ]; then
 		touch var/nagadmin-generated-config/resource.cfg
-		docker-compose -p {{ project_name }} run --rm --no-deps --user=0:0 php chown 100:101 /code/var/nagadmin-generated-config -R
+	fi
+	{{ just_executable() }} --justfile {{ justfile() }} _ensure_dir_prepared_recursive "var/nagadmin-generated-config"
+
+# The Nagios var directory (state/retention); written by the nagios container.
+_var-nagios-var: (_ensure_dir_prepared_recursive "var/nagios/var")
+
+# Internal - ensures a directory exists (created if missing).
+_ensure_dir_created path:
+	#!/bin/sh
+	if [ ! -d {{ path }} ]; then
+		mkdir -p {{ path }}
 	fi
 
-_var-nagios-var:
-	mkdir -p var/nagios/var
+# Internal - ensures a directory exists and (re-)asserts its ownership recursively.
+# Runs on every `_prepare_run`, so a pre-existing mis-owned directory gets corrected.
+_ensure_dir_prepared_recursive path: (_ensure_dir_created path)
+	@docker run \
+	--rm \
+	--mount type=bind,src={{ justfile_directory() }},dst=/justfile_directory \
+	{{ alpine_container_image }} \
+	/bin/sh -c 'chown -R {{ container_user }} /justfile_directory/{{ path }}'
