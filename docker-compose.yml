@@ -51,8 +51,10 @@ services:
 
   nagios:
     # This is Nagios v4.4.6.
-    # See https://github.com/manios/docker-nagios/blob/build9/CHANGELOG.md#build-9-2022-01-07
-    image: docker.io/manios/nagios:build9
+    # See https://github.com/manios/docker-nagios/blob/build-8/CHANGELOG.md#build-8-2021-10-20
+    # The upstream image was retagged from `buildN` to `build-N`; `build-8` is the
+    # `build-N`-scheme tag that still ships Nagios 4.4.6 (the old `build9` tag is gone).
+    image: docker.io/manios/nagios:build-8
     restart: unless-stopped
     ports:
     - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
