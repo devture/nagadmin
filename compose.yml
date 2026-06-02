@@ -3,7 +3,7 @@ services:
     image: docker.io/mongo:5.0.6-focal
     restart: unless-stopped
     volumes:
-    - ../nagadmin-containers-data/mongodb:/data/db:rw,cached
+    - ./var/container-data/mongodb:/data/db:rw,cached
     # This is a helper directory we use for import/export operations.
     # See the `mongodb-dump` and `mongodb-import` just recipes.
     - ./var/mongodb-io:/mongodb-io:rw,cached
@@ -58,8 +58,8 @@ services:
     - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
     volumes:
     - ./etc/services/nagios/etc:/opt/nagios/etc:rw,cached
-    - ./var/nagios/var:/opt/nagios/var:rw,cached
-    - ./var/nagadmin-generated-config:/nagadmin-generated-config:ro,cached
+    - ./var/container-data/nagios/var:/opt/nagios/var:rw,cached
+    - ./var/container-data/nagadmin-generated-config:/nagadmin-generated-config:ro,cached
     environment:
       NAGIOSADMIN_USER: ${NAGIOSADMIN_USER}
       NAGIOSADMIN_PASS: ${NAGIOSADMIN_PASS}

@@ -64,7 +64,7 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-nagadmin-generated-config _var-nagios-var
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var
 
 # The Twig cache, written by the php container (runs as {{ container_user }}).
 _var-cache: (_ensure_dir_prepared_recursive "var/cache")
@@ -72,18 +72,21 @@ _var-cache: (_ensure_dir_prepared_recursive "var/cache")
 # Used for MongoDB dump/import I/O; written by the mongodb container (runs as root).
 _var-mongodb-io: (_ensure_dir_created "var/mongodb-io")
 
+# The MongoDB data directory; written by the mongodb container (runs as root).
+_var-container-data-mongodb: (_ensure_dir_created "var/container-data/mongodb")
+
 # The generated Nagios configuration, written by the php container (runs as {{ container_user }}).
 # The php container writes both into this directory (resource.cfg) and its `configuration/`
 # subdirectory, so the whole tree (including this parent dir) must be owned by it.
-_var-nagadmin-generated-config: (_ensure_dir_created "var/nagadmin-generated-config/configuration")
+_var-nagadmin-generated-config: (_ensure_dir_created "var/container-data/nagadmin-generated-config/configuration")
 	#!/bin/sh
-	if [ ! -f var/nagadmin-generated-config/resource.cfg ]; then
-		touch var/nagadmin-generated-config/resource.cfg
+	if [ ! -f var/container-data/nagadmin-generated-config/resource.cfg ]; then
+		touch var/container-data/nagadmin-generated-config/resource.cfg
 	fi
-	{{ just_executable() }} --justfile {{ justfile() }} _ensure_dir_prepared_recursive "var/nagadmin-generated-config"
+	{{ just_executable() }} --justfile {{ justfile() }} _ensure_dir_prepared_recursive "var/container-data/nagadmin-generated-config"
 
 # The Nagios var directory (state/retention); written by the nagios container.
-_var-nagios-var: (_ensure_dir_prepared_recursive "var/nagios/var")
+_var-nagios-var: (_ensure_dir_prepared_recursive "var/container-data/nagios/var")
 
 # Internal - ensures a directory exists (created if missing).
 _ensure_dir_created path:

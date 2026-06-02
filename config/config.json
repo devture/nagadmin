@@ -32,12 +32,12 @@
 	},
 	"NagiosBundle": {
 		"database_service_id": "mongodb.database",
-		"log_file_path": "/code/var/nagios/var/nagios.log",
-		"status_file_path": "/code/var/nagios/var/status.dat",
-		"command_file_path": "/code/var/nagios/var/rw/nagios.cmd",
+		"log_file_path": "/code/var/container-data/nagios/var/nagios.log",
+		"status_file_path": "/code/var/container-data/nagios/var/status.dat",
+		"command_file_path": "/code/var/container-data/nagios/var/rw/nagios.cmd",
 		"nagios_url": "%NagiosBundle.nagios_url%",
 		"deployment_handler": {
-			"path": "/code/var/nagadmin-generated-config/"
+			"path": "/code/var/container-data/nagadmin-generated-config/"
 		},
 		"defaults": {
 			"service": {
