@@ -21,5 +21,19 @@ services:
     App\:
         resource: '../src/'
 
+    # The MongoDB connection. The `array` type map makes find()/findOne() return
+    # plain PHP arrays (not BSONDocument/BSONArray objects), matching what the
+    # data models expect — mirroring the legacy application's wiring.
+    MongoDB\Client:
+        arguments:
+            $uri: '%nagadmin.mongodb.uri%'
+
+    MongoDB\Database:
+        factory: ['@MongoDB\Client', 'selectDatabase']
+        arguments:
+            $databaseName: '%nagadmin.mongodb.db%'
+            $options:
+                typeMap: { root: array, document: array, array: array }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
