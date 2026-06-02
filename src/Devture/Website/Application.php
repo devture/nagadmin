@@ -50,10 +50,17 @@ class Application extends \Silex\Application {
 
 		$app->register(new \Silex\Provider\SwiftmailerServiceProvider());
 
-		$app->register(new \Devture\SilexProvider\DoctrineMongoDB\ServicesProvider('mongodb', $this['config']['MongoDBProviderConfig']));
+		$app['mongodb.client'] = function ($app) {
+			return new \MongoDB\Client($app['config']['MongoDBProviderConfig']['server']);
+		};
 
 		$app['mongodb.database'] = function ($app) {
-			return $app['mongodb.connection']->selectDatabase($app['config']['mongo']['db_name']);
+			//The `array` type map makes find()/findOne() return plain PHP arrays
+			//(not BSONDocument/BSONArray objects), matching what BaseModel expects.
+			return $app['mongodb.client']->selectDatabase(
+				$app['config']['mongo']['db_name'],
+				array('typeMap' => array('root' => 'array', 'document' => 'array', 'array' => 'array'))
+			);
 		};
 
 		$app->register(new \Devture\Bundle\FrameworkBundle\ServicesProvider($this['config']['FrameworkBundle']));

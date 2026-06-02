@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
 
-use Doctrine\MongoDB\Database;
+use MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Host;
@@ -28,7 +28,7 @@ class HostRepository extends BaseMongoRepository {
 	public function ensureIndexes() {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'name' => 1,
 		));
 	}

@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
 
-use Doctrine\MongoDB\Database;
+use MongoDB\Database;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Component\DBAL\Exception\NotFound;
@@ -42,11 +42,11 @@ class ContactRepository extends BaseMongoRepository {
 	public function ensureIndexes() {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'serviceNotificationCommandId' => 1,
 		));
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'timePeriodId' => 1,
 		));
 	}

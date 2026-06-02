@@ -1,7 +1,7 @@
 <?php
 namespace Devture\Bundle\NagiosBundle\Repository;
 
-use Doctrine\MongoDB\Database;
+use MongoDB\Database;
 use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Host;
@@ -34,15 +34,15 @@ class ServiceRepository extends BaseMongoRepository {
 	public function ensureIndexes() {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'hostId' => 1,
 		));
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'commandId' => 1,
 		));
 
-		$collection->ensureIndex(array(
+		$collection->createIndex(array(
 			'contactsIds' => 1,
 		));
 	}
@@ -94,7 +94,7 @@ class ServiceRepository extends BaseMongoRepository {
 	}
 
 	public function countByHost(Host $host) {
-		return $this->db->selectCollection($this->getCollectionName())->count(array('hostId' => $host->getId()));
+		return $this->db->selectCollection($this->getCollectionName())->countDocuments(array('hostId' => $host->getId()));
 	}
 
 	public function findByCommand(Command $command) {
