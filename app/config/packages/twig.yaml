@@ -2,6 +2,8 @@ twig:
     file_name_pattern: '*.twig'
     globals:
         project_name: '%nagadmin.project_name%'
+        # The base layout template name, so ported templates can `{% extends layout %}`.
+        layout: 'layout.html.twig'
 
 when@test:
     twig:
