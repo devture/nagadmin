@@ -1,0 +1,26 @@
+{% macro menu_item(route, url, title, icon) %}
+	<li class="{{ is_route_prefix(route) ? 'active' : '' }}">
+		<a href="{{ url }}">
+			{% if icon is not none %}
+				<i class="{{ icon }}"></i>
+			{% endif %}
+			{{ title }}
+		</a>
+	</li>
+{% endmacro %}
+
+{% if is_logged_in() %}
+	<ul class="nav navbar-nav">
+		{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
+
+		{# Further sections (time periods, commands, contacts, hosts, services,
+		   logs, resource variables, configuration, users) are re-added here as
+		   their controllers/routes are ported. #}
+	</ul>
+
+	<form class="navbar-form navbar-right" method="post" action="{{ path('devture_user.logout') }}">
+		<button class="btn btn-default btn-sm">
+			Log out
+		</button>
+	</form>
+{% endif %}

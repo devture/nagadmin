@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
+    #[Route('/login', name: 'devture_user.login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // The form_login authenticator on the firewall intercepts the POST,
@@ -20,7 +20,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/logout', name: 'logout', methods: ['GET'])]
+    #[Route('/logout', name: 'devture_user.logout', methods: ['GET', 'POST'])]
     public function logout(): void
     {
         // Intercepted by the firewall's logout key; never executed.

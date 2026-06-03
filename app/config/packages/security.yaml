@@ -31,11 +31,12 @@ security:
             lazy: true
             provider: nagadmin_users
             form_login:
-                login_path: login
-                check_path: login
+                login_path: devture_user.login
+                check_path: devture_user.login
                 enable_csrf: true
+                default_target_path: devture_nagios.dashboard
             logout:
-                path: logout
+                path: devture_user.logout
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
