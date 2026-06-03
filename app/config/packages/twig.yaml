@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        project_name: '%nagadmin.project_name%'
 
 when@test:
     twig:

@@ -10,6 +10,10 @@ parameters:
     nagadmin.mongodb.uri: '%env(MONGODB_URI)%'
     nagadmin.mongodb.db: '%env(MONGODB_DB)%'
     nagadmin.notifications.api_secret: '%env(NAGADMIN_NOTIFICATION_API_SECRET)%'
+    # Display name for this deployment and the external Nagios web UI URL
+    # (both surfaced in the layout/navbar).
+    nagadmin.project_name: '%env(NAGADMIN_PROJECT_NAME)%'
+    nagadmin.nagios.url: '%env(NAGADMIN_NAGIOS_URL)%'
     # Service-name patterns whose matches are treated as "master" services that
     # others depend on (same default as the legacy config.json).
     nagadmin.auto_service_dependency.master_service_regexes:
