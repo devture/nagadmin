@@ -107,6 +107,11 @@ services:
             - '@Devture\Bundle\NagiosBundle\Validator\TimePeriodValidator'
         calls:
             - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'time_period']
+    Devture\Bundle\NagiosBundle\Form\CommandFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\CommandValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'command']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:

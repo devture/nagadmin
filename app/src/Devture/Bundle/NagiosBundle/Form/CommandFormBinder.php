@@ -20,7 +20,7 @@ class CommandFormBinder extends SetterRequestBinder {
 		$expectedArgumentsCount = $entity->getLineArgumentsCount();
 		$entity->clearArguments();
 		$argumentNumber = 0;
-		foreach ($request->request->get('arguments') as $argumentData) {
+		foreach ($request->request->all('arguments') as $argumentData) {
 			$argumentNumber += 1;
 			if ($argumentNumber > $expectedArgumentsCount) {
 				break;
