@@ -1,0 +1,14 @@
+{% extends layout %}
+
+{% block content %}
+	<div class="clearfix">
+		<a class="btn btn-default pull-right" href="{{ path('devture_user.add') }}">
+			<i class="glyphicon glyphicon-plus"></i>
+			Add new
+		</a>
+	</div>
+
+	<br />
+
+	{% include "DevtureUserBundle/list.html.twig" with {'items': items} %}
+{% endblock %}

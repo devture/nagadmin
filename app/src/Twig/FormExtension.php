@@ -29,11 +29,11 @@ class FormExtension extends AbstractExtension
     {
         return [
             new TwigFunction('render_form_violations', $this->renderFormViolations(...), [
-                'is_safe' => ['html' => true],
+                'is_safe' => ['html'],
                 'needs_environment' => true,
             ]),
             new TwigFunction('render_form_csrf_token', $this->renderFormCsrfToken(...), [
-                'is_safe' => ['html' => true],
+                'is_safe' => ['html'],
             ]),
         ];
     }

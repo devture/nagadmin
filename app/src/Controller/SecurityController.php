@@ -26,4 +26,14 @@ class SecurityController extends AbstractController
         // Intercepted by the firewall's logout key; never executed.
         throw new \LogicException('This method is intercepted by the logout key on the firewall.');
     }
+
+    #[Route('/logged-out', name: 'devture_user.logged_out', methods: ['GET'])]
+    public function loggedOut(): Response
+    {
+        if ($this->getUser() !== null) {
+            return $this->redirectToRoute('devture_nagios.dashboard');
+        }
+
+        return $this->render('DevtureUserBundle/logged_out.html.twig');
+    }
 }

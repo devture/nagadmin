@@ -37,6 +37,7 @@ security:
                 default_target_path: devture_nagios.dashboard
             logout:
                 path: devture_user.logout
+                target: devture_user.logged_out
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
@@ -54,6 +55,7 @@ security:
     # rather than a user session) get their own treatment when they are ported.
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/logged-out$, roles: PUBLIC_ACCESS }
         - { path: ^/resource, roles: ROLE_SENSITIVE }
         - { path: ^/configuration, roles: ROLE_SENSITIVE }
         - { path: ^/time-period, roles: ROLE_CONFIGURATION_MANAGEMENT }
