@@ -34,8 +34,13 @@ services:
         resource: '../../Twig/'
     Devture\Bundle\NagiosBundle\Security\:
         resource: '../../Security/'
+    Devture\Bundle\NagiosBundle\Validator\:
+        resource: '../../Validator/'
+    # The CSRF adapter autowires; the form binders need their validator + a
+    # per-form CSRF intention, so they are defined explicitly below.
     Devture\Bundle\NagiosBundle\Form\:
         resource: '../../Form/'
+        exclude: '../../Form/*FormBinder.php'
 
     # The MongoDB connection. The `array` type map makes find()/findOne() return
     # plain PHP arrays (not BSONDocument/BSONArray objects), matching what the
@@ -92,6 +97,16 @@ services:
             $masterServicesRegexes: '%nagadmin.auto_service_dependency.master_service_regexes%'
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationWriter: ~
+
+    # Best-effort redeploy after a model change (collect -> validate -> deploy).
+    Devture\Bundle\NagiosBundle\Deployment\Deployer: ~
+
+    # Per-form binders: validator injected, CSRF bound to a per-form intention.
+    Devture\Bundle\NagiosBundle\Form\TimePeriodFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\TimePeriodValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'time_period']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:

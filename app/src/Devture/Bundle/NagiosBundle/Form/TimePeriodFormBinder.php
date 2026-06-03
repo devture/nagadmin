@@ -18,7 +18,9 @@ class TimePeriodFormBinder extends SetterRequestBinder {
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
 		$entity->clearRules();
-		foreach ((array)$request->request->get('rules') as $ruleData) {
+		// `rules` is an array of {dateRange, timeRange}. Symfony's InputBag::get()
+		// rejects non-scalar values, so the array is read via all().
+		foreach ($request->request->all('rules') as $ruleData) {
 			$entity->addRule(new TimePeriodRule($ruleData));
 		}
 	}

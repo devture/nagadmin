@@ -13,9 +13,13 @@
 	<ul class="nav navbar-nav">
 		{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
 
-		{# Further sections (time periods, commands, contacts, hosts, services,
-		   logs, resource variables, configuration) are re-added here as their
-		   controllers/routes are ported. #}
+		{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
+			{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
+		{% endif %}
+
+		{# Further sections (commands, contacts, hosts, services, logs, resource
+		   variables, configuration) are re-added here as their controllers/routes
+		   are ported. #}
 
 		{% if is_granted('ROLE_DEVTURE_USER') %}
 			{{ _self.menu_item('devture_user.', path('devture_user.manage'), 'Users', 'glyphicon glyphicon-user') }}

@@ -1,7 +1,7 @@
-{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
 {% macro render_rules_example() %}
-{% spaceless %}
+{% apply spaceless %}
 monday     08:00-24:00
 tuesday    09:00-17:00
 wednesday  08:00-12:00,15:00-19:00
@@ -10,7 +10,7 @@ sunday     14:00-19:00
 monday 3   00:00-09:00,17:00-24:00
 day 2      00:00-24:00
 february 4 00:00-24:00
-{% endspaceless %}
+{% endapply %}
 {% endmacro %}
 
 {% block devture_nagios_content %}
@@ -47,12 +47,12 @@ february 4 00:00-24:00
 				<div class="col-lg-10">
 					<div id="js-rules-container">
 					{% for rule in entity.rules %}
-						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': rule, 'number': loop.index} %}
+						{% include '@DevtureNagios/time_period/rule_editor.html.twig' with {'entity': rule, 'number': loop.index} %}
 					{% endfor %}
 					</div>
 
 					<script id="js-rule-editor-template" type="text/template">
-						{% include 'DevtureNagiosBundle/time_period/rule_editor.html.twig' with {'entity': none, 'number': '__NUMBER__'} %}
+						{% include '@DevtureNagios/time_period/rule_editor.html.twig' with {'entity': none, 'number': '__NUMBER__'} %}
 					</script>
 
 					<a class="btn btn-default btn-sm" href="javascript://" id="js-button-add-rule">
