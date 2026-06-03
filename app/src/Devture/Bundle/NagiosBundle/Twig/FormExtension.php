@@ -49,7 +49,7 @@ class FormExtension extends AbstractExtension
             return str_replace(array_keys($error['params']), array_values($error['params']), $error['message']);
         }, $errors);
 
-        return $twig->render('form/violation_errors.html.twig', ['fieldKey' => $fieldKey, 'messages' => $messages]);
+        return $twig->render('@DevtureNagios/form/violation_errors.html.twig', ['fieldKey' => $fieldKey, 'messages' => $messages]);
     }
 
     public function renderFormCsrfToken(BinderInterface $form): string

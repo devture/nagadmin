@@ -31,7 +31,7 @@ class UserController extends AbstractController
     {
         $this->repository->ensureIndexes();
 
-        return $this->render('DevtureUserBundle/index.html.twig', [
+        return $this->render('@DevtureUser/index.html.twig', [
             'items' => $this->repository->findAll(),
         ]);
     }
@@ -47,7 +47,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('devture_user.manage');
         }
 
-        return $this->render('DevtureUserBundle/record.html.twig', [
+        return $this->render('@DevtureUser/record.html.twig', [
             'entity' => $entity,
             'isAdded' => false,
             'form' => $this->formBinder,
@@ -70,7 +70,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('devture_user.manage');
         }
 
-        return $this->render('DevtureUserBundle/record.html.twig', [
+        return $this->render('@DevtureUser/record.html.twig', [
             'entity' => $entity,
             'isAdded' => true,
             'form' => $this->formBinder,

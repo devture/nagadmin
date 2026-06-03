@@ -18,6 +18,6 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'devture_nagios.dashboard', methods: ['GET'])]
     public function dashboard(): Response
     {
-        return $this->render('DevtureNagiosBundle/dashboard/dashboard.html.twig');
+        return $this->render('@DevtureNagios/dashboard/dashboard.html.twig');
     }
 }

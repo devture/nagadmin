@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
     {
         // The form_login authenticator on the firewall intercepts the POST,
         // so this action only ever renders the form (and shows the last error).
-        return $this->render('security/login.html.twig', [
+        return $this->render('@DevtureUser/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError(),
         ]);
@@ -34,6 +34,6 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('devture_nagios.dashboard');
         }
 
-        return $this->render('DevtureUserBundle/logged_out.html.twig');
+        return $this->render('@DevtureUser/logged_out.html.twig');
     }
 }

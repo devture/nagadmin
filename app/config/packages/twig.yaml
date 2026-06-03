@@ -3,7 +3,7 @@ twig:
     globals:
         # The base layout template name, so ported templates can `{% extends layout %}`.
         # (project_name is provided as a global by App Twig extension.)
-        layout: 'layout.html.twig'
+        layout: '@@DevtureNagios/layout.html.twig'
 
 when@test:
     twig:
