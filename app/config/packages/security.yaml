@@ -3,14 +3,14 @@ security:
     # passwords verify with no re-hash. Pinned (not 'auto') so newly hashed
     # passwords keep the same format too.
     password_hashers:
-        App\Security\SecurityUser:
+        Devture\Bundle\UserBundle\Security\SecurityUser:
             algorithm: bcrypt
             cost: 13
 
     # Identities are loaded from the native Mongo user repository.
     providers:
         nagadmin_users:
-            id: App\Security\UserProvider
+            id: Devture\Bundle\UserBundle\Security\UserProvider
 
     # The legacy master role 'all' (User::ROLE_MASTER, mapped to ROLE_ALL)
     # grants global access, so it expands to every other role.
@@ -68,6 +68,6 @@ when@test:
         password_hashers:
             # Password hashers are resource-intensive by design to ensure security.
             # In tests, it's safe to reduce their cost to improve performance.
-            App\Security\SecurityUser:
+            Devture\Bundle\UserBundle\Security\SecurityUser:
                 algorithm: bcrypt
                 cost: 4 # Lowest possible value for bcrypt
