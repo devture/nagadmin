@@ -19,7 +19,9 @@
 			{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
 		{% endif %}
 
-		{# Further sections (contacts, hosts, services, logs, resource variables,
+		{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
+
+		{# Further sections (hosts, services, logs, resource variables,
 		   configuration) are re-added here as their controllers/routes are ported. #}
 
 		{% if is_granted('ROLE_DEVTURE_USER') %}

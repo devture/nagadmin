@@ -11,6 +11,8 @@ parameters:
     nagadmin.auto_service_dependency.master_service_regexes:
         - '/^ping$/i'
         - '/host-?alive/i'
+    # Deterministic color palette for contact avatars (Colorizer).
+    nagadmin.colors: ['#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888']
     # Nagios runtime file paths (shared bind-mounted volume, fixed by the container layout).
     nagadmin.nagios.log_file_path: '/code/var/container-data/nagios/var/nagios.log'
     nagadmin.nagios.status_file_path: '/code/var/container-data/nagios/var/status.dat'
@@ -82,6 +84,15 @@ services:
     # authorization layer by Security\Voter\NagiosAccessVoter.
     Devture\Bundle\NagiosBundle\Helper\AccessChecker: ~
 
+    # The current authenticated domain User (for access checks in controllers
+    # and form binders), and the deterministic color palette + contact API
+    # export used by the contact avatars.
+    Devture\Bundle\NagiosBundle\Helper\CurrentUserProvider: ~
+    Devture\Bundle\NagiosBundle\Helper\Colorizer:
+        arguments:
+            $colors: '%nagadmin.colors%'
+    Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge: ~
+
     # The Nagios configuration generator: exporters (one per config file),
     # the writer, and the collector that runs the exporters in order.
     Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter: ~
@@ -112,6 +123,11 @@ services:
             - '@Devture\Bundle\NagiosBundle\Validator\CommandValidator'
         calls:
             - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'command']
+    # Contact binder: all constructor deps autowire (incl. ContactValidator);
+    # only the CSRF intention needs binding.
+    Devture\Bundle\NagiosBundle\Form\ContactFormBinder:
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'contact']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:

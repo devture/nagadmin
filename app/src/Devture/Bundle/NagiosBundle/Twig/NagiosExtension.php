@@ -2,22 +2,27 @@
 
 namespace Devture\Bundle\NagiosBundle\Twig;
 
+use Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge;
+use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Status\Manager as StatusManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
  * Exposes Nagios live status to the templates (the navbar status badge and
- * the per-page "is Nagios running?" banners). Backed by the Status\Manager,
- * which reads status.dat. Further helpers (access checks, colorize, …) are
- * added here as the templates that need them are ported.
+ * the per-page "is Nagios running?" banners) plus the contact API-model
+ * export filter. Backed by the Status\Manager (reads status.dat) and the
+ * ContactBridge. Further helpers are added here as the templates that need
+ * them are ported.
  */
 class NagiosExtension extends AbstractExtension
 {
     public function __construct(
         private readonly StatusManager $statusManager,
+        private readonly ContactBridge $contactBridge,
         #[Autowire('%nagadmin.nagios.url%')]
         private readonly string $nagiosUrl,
     ) {
@@ -31,6 +36,18 @@ class NagiosExtension extends AbstractExtension
             new TwigFunction('devture_nagios_get_service_status', $this->getServiceStatus(...)),
             new TwigFunction('devture_nagios_get_nagios_url', $this->getNagiosUrl(...)),
         ];
+    }
+
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('contact_api_model_export', $this->exportContactApiModel(...)),
+        ];
+    }
+
+    public function exportContactApiModel(Contact $contact): array
+    {
+        return $this->contactBridge->export($contact);
     }
 
     public function getInfoStatus()

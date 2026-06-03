@@ -11,7 +11,7 @@ use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Validator\ContactValidator;
 use Devture\Bundle\UserBundle\Repository\UserRepositoryInterface;
 use Devture\Bundle\NagiosBundle\Helper\AccessChecker;
-use Devture\Bundle\UserBundle\AccessControl\AccessControl;
+use Devture\Bundle\NagiosBundle\Helper\CurrentUserProvider;
 
 class ContactFormBinder extends SetterRequestBinder {
 
@@ -19,17 +19,17 @@ class ContactFormBinder extends SetterRequestBinder {
 	private $commandRepository;
 	private $userRepository;
 	private $accessChecker;
-	private $accessControl;
+	private $currentUserProvider;
 
 	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository,
-								UserRepositoryInterface $userRepository, AccessChecker $accessChecker, AccessControl $accessControl,
+								UserRepositoryInterface $userRepository, AccessChecker $accessChecker, CurrentUserProvider $currentUserProvider,
 								ContactValidator $validator) {
 		parent::__construct($validator);
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;
 		$this->userRepository = $userRepository;
 		$this->accessChecker = $accessChecker;
-		$this->accessControl = $accessControl;
+		$this->currentUserProvider = $currentUserProvider;
 	}
 
 	/**
@@ -53,7 +53,7 @@ class ContactFormBinder extends SetterRequestBinder {
 		$whitelisted = array('name', 'email');
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
-		if ($this->accessChecker->canUserDoConfigurationManagement($this->accessControl->getUser())) {
+		if ($this->accessChecker->canUserDoConfigurationManagement($this->currentUserProvider->getUser())) {
 			try {
 				$user = $this->userRepository->find($request->request->get('userId'));
 				$entity->setUser($user);
@@ -77,7 +77,8 @@ class ContactFormBinder extends SetterRequestBinder {
 		}
 
 		$entity->clearAddresses();
-		foreach ((array)$request->request->get('addresses') as $slot => $address) {
+		// `addresses` is a slot=>value map; read via all() (InputBag::get rejects arrays).
+		foreach ($request->request->all('addresses') as $slot => $address) {
 			if ($address) {
 				$entity->addAddress($slot, $address);
 			}
