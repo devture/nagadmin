@@ -98,7 +98,11 @@ services:
     Devture\Bundle\NagiosBundle\Helper\Colorizer:
         arguments:
             $colors: '%nagadmin.colors%'
-    Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge: ~
+
+    # API-model exporters (domain models -> JSON for the Angular live-status UI).
+    # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).
+    Devture\Bundle\NagiosBundle\ApiModelBridge\:
+        resource: '../../ApiModelBridge/'
 
     # The Nagios configuration generator: exporters (one per config file),
     # the writer, and the collector that runs the exporters in order.
