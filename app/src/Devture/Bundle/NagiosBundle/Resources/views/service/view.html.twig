@@ -1,9 +1,9 @@
-{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
-{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+{% import '@DevtureNagios/macros.html.twig' as macros %}
 
 {% macro service_detailed_status(entity, status) %}
-	{% import 'DevtureNagiosBundle/macros.html.twig' as macros %}
+	{% import '@DevtureNagios/macros.html.twig' as macros %}
 
 	{% set status = devture_nagios_get_service_status(entity) %}
 
@@ -81,8 +81,8 @@
 {% endmacro %}
 
 {% block devture_nagios_content %}
-	{% if devture_nagios_can_user_manage_service(app.user, entity) %}
-		{% include 'DevtureNagiosBundle/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% if is_granted('NAGIOS_MANAGE', entity) %}
+		{% include '@DevtureNagios/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
 	{% endif %}
 
 	<div ng-app-lazy="nagadminApp">
@@ -112,7 +112,7 @@
 				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-user"></i> Users to notify</label>
 				<div class="col-lg-10 clearfix">
 				{% for contact in entity.contacts %}
-					{% if devture_nagios_can_user_manage_contact(app.user, contact) %}
+					{% if is_granted('NAGIOS_MANAGE', contact) %}
 						<a
 							class="well well-small"
 							style="display: inline-block; padding: 2px 5px;"
@@ -149,7 +149,7 @@
 					{% if logs|length == 0 %}
 						No recent log entries related to this service.
 					{% else %}
-						{% include 'DevtureNagiosBundle/log/list.html.twig' with {'items': logs} only %}
+						{% include '@DevtureNagios/log/list.html.twig' with {'items': logs} only %}
 					{% endif %}
 				</div>
 			</div>

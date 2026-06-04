@@ -4,6 +4,9 @@ namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Devture\Bundle\NagiosBundle\Deployment\Deployer;
 use Devture\Bundle\NagiosBundle\Form\HostFormBinder;
+use Devture\Bundle\NagiosBundle\Helper\AccessChecker;
+use Devture\Bundle\NagiosBundle\Helper\CurrentUserProvider;
+use Devture\Bundle\NagiosBundle\Log\Fetcher as LogFetcher;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
@@ -25,6 +28,9 @@ class HostManagementController extends AbstractController
         private readonly ServiceRepository $serviceRepository,
         private readonly CommandRepository $commandRepository,
         private readonly HostFormBinder $formBinder,
+        private readonly LogFetcher $logFetcher,
+        private readonly AccessChecker $accessChecker,
+        private readonly CurrentUserProvider $currentUserProvider,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly Deployer $deployer,
     ) {
@@ -83,16 +89,23 @@ class HostManagementController extends AbstractController
         ]));
     }
 
-    /**
-     * Live host-status view page (with Angular service badges + related logs).
-     * Deferred to D4.3 along with the rest of the Angular live-status UI and
-     * the log section; for now it redirects to the edit page so that the
-     * existing template links (host list, toolbar) resolve.
-     */
     #[Route('/view/{id}', name: 'devture_nagios.host.view', methods: ['GET'])]
     public function view(string $id): Response
     {
-        return $this->redirectToRoute('devture_nagios.host.edit', ['id' => $id]);
+        try {
+            $entity = $this->repository->find($id);
+        } catch (NotFound) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$this->accessChecker->canUserViewHost($this->currentUserProvider->getUser(), $entity)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('@DevtureNagios/host/view.html.twig', [
+            'entity' => $entity,
+            'logs' => $this->logFetcher->fetchForHost($entity),
+        ]);
     }
 
     #[Route('/delete/{id}/{token}', name: 'devture_nagios.host.delete', methods: ['POST'])]

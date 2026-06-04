@@ -4,12 +4,14 @@ namespace Devture\Bundle\NagiosBundle\Controller;
 
 use Devture\Bundle\NagiosBundle\Deployment\Deployer;
 use Devture\Bundle\NagiosBundle\Form\ServiceFormBinder;
+use Devture\Bundle\NagiosBundle\Log\Fetcher as LogFetcher;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\NagiosCommand\Manager as NagiosCommandManager;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
+use Devture\Bundle\NagiosBundle\Security\Voter\NagiosAccessVoter;
 use Devture\Component\DBAL\Exception\NotFound;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -30,6 +32,7 @@ class ServiceManagementController extends AbstractController
         private readonly ContactRepository $contactRepository,
         private readonly ServiceFormBinder $formBinder,
         private readonly NagiosCommandManager $nagiosCommandManager,
+        private readonly LogFetcher $logFetcher,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly Deployer $deployer,
         #[Autowire('%nagadmin.service.defaults%')]
@@ -112,15 +115,21 @@ class ServiceManagementController extends AbstractController
         ]));
     }
 
-    /**
-     * Live service-status view page (Angular status + related logs). Deferred
-     * to D4.3 with the rest of the Angular live-status UI and the log section;
-     * redirects to the edit page for now so existing template links resolve.
-     */
     #[Route('/view/{id}', name: 'devture_nagios.service.view', methods: ['GET'])]
     public function view(string $id): Response
     {
-        return $this->redirectToRoute('devture_nagios.service.edit', ['id' => $id]);
+        try {
+            $entity = $this->repository->find($id);
+        } catch (NotFound) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->denyAccessUnlessGranted(NagiosAccessVoter::VIEW, $entity);
+
+        return $this->render('@DevtureNagios/service/view.html.twig', [
+            'entity' => $entity,
+            'logs' => $this->logFetcher->fetchForService($entity),
+        ]);
     }
 
     #[Route('/schedule_check/{id}/{token}', name: 'devture_nagios.service.schedule_check', methods: ['POST'])]

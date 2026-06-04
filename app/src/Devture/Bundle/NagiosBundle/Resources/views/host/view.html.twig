@@ -1,8 +1,8 @@
-{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	{% if devture_nagios_can_user_manage_host(app.user, entity) %}
-		{% include 'DevtureNagiosBundle/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
+		{% include '@DevtureNagios/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
 	{% endif %}
 
 	<div ng-app-lazy="nagadminApp">
@@ -51,7 +51,7 @@
 					{% if logs|length == 0 %}
 						No recent log entries related to this host.
 					{% else %}
-						{% include 'DevtureNagiosBundle/log/list.html.twig' with {'items': logs} only %}
+						{% include '@DevtureNagios/log/list.html.twig' with {'items': logs} only %}
 					{% endif %}
 				</div>
 			</div>
