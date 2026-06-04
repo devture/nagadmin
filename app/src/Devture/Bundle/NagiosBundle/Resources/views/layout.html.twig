@@ -92,8 +92,9 @@
 <script type="text/javascript" src="{{ static_url('/js/comploader/comploader.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('/js/jquery.relative-time.js') }}"></script>
 
-{# The comploader component registry (Angular live-status, chosen, etc.) is
-   ported alongside the API endpoints it references. #}
+<script type="text/javascript">
+	{% include '@DevtureNagios/comploader_components.js.twig' %}
+</script>
 
 <script type="text/javascript">
 {% block js %}
