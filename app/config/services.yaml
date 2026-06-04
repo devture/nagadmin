@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+# Application services live in their owning bundles
+# (src/Devture/Bundle/*/Resources/config/services.yaml), loaded by each
+# bundle's DependencyInjection extension. This file is intentionally minimal.
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true

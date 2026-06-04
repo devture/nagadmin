@@ -1,0 +1,18 @@
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
+
+{% block devture_nagios_content %}
+	{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
+		<div class="clearfix">
+			<a class="btn btn-default pull-right" href="{{ path('devture_nagios.contact.add') }}">
+				<i class="glyphicon glyphicon-plus"></i>
+				Add new
+			</a>
+		</div>
+
+		<div class="top-spaced-minor"></div>
+	{% endif %}
+
+	<div ng-app-lazy="nagadminApp">
+		{% include '@DevtureNagios/contact/list.html.twig' with {'items': items} %}
+	</div>
+{% endblock %}

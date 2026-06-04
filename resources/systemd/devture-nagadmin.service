@@ -7,11 +7,11 @@ DefaultDependencies=no
 [Service]
 Type=simple
 WorkingDirectory=/srv/http/nagadmin
-ExecStartPre=-/usr/bin/make stop
+ExecStartPre=-/usr/local/bin/just stop
 
-ExecStart=/usr/bin/make run
+ExecStart=/usr/local/bin/just run
 
-ExecStop=-/usr/bin/make stop
+ExecStop=-/usr/local/bin/just stop
 
 Restart=always
 RestartSec=30

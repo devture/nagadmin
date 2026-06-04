@@ -1,0 +1,205 @@
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
+
+{% import '@DevtureNagios/macros.html.twig' as macros %}
+
+{% macro service_detailed_status(entity, status) %}
+	{% import '@DevtureNagios/macros.html.twig' as macros %}
+
+	{% set status = devture_nagios_get_service_status(entity) %}
+
+	{% if status is none %}
+		-- There is no information about this service --
+	{% else %}
+		<div>
+			<fieldset>
+				<div class="form-group row">
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Status</label>
+					<div class="col-lg-10">
+						<div style="width: 100px; display: inline-block;">
+							{{ macros.service_status(status) }}
+						</div>
+						{% if status.checked %}
+							{% if status.currentState == status.lastHardState %}
+
+								since {{ macros.relative_time(status.lastHardStateChangeTime) }} ago
+							{% else %}
+								changing since {{ macros.relative_time(status.lastStateChangeTime) }} ago
+							{% endif %}
+
+							{% if status.currentStateHuman != 'ok' %}
+								(attempt {{ status.currentAttempt }}/{{ status.maxAttempts }})
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-flag"></i> Check Result</label>
+					<div class="col-lg-10 clearfix">
+						{{ status.pluginOutput }}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-tasks"></i> Performance</label>
+					<div class="col-lg-10 clearfix">
+						{{ status.performanceData }}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-chevron-left"></i> Last Check</label>
+					<div class="col-lg-10">
+						{% if status.lastCheckTime == 0 %}
+							Never
+						{% else %}
+							{{ macros.relative_time(status.lastCheckTime) }} ago
+						{% endif %}
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-chevron-right"></i> Next Check</label>
+					<div class="col-lg-10 clearfix">
+						{% if status.nextCheckTime < none|date('U') %}
+							<span class="text-error">
+								{{ macros.relative_time(status.nextCheckTime) }} ago
+							</span>
+						{% else %}
+							in {{ macros.relative_time(status.nextCheckTime) }}
+						{% endif %}
+						<div class="pull-right" style="width: 250px;">
+							<a class="btn btn-default btn-sm pull-right" href="javascript://" id="js-btn-service-check-schedule">
+								<i class="glyphicon glyphicon-refresh"></i>
+								check now
+							</a>
+							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
+								<div class="progress-bar" style="width: 0;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+{% block devture_nagios_content %}
+	{% if is_granted('NAGIOS_MANAGE', entity) %}
+		{% include '@DevtureNagios/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
+	{% endif %}
+
+	<div ng-app-lazy="nagadminApp">
+		<fieldset>
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
+				<div class="col-lg-10">
+					<a href="{{ path('devture_nagios.host.view', {'id': entity.host.id}) }}">
+						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
+						{{ entity.host.name }}
+					</a>
+					({{ entity.host.address }})
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Service</label>
+				<div class="col-lg-10 clearfix">
+					{{ entity.name }}
+					{% if not entity.enabled %}
+						<strong>(disabled)</strong>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-user"></i> Users to notify</label>
+				<div class="col-lg-10 clearfix">
+				{% for contact in entity.contacts %}
+					{% if is_granted('NAGIOS_MANAGE', contact) %}
+						<a
+							class="well well-small"
+							style="display: inline-block; padding: 2px 5px;"
+							href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
+							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
+							<contact entity='contact_{{ contact.id }}' size="24"></contact>
+							{{ contact.name }}
+						</a>
+					{% else %}
+						<span
+							class="well well-small"
+							style="display: inline-block; padding: 2px 5px;"
+							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
+							<contact entity='contact_{{ contact.id }}' size="24"></contact>
+							{{ contact.name }}
+						</span>
+					{% endif %}
+				{% else %}
+					No one
+				{% endfor %}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label">Status</label>
+				<div class="col-lg-10">
+					{{ _self.service_detailed_status(entity) }}
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-book"></i> Logs</label>
+				<div class="col-lg-10">
+					{% if logs|length == 0 %}
+						No recent log entries related to this service.
+					{% else %}
+						{% include '@DevtureNagios/log/list.html.twig' with {'items': logs} only %}
+					{% endif %}
+				</div>
+			</div>
+		</fieldset>
+	</div>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+
+	(function () {
+		var $button = $('#js-btn-service-check-schedule'),
+			$progress = $('#js-progress-service-check-schedule');
+
+		{#
+			Scheduling and performing a check takes time:
+				- Nagios polls for new command submissions every 1 second (at best)
+				- The check takes some time (< 1-2 seconds in most cases)
+				- Nagios updates the status file with results every 10 seconds (default value)
+			So we need to delay the user for a while, by showing fake progress messages.
+		#}
+		var waitingTime = 15000;
+
+		$button.click(function () {
+			if ($button.attr('disabled')) {
+				return;
+			}
+
+			$button.attr('disabled', true);
+			$button.text('scheduling a check..');
+
+			$.ajax({
+				"url": {{ path('devture_nagios.service.schedule_check', {'id': entity.id, 'token': csrf_token('schedule-service-check-' ~ entity.id)})|json_encode|raw }},
+				"type": "POST",
+				"dataType": "json",
+				"success": function (response) {
+					if (response.ok) {
+						var $bar = $progress.find('.progress-bar');
+
+						$button.remove();
+						$progress.removeClass('hide');
+						$bar.css('width', '0%');
+						$bar.animate({"width": "100%"}, waitingTime, 'linear', function () {
+							window.location.reload();
+						});
+					} else {
+						alert("There was a problem. Refresh and retry.");
+					}
+				}
+			});
+		});
+	})();
+{% endblock %}

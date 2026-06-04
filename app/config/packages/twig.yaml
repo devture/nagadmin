@@ -1,0 +1,10 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        # The base layout template name, so ported templates can `{% extends layout %}`.
+        # (project_name is provided as a global by App Twig extension.)
+        layout: '@@DevtureNagios/layout.html.twig'
+
+when@test:
+    twig:
+        strict_variables: true

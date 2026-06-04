@@ -1,0 +1,246 @@
+parameters:
+    nagadmin.mongodb.uri: '%env(MONGODB_URI)%'
+    nagadmin.mongodb.db: '%env(MONGODB_DB)%'
+    nagadmin.notifications.api_secret: '%env(NAGADMIN_NOTIFICATION_API_SECRET)%'
+    # Notification e-mail / SMS settings (notification API + console commands).
+    nagadmin.notifications.sender_email: '%env(NAGADMIN_NOTIFICATION_SENDER_EMAIL)%'
+    nagadmin.sms.gateway: '%env(NAGADMIN_SMS_GATEWAY)%'
+    nagadmin.sms.sender_id: '%env(NAGADMIN_SMS_SENDER_ID)%'
+    nagadmin.sms.username: '%env(NAGADMIN_SMS_USERNAME)%'
+    nagadmin.sms.password: '%env(NAGADMIN_SMS_PASSWORD)%'
+    # Display name for this deployment and the external Nagios web UI URL
+    # (both surfaced in the layout/navbar).
+    nagadmin.project_name: '%env(NAGADMIN_PROJECT_NAME)%'
+    nagadmin.nagios.url: '%env(NAGADMIN_NAGIOS_URL)%'
+    # Service-name patterns whose matches are treated as "master" services that
+    # others depend on (same default as the legacy config.json).
+    nagadmin.auto_service_dependency.master_service_regexes:
+        - '/^ping$/i'
+        - '/host-?alive/i'
+    # Default check/notification intervals pre-filled when adding a new service
+    # (same values as the legacy config.json / parameters.json).
+    nagadmin.service.defaults:
+        max_check_attempts: 5
+        check_interval: 10
+        retry_interval: 1
+        notification_interval: 60
+    # Deterministic color palette for contact avatars (Colorizer).
+    nagadmin.colors: ['#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888']
+    # Nagios runtime file paths (shared bind-mounted volume, fixed by the container layout).
+    nagadmin.nagios.log_file_path: '/code/var/container-data/nagios/var/nagios.log'
+    nagadmin.nagios.status_file_path: '/code/var/container-data/nagios/var/status.dat'
+    nagadmin.nagios.command_file_path: '/code/var/container-data/nagios/var/rw/nagios.cmd'
+    # Where the generated configuration is deployed (mounted read-only into the Nagios container).
+    nagadmin.deployment.path: '/code/var/container-data/nagadmin-generated-config/'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Controllers, console commands, Twig extensions, voters and the CSRF
+    # adapter living in this bundle are autoconfigured from their directories.
+    Devture\Bundle\NagiosBundle\Controller\:
+        resource: '../../Controller/'
+        tags: ['controller.service_arguments']
+    Devture\Bundle\NagiosBundle\ConsoleCommand\:
+        resource: '../../ConsoleCommand/'
+    Devture\Bundle\NagiosBundle\Twig\:
+        resource: '../../Twig/'
+    Devture\Bundle\NagiosBundle\Security\:
+        resource: '../../Security/'
+    Devture\Bundle\NagiosBundle\Validator\:
+        resource: '../../Validator/'
+    # The CSRF adapter autowires; the form binders need their validator + a
+    # per-form CSRF intention, so they are defined explicitly below.
+    Devture\Bundle\NagiosBundle\Form\:
+        resource: '../../Form/'
+        exclude: '../../Form/*FormBinder.php'
+
+    # The MongoDB connection. The `array` type map makes find()/findOne() return
+    # plain PHP arrays (not BSONDocument/BSONArray objects), matching what the
+    # data models expect — mirroring the legacy application's wiring.
+    MongoDB\Client:
+        arguments:
+            $uri: '%nagadmin.mongodb.uri%'
+
+    MongoDB\Database:
+        factory: ['@MongoDB\Client', 'selectDatabase']
+        arguments:
+            $databaseName: '%nagadmin.mongodb.db%'
+            $options:
+                typeMap: { root: array, document: array, array: array }
+
+    # The Nagios repositories. Concrete-typed dependencies (sibling repositories,
+    # the MongoDB database) autowire; the model-event dispatcher is bound explicitly.
+    Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\CommandRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\HostRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\ContactRepository:
+        arguments:
+            $dispatcher: '@nagadmin.model_event_dispatcher'
+    Devture\Bundle\NagiosBundle\Repository\ServiceRepository: ~
+    Devture\Bundle\NagiosBundle\Repository\ResourceRepository: ~
+    Devture\Bundle\NagiosBundle\Repository\UserRepository: ~
+
+    # The contact repository depends on the user repository via its interface.
+    Devture\Bundle\UserBundle\Repository\UserRepositoryInterface: '@Devture\Bundle\NagiosBundle\Repository\UserRepository'
+
+    # Fine-grained, per-entity access rules (host/service/contact/log
+    # visibility and management). Stateless; bridged into Symfony's
+    # authorization layer by Security\Voter\NagiosAccessVoter.
+    Devture\Bundle\NagiosBundle\Helper\AccessChecker: ~
+
+    # The current authenticated domain User (for access checks in controllers
+    # and form binders), and the deterministic color palette + contact API
+    # export used by the contact avatars.
+    Devture\Bundle\NagiosBundle\Helper\CurrentUserProvider: ~
+    Devture\Bundle\NagiosBundle\Helper\Colorizer:
+        arguments:
+            $colors: '%nagadmin.colors%'
+
+    # The configured SMS gateway (notification API + console command). Selected
+    # from the gateway name and credentials, mirroring the legacy wiring.
+    Devture\Component\SmsSender\Gateway\GatewayInterface:
+        factory: ['Devture\Bundle\NagiosBundle\Notification\SmsGatewayFactory', 'create']
+        arguments:
+            - '%nagadmin.sms.gateway%'
+            - '%nagadmin.sms.username%'
+            - '%nagadmin.sms.password%'
+
+    # API-model exporters (domain models -> JSON for the Angular live-status UI).
+    # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).
+    Devture\Bundle\NagiosBundle\ApiModelBridge\:
+        resource: '../../ApiModelBridge/'
+
+    # The Nagios configuration generator: exporters (one per config file),
+    # the writer, and the collector that runs the exporters in order.
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ResourceFileConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\TimePeriodsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ContactsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\CommandsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\HostGroupsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\HostsConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\ServicesConfigurationExporter: ~
+    Devture\Bundle\NagiosBundle\Deployment\Exporter\AutoServiceDepsConfigurationExporter:
+        arguments:
+            $masterServicesRegexes: '%nagadmin.auto_service_dependency.master_service_regexes%'
+
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationWriter: ~
+
+    # Best-effort redeploy after a model change (collect -> validate -> deploy).
+    Devture\Bundle\NagiosBundle\Deployment\Deployer: ~
+
+    # Per-form binders: validator injected, CSRF bound to a per-form intention.
+    Devture\Bundle\NagiosBundle\Form\TimePeriodFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\TimePeriodValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'time_period']
+    Devture\Bundle\NagiosBundle\Form\CommandFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\CommandValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'command']
+    # Contact binder: all constructor deps autowire (incl. ContactValidator);
+    # only the CSRF intention needs binding.
+    Devture\Bundle\NagiosBundle\Form\ContactFormBinder:
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'contact']
+    Devture\Bundle\NagiosBundle\Form\HostFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\HostValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'host']
+    # Service binder: ContactRepository + ServiceValidator autowire by type;
+    # only the CSRF intention needs binding.
+    Devture\Bundle\NagiosBundle\Form\ServiceFormBinder:
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'service']
+    Devture\Bundle\NagiosBundle\Form\ResourceFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\ResourceValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'resource']
+
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
+        calls:
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\InternalConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ResourceFileConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\TimePeriodsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ContactsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\CommandsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\HostGroupsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\HostsConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\ServicesConfigurationExporter']
+            - addExporter: ['@Devture\Bundle\NagiosBundle\Deployment\Exporter\AutoServiceDepsConfigurationExporter']
+
+    # Configuration validation (runs `nagios --verify-config` in this container) and
+    # deployment (writes the config and, optionally, asks Nagios to reload).
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester:
+        arguments:
+            $mainFileTemplatePath: '%kernel.project_dir%/src/Devture/Bundle/NagiosBundle/Resources/nagios_templates/nagios.cfg'
+    Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandler:
+        arguments:
+            $path: '%nagadmin.deployment.path%'
+    Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandlerInterface: '@Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandler'
+
+    # Submitting external commands to Nagios via its command pipe.
+    Devture\Bundle\NagiosBundle\NagiosCommand\Submitter:
+        arguments:
+            $commandFilePath: '%nagadmin.nagios.command_file_path%'
+    Devture\Bundle\NagiosBundle\NagiosCommand\Manager: ~
+
+    # Reading Nagios' live status (status.dat).
+    Devture\Bundle\NagiosBundle\Status\Fetcher:
+        arguments:
+            $statusFilePath: '%nagadmin.nagios.status_file_path%'
+    Devture\Bundle\NagiosBundle\Status\Manager: ~
+
+    # Reading the Nagios log.
+    Devture\Bundle\NagiosBundle\Log\Fetcher:
+        arguments:
+            $logFilePath: '%nagadmin.nagios.log_file_path%'
+
+    # Initial installation: sets resource variables and deploys the configuration.
+    Devture\Bundle\NagiosBundle\Install\Installer:
+        arguments:
+            $notificationApiSecret: '%nagadmin.notifications.api_secret%'
+
+    # Model lifecycle subscribers, performing cascade updates/deletes. They resolve
+    # their repositories lazily through a service locator (so the dispatcher can be
+    # built without forcing the repository graph, which depends back on it).
+    Devture\Bundle\NagiosBundle\Event\Subscriber\HostEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\ContactEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\CommandEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.service.repository: '@Devture\Bundle\NagiosBundle\Repository\ServiceRepository'
+                devture_nagios.contact.repository: '@Devture\Bundle\NagiosBundle\Repository\ContactRepository'
+    Devture\Bundle\NagiosBundle\Event\Subscriber\TimePeriodEventsSubscriber:
+        arguments:
+            $container: !service_locator
+                devture_nagios.contact.repository: '@Devture\Bundle\NagiosBundle\Repository\ContactRepository'
+
+    # The model-event dispatcher gets the subscribers registered on it. Subscribers
+    # are listed above and added here (the repositories dispatch model events to it).
+    nagadmin.model_event_dispatcher:
+        class: Symfony\Component\EventDispatcher\EventDispatcher
+        calls:
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\HostEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\ContactEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\CommandEventsSubscriber']
+            - addSubscriber: ['@Devture\Bundle\NagiosBundle\Event\Subscriber\TimePeriodEventsSubscriber']

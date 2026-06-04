@@ -31,10 +31,10 @@ composer-update:
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
+	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
 	./bin/container-console init-database
 
 # Performs initial installation and Nagios configuration deployment
@@ -63,7 +63,7 @@ docker-compose *extra_args:
 # Internal - makes sure PHP dependencies are installed
 _prepare_deps:
 	#!/bin/sh
-	if [ ! -f vendor/autoload.php ]; then
+	if [ ! -f app/vendor/autoload.php ]; then
 		{{ just_executable() }} --justfile {{ justfile() }} composer-install
 	fi
 

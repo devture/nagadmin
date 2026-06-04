@@ -1,0 +1,45 @@
+{% import '@DevtureNagios/macros.html.twig' as macros %}
+
+{% if items|length == 0 %}
+	No items found.
+{% else %}
+	<table class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th style="width: 30px;"></th>
+				<th>Identifier</th>
+				<th class="hidden-xs">Addresses</th>
+				<th>Notify</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for entity in items %}
+			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
+			<tr>
+				<td>
+					<a href="{{ link }}" class="btn-block"
+						ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
+						<contact entity='contact_{{ entity.id }}' size="24"></contact>
+					</a>
+				</td>
+				<td>
+					<a href="{{ link }}" class="btn-block">
+						{{ entity.name }}
+					</a>
+				</td>
+				<td class="hidden-xs">
+					{% set addresses = (entity.email ? [entity.email] : [])|merge(entity.addresses) %}
+					<a href="{{ link }}" class="btn-block">
+						{{ addresses|join(', ') }}
+					</a>
+				</td>
+				<td>
+					<a href="{{ link }}" class="btn-block">
+						{{ entity.timePeriod.title }}
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}

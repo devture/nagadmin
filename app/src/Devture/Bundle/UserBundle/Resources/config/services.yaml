@@ -1,0 +1,34 @@
+parameters:
+    # Assignable user roles (key => human description), shown as checkboxes on
+    # the user form and used to validate submitted roles. 'all' is the master role.
+    nagadmin.user.roles:
+        overseer: 'Overseer - the ability to see (but not edit) all host groups'
+        configuration_management: 'Management - the ability to manage the Nagios configuration'
+        sensitive: 'Sensitive information - like Resource Variables, Configuration, system logs'
+        devture_user: 'User management - the ability to create/edit/delete user accounts'
+        all: 'ALL'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Devture\Bundle\UserBundle\Controller\:
+        resource: '../../Controller/'
+        tags: ['controller.service_arguments']
+    Devture\Bundle\UserBundle\ConsoleCommand\:
+        resource: '../../ConsoleCommand/'
+    Devture\Bundle\UserBundle\Form\:
+        resource: '../../Form/'
+
+    # The security identity (SecurityUser) is instantiated around a domain User,
+    # not autowired, so only the provider is registered as a service.
+    Devture\Bundle\UserBundle\Security\:
+        resource: '../../Security/'
+        exclude: '../../Security/SecurityUser.php'
+
+    # User-management form validation (the form binder + controller autowire it).
+    Devture\Bundle\UserBundle\Validator\UserValidator:
+        arguments:
+            $repository: '@Devture\Bundle\UserBundle\Repository\UserRepositoryInterface'
+            $knownRoles: '%nagadmin.user.roles%'

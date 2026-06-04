@@ -1,0 +1,77 @@
+security:
+    # bcrypt at cost 13 matches the legacy hashes ($2y$13$...), so existing
+    # passwords verify with no re-hash. Pinned (not 'auto') so newly hashed
+    # passwords keep the same format too.
+    password_hashers:
+        Devture\Bundle\UserBundle\Security\SecurityUser:
+            algorithm: bcrypt
+            cost: 13
+
+    # Identities are loaded from the native Mongo user repository.
+    providers:
+        nagadmin_users:
+            id: Devture\Bundle\UserBundle\Security\UserProvider
+
+    # The legacy master role 'all' (User::ROLE_MASTER, mapped to ROLE_ALL)
+    # grants global access, so it expands to every other role.
+    role_hierarchy:
+        ROLE_ALL:
+            - ROLE_OVERSEER
+            - ROLE_CONFIGURATION_MANAGEMENT
+            - ROLE_SENSITIVE
+            - ROLE_DEVTURE_USER
+            - ROLE_USER
+
+    firewalls:
+        dev:
+            # Ensure dev tools and static assets are always allowed
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+        main:
+            lazy: true
+            provider: nagadmin_users
+            form_login:
+                login_path: devture_user.login
+                check_path: devture_user.login
+                enable_csrf: true
+                default_target_path: devture_nagios.dashboard
+            logout:
+                path: devture_user.logout
+                target: devture_user.logged_out
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week
+                samesite: lax
+
+    # Note: Only the *first* matching rule is applied.
+    #
+    # These mirror the legacy route-prefix protection rules (old setup_web.php):
+    # resource/configuration management is "sensitive", time-period/command
+    # management needs "configuration_management", and user management needs
+    # the "devture_user" role. The trailing catch-all puts the rest of the app
+    # behind authentication, as the legacy app did for every route.
+    #
+    # The notification API endpoints are invoked server-to-server by the Nagios
+    # notification commands; they authenticate with the shared API secret
+    # (Authorization: Bearer) inside the controller rather than via a user
+    # session, so they are publicly reachable past the firewall. The other /api
+    # endpoints feed the Angular UI and stay behind the catch-all (ROLE_USER).
+    access_control:
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/logged-out$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/notification, roles: PUBLIC_ACCESS }
+        - { path: ^/resource, roles: ROLE_SENSITIVE }
+        - { path: ^/configuration, roles: ROLE_SENSITIVE }
+        - { path: ^/time-period, roles: ROLE_CONFIGURATION_MANAGEMENT }
+        - { path: ^/command, roles: ROLE_CONFIGURATION_MANAGEMENT }
+        - { path: ^/user, roles: ROLE_DEVTURE_USER }
+        - { path: ^/, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            # Password hashers are resource-intensive by design to ensure security.
+            # In tests, it's safe to reduce their cost to improve performance.
+            Devture\Bundle\UserBundle\Security\SecurityUser:
+                algorithm: bcrypt
+                cost: 4 # Lowest possible value for bcrypt
