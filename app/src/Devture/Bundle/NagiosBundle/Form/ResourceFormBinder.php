@@ -14,7 +14,7 @@ class ResourceFormBinder extends SetterRequestBinder {
 	 */
 	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$entity->clearVariables();
-		foreach ((array)$request->request->get('variables') as $variableName => $variableValue) {
+		foreach ($request->request->all('variables') as $variableName => $variableValue) {
 			if ($variableValue) {
 				$entity->setVariable($variableName, $variableValue);
 			}

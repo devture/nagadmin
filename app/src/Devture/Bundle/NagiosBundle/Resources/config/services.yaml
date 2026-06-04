@@ -145,6 +145,11 @@ services:
     Devture\Bundle\NagiosBundle\Form\ServiceFormBinder:
         calls:
             - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'service']
+    Devture\Bundle\NagiosBundle\Form\ResourceFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\ResourceValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'resource']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:
