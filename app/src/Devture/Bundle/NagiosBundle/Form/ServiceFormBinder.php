@@ -41,7 +41,7 @@ class ServiceFormBinder extends SetterRequestBinder {
 		if ($command instanceof Command) {
 			$expectedArgumentsCount = $command->getLineArgumentsCount();
 			$argumentNumber = 0;
-			foreach ((array)$request->request->get('arguments') as $argumentId => $argumentData) {
+			foreach ($request->request->all('arguments') as $argumentId => $argumentData) {
 				$argumentNumber += 1;
 				if ($argumentNumber > $expectedArgumentsCount) {
 					break;
@@ -54,7 +54,7 @@ class ServiceFormBinder extends SetterRequestBinder {
 		}
 
 		$entity->clearContacts();
-		foreach ((array)$request->request->get('contactsIds') as $contactId) {
+		foreach ($request->request->all('contactsIds') as $contactId) {
 			try {
 				$entity->addContact($this->contactRepository->find($contactId));
 			} catch (NotFound $e) {

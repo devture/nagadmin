@@ -11,6 +11,13 @@ parameters:
     nagadmin.auto_service_dependency.master_service_regexes:
         - '/^ping$/i'
         - '/host-?alive/i'
+    # Default check/notification intervals pre-filled when adding a new service
+    # (same values as the legacy config.json / parameters.json).
+    nagadmin.service.defaults:
+        max_check_attempts: 5
+        check_interval: 10
+        retry_interval: 1
+        notification_interval: 60
     # Deterministic color palette for contact avatars (Colorizer).
     nagadmin.colors: ['#014de7', '#3a87ad', '#06cf99', '#8fcf06', '#dda808', '#e76d01', '#7801e7', '#353535', '#888888']
     # Nagios runtime file paths (shared bind-mounted volume, fixed by the container layout).
@@ -133,6 +140,11 @@ services:
             - '@Devture\Bundle\NagiosBundle\Validator\HostValidator'
         calls:
             - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'host']
+    # Service binder: ContactRepository + ServiceValidator autowire by type;
+    # only the CSRF intention needs binding.
+    Devture\Bundle\NagiosBundle\Form\ServiceFormBinder:
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'service']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:
