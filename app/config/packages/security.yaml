@@ -51,11 +51,15 @@ security:
     # the "devture_user" role. The trailing catch-all puts the rest of the app
     # behind authentication, as the legacy app did for every route.
     #
-    # The /api endpoints (notification API, authenticated by a shared secret
-    # rather than a user session) get their own treatment when they are ported.
+    # The notification API endpoints are invoked server-to-server by the Nagios
+    # notification commands; they authenticate with the shared API secret
+    # (Authorization: Bearer) inside the controller rather than via a user
+    # session, so they are publicly reachable past the firewall. The other /api
+    # endpoints feed the Angular UI and stay behind the catch-all (ROLE_USER).
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/logged-out$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/notification, roles: PUBLIC_ACCESS }
         - { path: ^/resource, roles: ROLE_SENSITIVE }
         - { path: ^/configuration, roles: ROLE_SENSITIVE }
         - { path: ^/time-period, roles: ROLE_CONFIGURATION_MANAGEMENT }
