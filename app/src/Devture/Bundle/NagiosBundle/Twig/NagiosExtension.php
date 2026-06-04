@@ -3,8 +3,11 @@
 namespace Devture\Bundle\NagiosBundle\Twig;
 
 use Devture\Bundle\NagiosBundle\ApiModelBridge\ContactBridge;
+use Devture\Bundle\NagiosBundle\Helper\Colorizer;
 use Devture\Bundle\NagiosBundle\Model\Contact;
+use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
+use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 use Devture\Bundle\NagiosBundle\Status\Manager as StatusManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\AbstractExtension;
@@ -23,6 +26,8 @@ class NagiosExtension extends AbstractExtension
     public function __construct(
         private readonly StatusManager $statusManager,
         private readonly ContactBridge $contactBridge,
+        private readonly Colorizer $colorizer,
+        private readonly ServiceRepository $serviceRepository,
         #[Autowire('%nagadmin.nagios.url%')]
         private readonly string $nagiosUrl,
     ) {
@@ -35,6 +40,7 @@ class NagiosExtension extends AbstractExtension
             new TwigFunction('devture_nagios_get_program_status', $this->getProgramStatus(...)),
             new TwigFunction('devture_nagios_get_service_status', $this->getServiceStatus(...)),
             new TwigFunction('devture_nagios_get_nagios_url', $this->getNagiosUrl(...)),
+            new TwigFunction('devture_nagios_count_host_services', $this->countHostServices(...)),
         ];
     }
 
@@ -42,7 +48,18 @@ class NagiosExtension extends AbstractExtension
     {
         return [
             new TwigFilter('contact_api_model_export', $this->exportContactApiModel(...)),
+            new TwigFilter('devture_nagios_colorize', $this->colorize(...)),
         ];
+    }
+
+    public function countHostServices(Host $host): int
+    {
+        return $this->serviceRepository->countByHost($host);
+    }
+
+    public function colorize(string $value): string
+    {
+        return $this->colorizer->colorize($value);
     }
 
     public function exportContactApiModel(Contact $contact): array

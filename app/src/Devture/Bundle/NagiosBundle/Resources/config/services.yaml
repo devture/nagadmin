@@ -128,6 +128,11 @@ services:
     Devture\Bundle\NagiosBundle\Form\ContactFormBinder:
         calls:
             - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'contact']
+    Devture\Bundle\NagiosBundle\Form\HostFormBinder:
+        arguments:
+            - '@Devture\Bundle\NagiosBundle\Validator\HostValidator'
+        calls:
+            - setCsrfProtection: ['@Devture\Bundle\NagiosBundle\Form\Csrf\SymfonyCsrfTokenManager', 'host']
 
     Devture\Bundle\NagiosBundle\Deployment\ConfigurationCollector:
         calls:

@@ -1,8 +1,8 @@
-{% extends 'DevtureNagiosBundle/layout.html.twig' %}
+{% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
 {% block devture_nagios_content %}
 	{% if isAdded %}
-		{% include 'DevtureNagiosBundle/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}
+		{% include '@DevtureNagios/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}
 	{% endif %}
 
 	{{ render_form_violations(form, '__other__') }}

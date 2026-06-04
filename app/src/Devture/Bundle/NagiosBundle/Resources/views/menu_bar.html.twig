@@ -14,6 +14,8 @@
 		{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'glyphicon glyphicon-home') }}
 
 		{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
+			{{ _self.menu_item('devture_nagios.host.', path('devture_nagios.host.manage'), 'Hosts', 'glyphicon glyphicon-th-large') }}
+
 			{{ _self.menu_item('devture_nagios.time_period.', path('devture_nagios.time_period.manage'), 'Time Periods', 'glyphicon glyphicon-time') }}
 
 			{{ _self.menu_item('devture_nagios.command.', path('devture_nagios.command.manage'), 'Commands', 'glyphicon glyphicon-cog') }}
@@ -21,8 +23,8 @@
 
 		{{ _self.menu_item('devture_nagios.contact.', path('devture_nagios.contact.manage'), 'Contacts', 'glyphicon glyphicon-user') }}
 
-		{# Further sections (hosts, services, logs, resource variables,
-		   configuration) are re-added here as their controllers/routes are ported. #}
+		{# Further sections (services, logs, resource variables, configuration)
+		   are re-added here as their controllers/routes are ported. #}
 
 		{% if is_granted('ROLE_DEVTURE_USER') %}
 			{{ _self.menu_item('devture_user.', path('devture_user.manage'), 'Users', 'glyphicon glyphicon-user') }}

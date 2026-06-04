@@ -17,7 +17,7 @@ class HostFormBinder extends SetterRequestBinder {
 		$this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
 		$entity->clearGroups();
-		foreach ((array)$request->request->get('groups') as $groupName) {
+		foreach ($request->request->all('groups') as $groupName) {
 			$entity->addGroup($groupName);
 		}
 	}
