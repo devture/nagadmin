@@ -52,12 +52,17 @@ None of the existing Nagios configurator systems seemed to achieve the goals of:
 
 ### Configure
 
-Start by copying the sample configuration parameters file:
+Start by copying the sample infrastructure configuration file:
 
-	cp config/parameters.json.dist config/parameters.json
 	cp .env.dist .env
 
-Now modify `config/parameters.json` and `.env` to your liking.
+Now modify `.env` to your liking (timezone, published ports, Nagios UI credentials).
+
+Application configuration lives under `app/` and uses Symfony's environment
+variables. The committed defaults are in `app/.env`; put deployment-specific
+secrets and overrides — the notification API secret (`NAGADMIN_NOTIFICATION_API_SECRET`),
+the mailer DSN (`MAILER_DSN`), the SMS gateway credentials, etc. — in an
+untracked `app/.env.local`.
 
 
 ### Run for the first time
@@ -123,7 +128,7 @@ Run the check command to see if things are running correctly:
 
 ### Set up a reverse-proxy
 
-See `resources/webserver`. You may also wish to adjust the `%trusted_proxies%` parameter in `config/parameters.json`.
+See `resources/webserver`. You may also wish to configure Symfony's trusted proxies (the `SYMFONY_TRUSTED_PROXIES` environment variable, e.g. in `app/.env.local`).
 
 --------------------
 
@@ -156,7 +161,7 @@ Community members are free to make improvements to the existing codebase.
 
 ### What is Nagadmin written in?
 
-Nagadmin is written in [PHP](https://php.net) and uses the [Silex microframework](https://github.com/silexphp/Silex).
+Nagadmin is written in [PHP](https://php.net) and uses the [Symfony framework](https://symfony.com/) (the application lives under `app/`).
 
 
 ### What are the system requirements?
@@ -212,7 +217,7 @@ This keeps things simple, by removing the complex inheritance model.
 
 That's an advanced feature.
 
-Nagadmin supports automatic service dependencies though (see the `NagiosBundle.auto_service_dependency.master_service_regexes` parameter in `config/parameters.json`).
+Nagadmin supports automatic service dependencies though (see the `nagadmin.auto_service_dependency.master_service_regexes` parameter in `app/src/Devture/Bundle/NagiosBundle/Resources/config/services.yaml`).
 
 A service that has a name "ping" or "host-alive" (case-insensitive) is automatically made a parent service of all other
 services on the same host.
