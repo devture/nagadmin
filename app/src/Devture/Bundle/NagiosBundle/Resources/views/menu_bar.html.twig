@@ -25,13 +25,13 @@
 
 		{{ _self.menu_item('devture_nagios.service.', path('devture_nagios.service.manage'), 'Services', 'glyphicon glyphicon-signal') }}
 
+		{{ _self.menu_item('devture_nagios.log.', path('devture_nagios.log.manage'), 'Logs', 'glyphicon glyphicon-book') }}
+
 		{% if is_granted('ROLE_SENSITIVE') %}
 			{{ _self.menu_item('devture_nagios.resource.', path('devture_nagios.resource.manage'), 'Resource Variables', 'glyphicon glyphicon-wrench') }}
 
 			{{ _self.menu_item('devture_nagios.configuration.', path('devture_nagios.configuration.test'), 'Configuration', 'glyphicon glyphicon-retweet') }}
 		{% endif %}
-
-		{# The log section is re-added here once its controller/route is ported. #}
 
 		{% if is_granted('ROLE_DEVTURE_USER') %}
 			{{ _self.menu_item('devture_user.', path('devture_user.manage'), 'Users', 'glyphicon glyphicon-user') }}
