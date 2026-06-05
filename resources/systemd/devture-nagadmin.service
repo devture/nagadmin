@@ -7,11 +7,12 @@ DefaultDependencies=no
 [Service]
 Type=simple
 WorkingDirectory=/srv/http/nagadmin
-ExecStartPre=-/usr/local/bin/just stop
+# `prod` runs the production environment; a bare `just run`/`stop` defaults to dev.
+ExecStartPre=-/usr/local/bin/just stop prod
 
-ExecStart=/usr/local/bin/just run
+ExecStart=/usr/local/bin/just run prod
 
-ExecStop=-/usr/local/bin/just stop
+ExecStop=-/usr/local/bin/just stop prod
 
 Restart=always
 RestartSec=30
