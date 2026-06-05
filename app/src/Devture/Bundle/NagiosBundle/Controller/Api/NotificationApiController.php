@@ -2,10 +2,7 @@
 
 namespace Devture\Bundle\NagiosBundle\Controller\Api;
 
-use Devture\Component\SmsSender\Exception\SendingFailedException;
-use Devture\Component\SmsSender\Exception\SendingThrottledException;
-use Devture\Component\SmsSender\Gateway\GatewayInterface;
-use Devture\Component\SmsSender\Message;
+use Devture\Bundle\NagiosBundle\Notification\SmsSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,9 +22,8 @@ class NotificationApiController extends AbstractController
 {
     public function __construct(
         private readonly MailerInterface $mailer,
-        private readonly GatewayInterface $smsGateway,
+        private readonly SmsSender $smsSender,
         #[Autowire('%nagadmin.notifications.api_secret%')] private readonly string $apiSecret,
-        #[Autowire('%nagadmin.sms.sender_id%')] private readonly string $smsSenderId,
         #[Autowire('%nagadmin.notifications.sender_email%')] private readonly string $senderEmailAddress,
     ) {
     }
@@ -60,16 +56,9 @@ class NotificationApiController extends AbstractController
             return $this->json(['ok' => false, 'message' => 'Empty message text parameter in body payload'], 422);
         }
 
-        $message = new Message($this->smsSenderId, $phoneNumber, $messageText);
-
         try {
-            $this->smsGateway->send($message);
-        } catch (SendingThrottledException $e) {
-            return $this->json([
-                'ok' => false,
-                'message' => sprintf('Sending throttled: %s', $e->getMessage()),
-            ], 503);
-        } catch (SendingFailedException $e) {
+            $this->smsSender->send($phoneNumber, $messageText);
+        } catch (\Throwable $e) {
             return $this->json([
                 'ok' => false,
                 'message' => sprintf('Sending failed: %s', $e->getMessage()),

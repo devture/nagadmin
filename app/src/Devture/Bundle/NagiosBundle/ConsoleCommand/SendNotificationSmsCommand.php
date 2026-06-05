@@ -2,14 +2,12 @@
 
 namespace Devture\Bundle\NagiosBundle\ConsoleCommand;
 
-use Devture\Component\SmsSender\Gateway\GatewayInterface;
-use Devture\Component\SmsSender\Message;
+use Devture\Bundle\NagiosBundle\Notification\SmsSender;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsCommand(
     name: 'send-notification:sms',
@@ -18,8 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class SendNotificationSmsCommand extends Command
 {
     public function __construct(
-        private readonly GatewayInterface $smsGateway,
-        #[Autowire('%nagadmin.sms.sender_id%')] private readonly string $smsSenderId,
+        private readonly SmsSender $smsSender,
     ) {
         parent::__construct();
     }
@@ -32,13 +29,10 @@ class SendNotificationSmsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $message = new Message(
-            $this->smsSenderId,
+        $this->smsSender->send(
             $input->getArgument('phoneNumber'),
             $input->getArgument('message'),
         );
-
-        $this->smsGateway->send($message);
 
         return Command::SUCCESS;
     }

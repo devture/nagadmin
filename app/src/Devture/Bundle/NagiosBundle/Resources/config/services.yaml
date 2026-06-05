@@ -4,10 +4,8 @@ parameters:
     nagadmin.notifications.api_secret: '%env(NAGADMIN_NOTIFICATION_API_SECRET)%'
     # Notification e-mail / SMS settings (notification API + console commands).
     nagadmin.notifications.sender_email: '%env(NAGADMIN_NOTIFICATION_SENDER_EMAIL)%'
-    nagadmin.sms.gateway: '%env(NAGADMIN_SMS_GATEWAY)%'
     nagadmin.sms.sender_id: '%env(NAGADMIN_SMS_SENDER_ID)%'
-    nagadmin.sms.username: '%env(NAGADMIN_SMS_USERNAME)%'
-    nagadmin.sms.password: '%env(NAGADMIN_SMS_PASSWORD)%'
+    nagadmin.sms.suppress_sending: '%env(bool:NAGADMIN_SMS_SUPPRESS_SENDING)%'
     # Display name for this deployment and the external Nagios web UI URL
     # (both surfaced in the layout/navbar).
     nagadmin.project_name: '%env(NAGADMIN_PROJECT_NAME)%'
@@ -105,14 +103,25 @@ services:
         arguments:
             $colors: '%nagadmin.colors%'
 
-    # The configured SMS gateway (notification API + console command). Selected
-    # from the gateway name and credentials, mirroring the legacy wiring.
-    Devture\Component\SmsSender\Gateway\GatewayInterface:
-        factory: ['Devture\Bundle\NagiosBundle\Notification\SmsGatewayFactory', 'create']
+    # SMS notifications via the Vonage SDK (notification API + console command).
+    vonage_sms.http_client:
+        class: GuzzleHttp\Client
+
+    Vonage\Client\Credentials\Basic:
         arguments:
-            - '%nagadmin.sms.gateway%'
-            - '%nagadmin.sms.username%'
-            - '%nagadmin.sms.password%'
+            $key: '%env(NAGADMIN_VONAGE_API_KEY)%'
+            $secret: '%env(NAGADMIN_VONAGE_API_SECRET)%'
+
+    Vonage\Client:
+        arguments:
+            $credentials: '@Vonage\Client\Credentials\Basic'
+            $options: []
+            $client: '@vonage_sms.http_client'
+
+    Devture\Bundle\NagiosBundle\Notification\SmsSender:
+        arguments:
+            $senderNameOrNumber: '%nagadmin.sms.sender_id%'
+            $suppressSending: '%nagadmin.sms.suppress_sending%'
 
     # API-model exporters (domain models -> JSON for the Angular live-status UI).
     # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).
