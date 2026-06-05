@@ -58,11 +58,13 @@ Start by copying the sample infrastructure configuration file:
 
 Now modify `.env` to your liking (timezone, published ports, Nagios UI credentials).
 
-Application configuration lives under `app/` and uses Symfony's environment
-variables. The committed defaults are in `app/.env`; put deployment-specific
-secrets and overrides — the notification API secret (`NAGADMIN_NOTIFICATION_API_SECRET`),
-the mailer DSN (`MAILER_DSN`), the SMS gateway credentials, etc. — in an
-untracked `app/.env.local`.
+Application configuration lives under `app/` and uses Symfony environment
+variables. Copy the committed template to an untracked `app/.env` and put your
+deployment-specific values there — including secrets such as the notification API
+secret (`NAGADMIN_NOTIFICATION_API_SECRET`), the mailer DSN (`MAILER_DSN`) and the
+SMS gateway credentials:
+
+	cp app/.env.dist app/.env
 
 
 ### Run for the first time
@@ -128,7 +130,7 @@ Run the check command to see if things are running correctly:
 
 ### Set up a reverse-proxy
 
-See `resources/webserver`. You may also wish to configure Symfony's trusted proxies (the `SYMFONY_TRUSTED_PROXIES` environment variable, e.g. in `app/.env.local`).
+See `resources/webserver`. You may also wish to configure Symfony's trusted proxies (the `SYMFONY_TRUSTED_PROXIES` environment variable, e.g. in `app/.env`).
 
 --------------------
 
