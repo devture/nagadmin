@@ -1,0 +1,9 @@
+# Production-only overrides, combined with the shared compose.yml:
+#
+#     docker compose -f compose.yml -f compose.prod.yml ...
+#
+# The justfile does this with `env=prod` (e.g. `just run prod`).
+#
+# The outgoing mail relay is added here in a follow-up change.
+
+services: {}

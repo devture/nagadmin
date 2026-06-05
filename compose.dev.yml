@@ -1,0 +1,22 @@
+# Development-only overrides, combined with the shared compose.yml:
+#
+#     docker compose -f compose.yml -f compose.dev.yml ...
+#
+# The justfile does this automatically (its recipes default to `env=dev`).
+
+services:
+  # Captures all outgoing e-mail during development and shows it in a web UI,
+  # so the development environment never sends real mail. The application points
+  # MAILER_DSN at this service (see app/.env.dist); the web UI is published below.
+  mailcrab:
+    image: docker.io/marlonb/mailcrab:v1.6.5
+    restart: unless-stopped
+    # Any random non-root user will do (mailcrab keeps everything in memory).
+    user: 4000:4000
+    # mailcrab does not shut down quickly when asked nicely, so we just kill it.
+    # There is nothing to lose (captured mail is in-memory and disposable).
+    stop_signal: SIGKILL
+    ports:
+    # The mailcrab web UI. Its SMTP listener (port 1025) is reachable by the
+    # php container over the compose network as `mailcrab:1025`.
+    - "127.0.0.1:20825:1080"

@@ -12,14 +12,15 @@ container_user := "100:101"
 default:
 	@{{ just_executable() }} --list --justfile {{ justfile() }}
 
-# Runs all components (in the foreground)
-run: _prepare_deps _prepare_run (docker-compose "up")
+# Runs all components (in the foreground). Defaults to the dev environment;
+# pass `prod` (e.g. `just run prod`) to run the production configuration.
+run env='dev': _prepare_deps _prepare_run (docker-compose env "up")
 
 # Runs all components (in the background)
-run-bg: _prepare_deps _prepare_run (docker-compose "up -d")
+run-bg env='dev': _prepare_deps _prepare_run (docker-compose env "up -d")
 
 # Stops all components
-stop: (docker-compose "down")
+stop env='dev': (docker-compose env "down")
 
 # Installs PHP dependencies via composer
 composer-install:
@@ -42,13 +43,13 @@ install:
 	./bin/container-console install
 
 # Starts a MongoDB shell
-mongodb-shell: (docker-compose "exec mongodb sh -c 'mongosh nagadmin'")
+mongodb-shell env='dev': (docker-compose env "exec mongodb sh -c 'mongosh nagadmin'")
 
 # Creates a new gzipped MongoDB database dump (stored in `var/mongodb-io/latest-dump`)
-mongodb-dump: _var-mongodb-io (docker-compose "exec -T mongodb sh -c 'rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump'") (docker-compose "exec -T mongodb sh -c 'mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump'")
+mongodb-dump env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump'") (docker-compose env "exec -T mongodb sh -c 'mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump'")
 
 # Imports a gzipped MongoDB database dump (found in `var/mongodb-io/import`)
-mongodb-import: _var-mongodb-io (docker-compose "exec -T mongodb sh -c 'mongorestore --gzip --dir=/mongodb-io/import'")
+mongodb-import env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'mongorestore --gzip --dir=/mongodb-io/import'")
 
 # Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
 mongodb-upgrade: _var-mongodb-io
@@ -56,9 +57,19 @@ mongodb-upgrade: _var-mongodb-io
 
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
 
-# Internal - runs a `docker compose` command against this project's compose file
-docker-compose *extra_args:
-	docker compose -f compose.yml -p {{ project_name }} {{ extra_args }}
+# Internal - runs a `docker compose` command for the given environment (dev|prod),
+# combining the shared compose.yml with the matching compose.<env>.yml override.
+docker-compose env *extra_args: _require_root_env_file_or_fail
+	docker compose -f compose.yml -f compose.{{ env }}.yml -p {{ project_name }} {{ extra_args }}
+
+# Internal - fails early (with guidance) if the repository-root `.env` is missing.
+_require_root_env_file_or_fail:
+	#!/bin/sh
+	if [ ! -f "{{ justfile_directory() }}/.env" ]; then
+		echo "Error: missing .env file at {{ justfile_directory() }}/.env" >&2
+		echo "Copy .env.dist to .env and adjust the values before running this command." >&2
+		exit 1
+	fi
 
 # Internal - makes sure PHP dependencies are installed
 _prepare_deps:

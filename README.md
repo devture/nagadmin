@@ -73,6 +73,11 @@ SMS gateway credentials:
 just run
 ```
 
+`just run` starts the **development** environment, which includes a
+[mailcrab](https://github.com/tweedegolf/mailcrab) mail-catcher so it never
+sends real e-mail — captured messages are viewable at http://127.0.0.1:20825.
+To run the **production** environment instead, use `just run prod`.
+
 Not all services will run well yet. Nagios will encounter some errors, because it can't find some of its configuration yet.
 We resolve this below during the [Installation](#install) step.
 
