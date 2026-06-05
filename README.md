@@ -137,6 +137,26 @@ Run the check command to see if things are running correctly:
 
 See `resources/webserver`. You may also wish to configure Symfony's trusted proxies (the `SYMFONY_TRUSTED_PROXIES` environment variable, e.g. in `app/.env`).
 
+
+### Running in production
+
+Use `just run prod` to run the production environment. It combines `compose.yml`
+with `compose.prod.yml`, which adds a bundled
+[exim-relay](https://github.com/devture/exim-relay) `mailer` service for sending
+Nagios notifications. Point the application at it by setting
+`MAILER_DSN=smtp://mailer:8025` in the production `app/.env`.
+
+Configure outgoing delivery via the repository-root `.env`:
+
+- `SMARTHOST` — upstream SMTP relay as `host::port` (e.g. `smtp.example.com::587`).
+  Leave empty to deliver directly to recipients' MX servers.
+- `SMARTHOST_PROTOCOL` — `smtp` (STARTTLS, port 587) or `smtps` (implicit TLS, port 465).
+- `SMTP_USERNAME` / `SMTP_PASSWORD` — credentials for the smarthost.
+
+The relay keeps a persistent on-disk spool (`var/container-data/exim-spool`), so a
+transient SMTP outage does not lose notifications: queued mail is retried until it
+is delivered.
+
 --------------------
 
 

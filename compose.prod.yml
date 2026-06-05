@@ -3,7 +3,35 @@
 #     docker compose -f compose.yml -f compose.prod.yml ...
 #
 # The justfile does this with `env=prod` (e.g. `just run prod`).
-#
-# The outgoing mail relay is added here in a follow-up change.
 
-services: {}
+services:
+  # Outgoing mail relay for Nagios notifications. The application hands mail to
+  # it on port 8025 (set MAILER_DSN=smtp://mailer:8025 in the production app/.env).
+  #
+  # Delivery model (configured via the repository-root .env):
+  #   * SMARTHOST set   -> relay through that authenticated SMTP provider
+  #                        (recommended). Because the spool is persisted on disk,
+  #                        a transient provider outage is tolerated: queued mail is
+  #                        retried until it gets through, so Nagios notifications
+  #                        are never silently dropped.
+  #   * SMARTHOST empty -> deliver directly to the recipients' MX servers.
+  mailer:
+    image: docker.io/devture/exim-relay:4.98-r0-4
+    restart: unless-stopped
+    # Same uid:gid as the other containers (the `exim` user inside the image),
+    # so it can own its persistent spool directory below.
+    user: 100:101
+    environment:
+      HOSTNAME: ${HOSTNAME}
+      DISABLE_SENDER_VERIFICATION: 1
+      # Upstream smarthost as `host::port` (e.g. smtp.example.com::587) and the
+      # protocol (`smtp` = STARTTLS/587, `smtps` = implicit TLS/465), plus the
+      # authentication credentials. Leave SMARTHOST empty for direct-to-MX.
+      SMARTHOST: ${SMARTHOST}
+      SMARTHOST_PROTOCOL: ${SMARTHOST_PROTOCOL}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+    # Persistent spool (store-and-forward queue) so undelivered mail survives
+    # restarts and is retried. Created/owned by the `_var-exim-spool` just recipe.
+    - ./var/container-data/exim-spool:/var/spool/exim:rw,cached

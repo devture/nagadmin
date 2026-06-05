@@ -37,16 +37,6 @@ services:
     volumes:
     - ./:/code:rw,cached
 
-  mailer:
-    image: docker.io/devture/exim-relay:4.98-r0-4
-    restart: unless-stopped
-    user: 100:101
-    tmpfs:
-      - /var/spool/exim
-    environment:
-      HOSTNAME: ${HOSTNAME}
-      DISABLE_SENDER_VERIFICATION: 1
-
   nagios:
     # This is Nagios v4.5.12 (Alpine 3.23).
     # See https://github.com/manios/docker-nagios/blob/master/CHANGELOG.md

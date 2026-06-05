@@ -79,7 +79,12 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool
+
+# The exim-relay mail spool (persistent store-and-forward queue); written by the
+# mailer container (runs as {{ container_user }}). Only mounted in production, but
+# prepared unconditionally (an empty, correctly-owned directory is harmless in dev).
+_var-exim-spool: (_ensure_dir_prepared_recursive "var/container-data/exim-spool")
 
 # The Twig cache, written by the php container (runs as {{ container_user }}).
 _var-cache: (_ensure_dir_prepared_recursive "var/cache")
