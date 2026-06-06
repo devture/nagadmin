@@ -1,0 +1,39 @@
+# prek (pre-commit hooks) configuration
+# See: https://prek.j178.dev/ and https://github.com/j178/prek
+#
+# Hooks run automatically on `git commit` once the git hook is installed
+# (`just prek-install-git-pre-commit-hook`). Some hooks (trailing-whitespace,
+# end-of-file-fixer) auto-fix issues; when they do, the commit aborts so you
+# can stage the fixes and commit again.
+#
+# See docs/development.md for setup instructions and usage.
+
+repos:
+  # Fast built-in hooks (Rust-native, no dependencies)
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+        # Exclude dependencies, runtime data, and the legacy front-end assets
+        exclude: '^(app/vendor/|var/|app/var/|app/public/)'
+      - id: end-of-file-fixer
+        exclude: '^(app/vendor/|var/|app/var/|app/public/)'
+      - id: check-yaml
+        exclude: '^app/vendor/'
+      - id: check-json
+        exclude: '^app/vendor/'
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=1024']
+      - id: detect-private-key
+
+  # Local hooks that run project-specific tools
+  - repo: local
+    hooks:
+      # PHP static analysis (PHPStan)
+      - id: php-analyze
+        name: PHP Static Analysis (PHPStan)
+        entry: just php-analyze
+        language: system
+        files: '\.php$'
+        exclude: '^app/vendor/'
+        pass_filenames: false

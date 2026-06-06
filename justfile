@@ -3,6 +3,13 @@ project_name := "devture-nagadmin"
 # A small throwaway image used for preparing `var/` directory ownership.
 alpine_container_image := "docker.io/alpine:3.23.4"
 
+# mise data directory - can be overridden via environment variable for CI
+mise_data_dir := env("MISE_DATA_DIR", justfile_directory() / "var/mise")
+
+# Auto-trust the project's mise.toml via MISE_TRUSTED_CONFIG_PATHS env var
+# (avoids needing `mise trust` on first run)
+mise_trusted_config_paths := justfile_directory() / "mise.toml"
+
 # The uid:gid that the php and nagios containers run as (the nagios user inside the
 # manios/nagios image). The php container must own the `var/` directories it writes
 # to (the Twig cache and the generated Nagios configuration).
@@ -152,3 +159,39 @@ _ensure_dir_prepared_recursive path: (_ensure_dir_created path)
 	--mount type=bind,src={{ justfile_directory() }},dst=/justfile_directory \
 	{{ alpine_container_image }} \
 	/bin/sh -c 'chown -R {{ container_user }} /justfile_directory/{{ path }}'
+
+# Pre-commit hooks (prek)
+
+# Invokes mise with the project-local data directory
+mise *args: _ensure_mise_data_directory
+	#!/bin/sh
+	export MISE_DATA_DIR="{{ mise_data_dir }}"
+	export MISE_TRUSTED_CONFIG_PATHS="{{ mise_trusted_config_paths }}"
+	mise {{ args }}
+
+# Runs prek (pre-commit hooks manager) with the given arguments
+prek *args: _ensure_mise_tools_installed
+	@just --justfile {{ justfile() }} mise exec -- prek {{ args }}
+
+# Runs pre-commit hooks on staged files
+prek-run-on-staged *args: _ensure_mise_tools_installed
+	@just --justfile {{ justfile() }} mise exec -- prek run {{ args }}
+
+# Runs pre-commit hooks on all files
+prek-run-on-all *args: _ensure_mise_tools_installed
+	@just --justfile {{ justfile() }} mise exec -- prek run --all-files {{ args }}
+
+# Installs the git pre-commit hook (runs prek automatically before each commit)
+prek-install-git-pre-commit-hook: _ensure_mise_tools_installed
+	@just --justfile {{ justfile() }} mise exec -- prek install
+
+# Internal - ensures the mise data directory exists
+_ensure_mise_data_directory:
+	#!/bin/sh
+	if [ ! -d "{{ mise_data_dir }}" ]; then
+		mkdir -p "{{ mise_data_dir }}"
+	fi
+
+# Internal - ensures mise tools are installed
+_ensure_mise_tools_installed: _ensure_mise_data_directory
+	@just --justfile {{ justfile() }} mise install --quiet
