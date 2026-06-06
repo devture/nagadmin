@@ -30,6 +30,10 @@ composer-install:
 composer-update:
 	./bin/composer update --optimize-autoloader --ignore-platform-req=php
 
+# Runs static analysis (PHPStan) against the app's PHP code
+php-analyze: _prepare_deps
+	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
+
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
 	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json

@@ -1,0 +1,7 @@
+parameters:
+	level: 5
+	tmpDir: var/cache/phpstan
+	paths:
+		- src
+	inferPrivatePropertyTypeFromConstructor: true
+	treatPhpDocTypesAsCertain: false
