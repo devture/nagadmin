@@ -30,6 +30,7 @@ class Fetcher {
 		$lines = explode("\n", $contents);
 		$state = self::STATE_FREE;
 		$lastDefinitionType = null;
+		$lastDefinitionDirectives = array();
 
 		$objects = array();
 
@@ -53,28 +54,28 @@ class Fetcher {
 				throw new ParseException('Unexpected line during free state: ' . $line);
 			}
 
-			if ($state === self::STATE_DEFINITION) {
-				$line = ltrim($line);
+			// At this point the state is always STATE_DEFINITION: every branch of the
+			// STATE_FREE block above either continues the loop or throws.
+			$line = ltrim($line);
 
-				if ($line === '}') {
-					if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
-						$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
-					} else if ($lastDefinitionType === Status::TYPE_PROGRAM_STATUS) {
-						$objects[] = new ProgramStatus($lastDefinitionType, $lastDefinitionDirectives);
-					} else if ($lastDefinitionType === Status::TYPE_INFO) {
-						$objects[] = new InfoStatus($lastDefinitionType, $lastDefinitionDirectives);
-					}
-					$state = self::STATE_FREE;
-					continue;
+			if ($line === '}') {
+				if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
+					$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
+				} else if ($lastDefinitionType === Status::TYPE_PROGRAM_STATUS) {
+					$objects[] = new ProgramStatus($lastDefinitionType, $lastDefinitionDirectives);
+				} else if ($lastDefinitionType === Status::TYPE_INFO) {
+					$objects[] = new InfoStatus($lastDefinitionType, $lastDefinitionDirectives);
 				}
-
-				$parts = explode('=', $line, 2);
-				if (!isset($parts[1])) {
-					throw new ParseException('Unexpected line during definition state: ' . $line);
-				}
-
-				$lastDefinitionDirectives[$parts[0]] = $parts[1];
+				$state = self::STATE_FREE;
+				continue;
 			}
+
+			$parts = explode('=', $line, 2);
+			if (!isset($parts[1])) {
+				throw new ParseException('Unexpected line during definition state: ' . $line);
+			}
+
+			$lastDefinitionDirectives[$parts[0]] = $parts[1];
 		}
 
 		return $objects;
