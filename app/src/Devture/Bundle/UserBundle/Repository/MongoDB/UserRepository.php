@@ -4,6 +4,9 @@ namespace Devture\Bundle\UserBundle\Repository\MongoDB;
 use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\UserBundle\Repository\UserRepositoryInterface;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\UserBundle\Model\User>
+ */
 class UserRepository extends BaseMongoRepository implements UserRepositoryInterface {
 
 	protected function getModelClass() {

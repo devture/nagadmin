@@ -3,10 +3,19 @@ namespace Devture\Component\DBAL\Repository;
 
 use Devture\Component\DBAL\Model\BaseModel;
 
+/**
+ * @template T of BaseModel
+ */
 abstract class BaseRepository implements RepositoryInterface {
 
+	/**
+	 * @var array<string, T>
+	 */
 	protected $models = array();
 
+	/**
+	 * @return class-string<T>
+	 */
 	abstract protected function getModelClass();
 
 	/**
@@ -16,7 +25,7 @@ abstract class BaseRepository implements RepositoryInterface {
 	 *
 	 * @see \Devture\Component\DBAL\Repository\RepositoryInterface::createModel()
 	 * @param array $data
-	 * @return BaseModel
+	 * @return T
 	 */
 	public function createModel(array $data) {
 		if (!isset($data['_id'])) {
@@ -32,6 +41,8 @@ abstract class BaseRepository implements RepositoryInterface {
 
 	/**
 	 * @see \Devture\Component\DBAL\Repository\RepositoryInterface::createModel()
+	 * @param array $data
+	 * @return T
 	 */
 	protected function hydrateModel(array $data) {
 		$modelClass = $this->getModelClass();
@@ -41,7 +52,7 @@ abstract class BaseRepository implements RepositoryInterface {
 	/**
 	 * Exports a model for persisting to the database.
 	 *
-	 * @param BaseModel $entity
+	 * @param T $entity
 	 * @return array
 	 */
 	protected function exportModel($entity) {
@@ -51,6 +62,10 @@ abstract class BaseRepository implements RepositoryInterface {
 		return $entity->export();
 	}
 
+	/**
+	 * @param array $data
+	 * @return T
+	 */
 	protected function loadModel(array $data) {
 		if (!isset($data['_id'])) {
 			throw new \InvalidArgumentException('Missing _id field in data.');

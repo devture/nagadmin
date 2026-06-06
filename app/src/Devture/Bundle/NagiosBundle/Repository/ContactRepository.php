@@ -15,6 +15,9 @@ use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Contact>
+ */
 class ContactRepository extends BaseMongoRepository {
 
 	private $dispatcher;

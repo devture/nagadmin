@@ -7,6 +7,9 @@ use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Command>
+ */
 class CommandRepository extends BaseMongoRepository {
 
 	private $dispatcher;

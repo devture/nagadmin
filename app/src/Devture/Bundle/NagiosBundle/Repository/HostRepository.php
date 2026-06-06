@@ -8,6 +8,9 @@ use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Host>
+ */
 class HostRepository extends BaseMongoRepository {
 
 	private $dispatcher;

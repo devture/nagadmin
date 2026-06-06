@@ -5,6 +5,9 @@ use Devture\Component\DBAL\Repository\BaseMongoRepository;
 use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Resource>
+ */
 class ResourceRepository extends BaseMongoRepository {
 
 	const RESOURCE_SINGLETON_ID = 'resource';

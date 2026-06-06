@@ -8,6 +8,9 @@ use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\TimePeriod>
+ */
 class TimePeriodRepository extends BaseMongoRepository {
 
 	private $dispatcher;

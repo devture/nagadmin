@@ -7,6 +7,10 @@ use Devture\Component\DBAL\Model\BaseModel;
 use Devture\Component\DBAL\IdGenerator\AutoGenerator;
 use Devture\Component\DBAL\Exception\NotFound;
 
+/**
+ * @template T of BaseModel
+ * @extends BaseRepository<T>
+ */
 abstract class BaseMongoRepository extends BaseRepository {
 
 	protected $db;
@@ -17,6 +21,11 @@ abstract class BaseMongoRepository extends BaseRepository {
 		$this->db = $db;
 	}
 
+	/**
+	 * @param mixed $id
+	 * @throws NotFound
+	 * @return T
+	 */
 	public function find($id) {
 		$stringId = (string) $id;
 		if (isset($this->models[$stringId])) {
@@ -35,7 +44,7 @@ abstract class BaseMongoRepository extends BaseRepository {
 	/**
 	 * @param array $criteria
 	 * @throws NotFound
-	 * @return BaseModel
+	 * @return T
 	 */
 	public function findOneBy(array $criteria) {
 		$data = $this->getDatabaseCollection()->findOne($criteria);
@@ -48,7 +57,7 @@ abstract class BaseMongoRepository extends BaseRepository {
 	/**
 	 * @param array $criteria
 	 * @param array $options find() options (e.g. `sort`, `limit`); passed straight to the driver.
-	 * @return BaseModel[]
+	 * @return list<T>
 	 */
 	public function findBy(array $criteria, array $options = array()) {
 		$results = array();
@@ -58,6 +67,9 @@ abstract class BaseMongoRepository extends BaseRepository {
 		return $results;
 	}
 
+	/**
+	 * @return list<T>
+	 */
 	public function findAll() {
 		return $this->findBy(array(), array());
 	}

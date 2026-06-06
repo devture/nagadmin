@@ -10,6 +10,9 @@ use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 
+/**
+ * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Service>
+ */
 class ServiceRepository extends BaseMongoRepository {
 
 	private $hostRepository;
