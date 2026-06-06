@@ -8,7 +8,7 @@ class ServiceInfo {
 	private $service;
 	private $status;
 
-	public function __construct(Service $service, ServiceStatus $status = null) {
+	public function __construct(Service $service, ?ServiceStatus $status) {
 		$this->service = $service;
 		$this->status = $status;
 	}

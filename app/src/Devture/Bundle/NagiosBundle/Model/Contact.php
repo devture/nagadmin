@@ -39,7 +39,7 @@ class Contact extends BaseModel {
 		return $this->serviceNotificationCommand;
 	}
 
-	public function setUser(User $user = null) {
+	public function setUser(?User $user) {
 		$this->user = $user;
 	}
 

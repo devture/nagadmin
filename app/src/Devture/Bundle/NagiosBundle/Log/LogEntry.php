@@ -12,7 +12,7 @@ class LogEntry {
 	private $host;
 	private $service;
 
-	public function __construct($type, $timestamp, $value, Host $host = null, Service $service = null) {
+	public function __construct($type, $timestamp, $value, ?Host $host, ?Service $service) {
 		$this->type = $type;
 		$this->timestamp = $timestamp;
 		$this->value = $value;
