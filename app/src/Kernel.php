@@ -10,14 +10,6 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     /**
-     * @return list<string> An array of allowed values for APP_ENV
-     */
-    private function getAllowedEnvs(): array
-    {
-        return ['prod', 'dev', 'test'];
-    }
-
-    /**
      * When NAGADMIN_RUNTIME_DIR is set, the kernel's mutable runtime state
      * (cache, build, log) is kept there rather than under app/var. This lets
      * the container (running as the Nagios uid 100:101) write to a directory

@@ -7,11 +7,9 @@ use Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile;
 class ConfigurationTester {
 
 	private $writer;
-	private $mainFileTemplatePath;
 
-	public function __construct(ConfigurationWriter $writer, $mainFileTemplatePath) {
+	public function __construct(ConfigurationWriter $writer) {
 		$this->writer = $writer;
-		$this->mainFileTemplatePath = $mainFileTemplatePath;
 	}
 
 	public function test(array $configurationFiles) {

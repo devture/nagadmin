@@ -193,9 +193,7 @@ services:
 
     # Configuration validation (runs `nagios --verify-config` in this container) and
     # deployment (writes the config and, optionally, asks Nagios to reload).
-    Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester:
-        arguments:
-            $mainFileTemplatePath: '%kernel.project_dir%/src/Devture/Bundle/NagiosBundle/Resources/nagios_templates/nagios.cfg'
+    Devture\Bundle\NagiosBundle\Deployment\ConfigurationTester: ~
     Devture\Bundle\NagiosBundle\Deployment\Handler\DeploymentHandler:
         arguments:
             $path: '%nagadmin.deployment.path%'
