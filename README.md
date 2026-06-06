@@ -149,8 +149,9 @@ Nagios notifications. Point the application at it by setting
 Configure outgoing delivery via the repository-root `.env`:
 
 - `SMARTHOST` — upstream SMTP relay as `host::port` (e.g. `smtp.example.com::587`).
-  Leave empty to deliver directly to recipients' MX servers.
-- `SMARTHOST_PROTOCOL` — `smtp` (STARTTLS, port 587) or `smtps` (implicit TLS, port 465).
+  Leave empty to deliver directly to recipients' MX servers. The relay uses
+  opportunistic STARTTLS, so use a STARTTLS port such as 587 (implicit TLS on port
+  465 is not supported by this image).
 - `SMTP_USERNAME` / `SMTP_PASSWORD` — credentials for the smarthost.
 
 The relay keeps a persistent on-disk spool (`var/container-data/exim-spool`), so a
