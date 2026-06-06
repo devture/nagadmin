@@ -213,6 +213,12 @@ These are either features not implemented (yet) or conscious decisions to keep t
 - **Very large installations** — the code and UI don't currently scale to thousands of services.
 
 
+## 🛠️ Development
+
+Working on Nagadmin itself? See [docs/development.md](docs/development.md) for the developer tooling — static
+analysis (PHPStan) and the pre-commit hooks.
+
+
 ## 📜 License
 
 [AGPL-3.0](LICENSE). The source code will always be available, and community contributions are welcome.
