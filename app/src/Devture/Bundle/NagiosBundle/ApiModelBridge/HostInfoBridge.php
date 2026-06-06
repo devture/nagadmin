@@ -7,7 +7,7 @@ use Devture\Bundle\NagiosBundle\Model\ServiceInfo;
 class HostInfoBridge {
 
 	private $hostBridge;
-	private $serviceStatusBridge;
+	private $servicesInfoBridge;
 
 	public function __construct(HostBridge $hostBridge, ServiceInfoBridge $servicesInfoBridge) {
 		$this->hostBridge = $hostBridge;

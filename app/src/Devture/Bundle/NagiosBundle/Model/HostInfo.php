@@ -3,7 +3,7 @@ namespace Devture\Bundle\NagiosBundle\Model;
 
 class HostInfo {
 
-	private $service;
+	private $host;
 	private $servicesInfo;
 
 	public function __construct(Host $host, array $servicesInfo) {
