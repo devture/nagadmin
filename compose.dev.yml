@@ -19,4 +19,4 @@ services:
     ports:
     # The mailcrab web UI. Its SMTP listener (port 1025) is reachable by the
     # php container over the compose network as `mailcrab:1025`.
-    - "127.0.0.1:20825:1080"
+    - "${MAILCRAB_HTTP_BIND_ADDRESS}:1080"
