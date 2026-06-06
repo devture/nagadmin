@@ -17,7 +17,6 @@ WORKDIR /code
 #   phar, tokenizer                 — used by Symfony console tooling
 # OPcache ships with the main php85 package (no separate extension to install).
 RUN apk add --no-cache \
-    curl \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-pecl-mongodb \
@@ -51,11 +50,5 @@ COPY override.conf /etc/php${PHP_VERSION}/php-fpm.d/zz-override.conf
 # We install Nagios in the PHP image merely for configuration-validation purposes.
 # The actual Nagios service that we use runs in a separate container.
 RUN apk add --no-cache nagios
-
-# Allows for us to wait on MongoDB to start, before running commands in the PHP container.
-# See `./bin/container-console`.
-RUN set -xe \
-	&& curl -fsSL -o /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/v2.4.1/waitforit-linux_amd64 \
-	&& chmod +x /usr/local/bin/waitforit
 
 CMD ["/usr/sbin/php-fpm", "-F"]
