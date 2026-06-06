@@ -9,8 +9,10 @@ for i in "$@"; do
 done
 
 docker_compose_run_flags='-T'
-if [ -t 1 ]; then
-	# Got tty
+if [ -t 0 ] && [ -t 1 ]; then
+	# Fully interactive (both stdin and stdout are a TTY): allocate a TTY so
+	# prompts work. When stdin is piped (e.g. `echo body | ... send-notification:email`)
+	# we must keep -T, otherwise Docker's pseudo-TTY swallows the piped input.
 	docker_compose_run_flags=''
 fi
 
