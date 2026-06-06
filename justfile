@@ -14,10 +14,10 @@ default:
 
 # Runs all components (in the foreground). Defaults to the dev environment;
 # pass `prod` (e.g. `just run prod`) to run the production configuration.
-run env='dev': _prepare_deps _prepare_run (docker-compose env "up")
+run env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up")
 
 # Runs all components (in the background)
-run-bg env='dev': _prepare_deps _prepare_run (docker-compose env "up -d")
+run-bg env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up -d")
 
 # Stops all components
 stop env='dev': (docker-compose env "down")
@@ -68,6 +68,18 @@ _require_root_env_file_or_fail:
 	if [ ! -f "{{ justfile_directory() }}/.env" ]; then
 		echo "Error: missing .env file at {{ justfile_directory() }}/.env" >&2
 		echo "Copy .env.dist to .env and adjust the values before running this command." >&2
+		exit 1
+	fi
+
+# Internal - fails early (with guidance) if the Symfony app `app/.env` is missing.
+# Without it, Symfony silently falls back to the committed `app/.env.dist`, whose
+# development defaults (APP_ENV=dev, the mailcrab MAILER_DSN, suppressed SMS, a
+# public api_secret) are unsafe to run with — especially in production.
+_require_app_env_file_or_fail:
+	#!/bin/sh
+	if [ ! -f "{{ justfile_directory() }}/app/.env" ]; then
+		echo "Error: missing app/.env file at {{ justfile_directory() }}/app/.env" >&2
+		echo "Copy app/.env.dist to app/.env and adjust the values before running this command." >&2
 		exit 1
 	fi
 
