@@ -1,277 +1,218 @@
-# Nagadmin: web-configurator and frontend for Nagios
+<h1 align="center">Nagadmin</h1>
 
-Nagadmin is a web-configurator for configuring a [Nagios](https://www.nagios.com) installation.
-It also serves as a frontend - a place where you can see the status of your services.
+<p align="center">
+	<b>An all-in-one <a href="https://www.nagios.com">Nagios</a> monitoring stack</b> — a beautiful web UI to
+	<i>configure</i> Nagios and <i>watch</i> your services, with <b>Nagios itself built right in</b>.
+</p>
 
-It's not meant to support all Nagios features.
-It may force a certain workflow upon you, which may or may not be to your taste.
-The reason it does this is to optimize for the common monitoring use-case and make things simpler for it.
+<p align="center">
+	<a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3" /></a>
+	<img src="https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white" alt="PHP 8.5" />
+	<img src="https://img.shields.io/badge/Symfony-8.1-000000?logo=symfony&logoColor=white" alt="Symfony 8.1" />
+	<img src="https://img.shields.io/badge/Nagios-4.5-FF6600" alt="Nagios 4.5" />
+	<img src="https://img.shields.io/badge/Docker-required-2496ED?logo=docker&logoColor=white" alt="Docker required" />
+</p>
 
-If your requirements are complicated, you may need to look into some other solutions or fork-and-improve this one.
+Editing Nagios `.cfg` files by hand is tedious, needs terminal access, and gives you no real overview of what's
+configured. **Nagadmin** replaces that with a friendly, mobile-friendly web interface — and, unlike most
+configurators, it doesn't expect you to bring your own Nagios. The Nagios engine is **bundled and managed for you**,
+so a single command brings up a complete, self-hosted monitoring system.
 
-![dashboard-partial-screenshot](https://raw.github.com/devture/nagadmin/master/resources/screenshots/dashboard-partial.png)
+It deliberately **optimizes for the common monitoring use-case** rather than supporting every esoteric Nagios
+feature. That keeps the workflow simple — but if your needs are very advanced, you may prefer another solution or a
+fork. See [🚧 Limitations](#-limitations).
 
---------------------
-
-
-## Why Nagadmin instead of "some other solution"?
-
-There are lots of web-configurator systems that aim to make Nagios installations easy to configure from the web.
-Editing Nagios configuration files may be inconvenient (requires terminal access),
-and more importantly does not show a good overview of what's really configured.
-
-None of the existing Nagios configurator systems seemed to achieve the goals of:
-
-- providing a simple user-interface that's **easier than "SSH into the Nagios host & edit raw config files"**
-- providing a **beautiful and pleasant user-interface** that also works on mobile devices
-- providing both a **configuration and frontend tool in one**
-- providing **advanced access control**, so that many users can see and potentially do different things
-- **optimizing for the common use-case**, by hiding certain complex Nagios features
-- giving you a **good overview of the current configuration and status**
+<p align="center">
+	<img src="resources/screenshots/dashboard-partial.png" alt="Nagadmin dashboard" />
+</p>
 
 
---------------------
+## 🧩 One stack, batteries included
+
+Nagadmin isn't a configurator that talks to a Nagios you have to install and babysit yourself — **it ships Nagios
+too**. A single `just run` brings the whole monitoring stack up in containers:
+
+- 🖥️ **Nagadmin web UI** — the configurator *and* the status frontend (a [Symfony](https://symfony.com/) app under `app/`)
+- 📟 **Nagios** — the monitoring engine itself, pre-wired and validated for you
+- 🗄️ **MongoDB** — stores your configuration
+- 🌐 **nginx** — serves the web UI
+- ✉️ **exim mail relay** — delivers notifications, with a persistent retry spool (production)
+
+You configure everything through the web UI; Nagadmin **generates and deploys validated Nagios configuration** for
+you. No hand-editing `.cfg` files, no separate Nagios install to wire up.
 
 
-## Installation
+## 🌟 Why Nagadmin?
 
+- ✅ **Easier than SSHing in to edit raw config** — point-and-click instead of `vi nagios.cfg`
+- 🎨 **A pleasant, modern UI** that also works on mobile devices
+- 🔄 **Configurator and frontend in one** — set things up *and* watch their status from the same place
+- 📦 **Nagios included** — no separate installation; it's part of the stack
+- 🔐 **Advanced access control** — many users can see and do different things
+- 🎯 **Optimized for the common case** — complex Nagios features are hidden to keep the workflow simple
+- 👀 **A clear overview** of both your current configuration and live status
+
+
+## 🚀 Getting started
 
 ### Prerequisites
 
-- Docker
+- [Docker](https://www.docker.com/)
 - Docker Compose (v1 or v2)
 - [just](https://github.com/casey/just) (command runner)
 
+### 1. Get the code
 
-### Download the source code and go into the main directory
+```sh
+cd /srv/http
+git clone <repository url> nagadmin
+cd nagadmin
+```
 
-	cd /srv/http
-	git clone <repository url> nagadmin
-	cd nagadmin
+### 2. Configure
 
+Nagadmin keeps its configuration in two files, each read natively by the tool that needs it:
 
-### Configure
+```sh
+cp .env.dist .env          # infrastructure: timezone, published ports, Nagios UI credentials
+cp app/.env.dist app/.env  # the Symfony app: secrets, mailer DSN, SMS credentials, etc.
+```
 
-Start by copying the sample infrastructure configuration file:
+Edit both to taste. `app/.env` holds deployment-specific values and secrets such as the notification API secret
+(`NAGADMIN_NOTIFICATION_API_SECRET`), the mailer DSN (`MAILER_DSN`) and the Vonage SMS credentials.
 
-	cp .env.dist .env
-
-Now modify `.env` to your liking (timezone, published ports, Nagios UI credentials).
-
-Application configuration lives under `app/` and uses Symfony environment
-variables. Copy the committed template to an untracked `app/.env` and put your
-deployment-specific values there — including secrets such as the notification API
-secret (`NAGADMIN_NOTIFICATION_API_SECRET`), the mailer DSN (`MAILER_DSN`) and the
-SMS gateway credentials:
-
-	cp app/.env.dist app/.env
-
-
-### Run for the first time
+### 3. First run
 
 ```sh
 just run
 ```
 
 `just run` starts the **development** environment, which includes a
-[mailcrab](https://github.com/tweedegolf/mailcrab) mail-catcher so it never
-sends real e-mail — captured messages are viewable at http://127.0.0.1:20825.
-To run the **production** environment instead, use `just run prod`.
+[mailcrab](https://github.com/tweedegolf/mailcrab) mail-catcher so it never sends real e-mail — captured messages are
+viewable at http://127.0.0.1:20182. To run the **production** environment instead, use `just run prod`
+(see **Running in production** below).
 
-Not all services will run well yet. Nagios will encounter some errors, because it can't find some of its configuration yet.
-We resolve this below during the [Installation](#install) step.
+> ℹ️ Nagios won't be fully healthy yet — it can't find its configuration until the install step below.
 
-
-### Initialize the database
-
-Run the following command to initialize the database (initial data-set import and databse indexes creation):
+### 4. Initialize the database
 
 ```sh
 just init-database
 ```
 
+Imports the initial data-set and creates the database indexes.
 
-### Install
-
-Run the following command to set up Resource Variables and install the initial Nagios configuration:
+### 5. Install
 
 ```sh
 just install
 ```
 
-Nagios should now properly start and run.
+Sets up the Resource Variables and deploys the initial Nagios configuration. Nagios should now start cleanly.
 
-
-### Create your first user
-
-Create a new administrator user account for you:
+### 6. Create your first user
 
 ```sh
 ./bin/container-console devture-user:add USERNAME_HERE EMAIL_ADDRESS_HERE
 ```
 
-You'll be asked for a password, etc.
+You'll be prompted for a password.
 
+### 7. Open it up
 
-### Accessing Nagadmin and Nagios
+| What | URL | Credentials |
+|------|-----|-------------|
+| 🖥️ **Nagadmin** | http://nagadmin.127.0.0.1.nip.io:20180 | the user you just created |
+| 📟 **Nagios** | http://nagadmin.127.0.0.1.nip.io:20181 | `NAGIOSADMIN_USER` / `NAGIOSADMIN_PASS` from `.env` |
 
-Use a web browser to access Nagadmin at this URL: http://nagadmin.127.0.0.1.nip.io:20180
+Nagadmin's frontend doesn't *replace* the native Nagios CGI interface — both run side by side, so you're free to use
+either (or both).
 
-You should be able to log in with the user that you created in the previous step.
-
-You can also access Nagios at this URL: http://nagadmin.127.0.0.1.nip.io:20188
-
-You need to authenticate using the username/password you've specified in `.env` (`NAGIOSADMIN_USER` and `NAGIOSADMIN_PASS`).
-
-
-### Verify that it all works
-
-Run the check command to see if things are running correctly:
+### 8. Verify
 
 ```sh
 ./bin/container-console check:status
 ```
 
+### Set up a reverse proxy
 
-### Set up a reverse-proxy
+See [`resources/webserver`](resources/webserver). You may also want to configure Symfony's trusted proxies via the
+`SYMFONY_TRUSTED_PROXIES` environment variable (e.g. in `app/.env`).
 
-See `resources/webserver`. You may also wish to configure Symfony's trusted proxies (the `SYMFONY_TRUSTED_PROXIES` environment variable, e.g. in `app/.env`).
 
+## ⚙️ Running in production
 
-### Running in production
-
-Use `just run prod` to run the production environment. It combines `compose.yml`
-with `compose.prod.yml`, which adds a bundled
-[exim-relay](https://github.com/devture/exim-relay) `mailer` service for sending
-Nagios notifications. Point the application at it by setting
-`MAILER_DSN=smtp://mailer:8025` in the production `app/.env`.
+`just run prod` combines `compose.yml` with `compose.prod.yml`, which adds a bundled
+[exim-relay](https://github.com/devture/exim-relay) `mailer` service for sending Nagios notifications. Point the
+application at it by setting `MAILER_DSN=smtp://mailer:8025` in the production `app/.env`.
 
 Configure outgoing delivery via the repository-root `.env`:
 
-- `SMARTHOST` — upstream SMTP relay as `host::port` (e.g. `smtp.example.com::587`).
-  Leave empty to deliver directly to recipients' MX servers. The relay uses
-  opportunistic STARTTLS, so use a STARTTLS port such as 587 (implicit TLS on port
-  465 is not supported by this image).
-- `SMTP_USERNAME` / `SMTP_PASSWORD` — credentials for the smarthost.
+- **`SMARTHOST`** — upstream SMTP relay as `host::port` (e.g. `smtp.example.com::587`). Leave empty to deliver
+  directly to recipients' MX servers. The relay uses opportunistic STARTTLS, so use a STARTTLS port such as 587
+  (implicit TLS on port 465 is not supported by this image).
+- **`SMTP_USERNAME`** / **`SMTP_PASSWORD`** — credentials for the smarthost.
 
-The relay keeps a persistent on-disk spool (`var/container-data/exim-spool`), so a
-transient SMTP outage does not lose notifications: queued mail is retried until it
-is delivered.
+The relay keeps a persistent on-disk spool (`var/container-data/exim-spool`), so a transient SMTP outage does not
+lose notifications: queued mail is retried until it is delivered.
 
---------------------
 
+## ❓ FAQ
 
-## FAQ
+**Does this support all kinds of esoteric Nagios features?**
+No — Nagadmin optimizes for the common case. See [🚧 Limitations](#-limitations).
 
+**Does it provide a frontend to view the status of my services?**
+Yes. Nagadmin is both a web configurator *and* a frontend — a simple alternative to the default Nagios CGI interface,
+which also remains available alongside it.
 
-### Does this support all kinds of esoteric Nagios features?
+**Can more than one person log into the Nagios UI?**
+Yes. The stack seeds a single `nagiosadmin` user from `.env`, but `htpasswd.users` (under
+`var/container-data/nagios/etc/`) is a standard file you can add users to (`htpasswd -b -s … alice <pw>`), then
+authorize them in `cgi.cfg`. Such changes persist.
 
-No - read the introduction above.
+**Can I import my existing Nagios configuration files?**
+No. You'd need to start from scratch via the UI.
 
+**Can I install the web configurator on a machine separate from Nagios?**
+No. Nagios runs as part of this all-in-one stack.
 
-### Does this provide a frontend where I can view the status of my services?
+**I'm running a Nagios-compatible system (Icinga, Shinken, Centreon). Can I use this?**
+Nagadmin only works with Nagios. Some of these are similar, so you may be able to migrate to Nagios (powered by Nagadmin).
 
-Yes. Nagadmin is both a web configuration tool for Nagios and a frontend.
-It can be used as a simple alternative to the default Nagios CGI interface.
+**I need to monitor thousands of services. Can I use this?**
+Not well — Nagadmin targets smaller installations and isn't optimized for that scale (yet).
 
+**What is it written in?**
+[PHP](https://php.net), using the [Symfony framework](https://symfony.com/) (the application lives under `app/`).
 
-### Can I import my existing Nagios configuration files into Nagadmin?
+**What are the system requirements?**
+A Linux server (`amd64` or `arm64`) with Docker and Docker Compose, any distribution. Everything runs in containers.
 
-No. You'd need to start from scratch.
+**What about Nagadmin's future?**
+The source will always be available. The aim is *not* to keep growing features and complexity; community
+improvements are welcome.
 
 
-### What are the plans for Nagadmin's future?
+## 🚧 Limitations
 
-The source code will always be available.
-Developing additional features and complicating it much further is not the aim of this project.
-Community members are free to make improvements to the existing codebase.
+These are either features not implemented (yet) or conscious decisions to keep things simple.
 
+- **Host checks and notifications** — not supported; all hosts are internally forced to an OK state so service checks
+  can run. The automatic service-dependency feature below makes up for it.
+- **Service groups** — not supported (more to enter, little value).
+- **Templates** (timeperiods/contacts/hosts/services) — not supported, to avoid a complex inheritance model.
+- **Service dependencies** — not supported manually, but **automatic** service dependencies are: a service named
+  `ping` or `host-alive` (case-insensitive) automatically becomes the parent of every other service on the same host,
+  so when that "important" service is down, notifications for its children are suppressed. (Configurable via
+  `nagadmin.auto_service_dependency.master_service_regexes` in
+  `app/src/Devture/Bundle/NagiosBundle/Resources/config/services.yaml`.)
+- **Service escalations** — not supported (advanced feature, out of scope for now).
+- **Event handlers** — not supported (advanced feature, out of scope for now).
+- **Importing existing config files** — not supported; reconfigure via the UI.
+- **Very large installations** — the code and UI don't currently scale to thousands of services.
 
-### What is Nagadmin written in?
 
-Nagadmin is written in [PHP](https://php.net) and uses the [Symfony framework](https://symfony.com/) (the application lives under `app/`).
+## 📜 License
 
-
-### What are the system requirements?
-
-We require an x86-84 (amd64) Linux server with Docker and Docker Compose regardless of the distribution.
-
-All services run in containers.
-
-
-### Can I install the web-configurator on another machine (not the one running Nagios)?
-
-No. Nagios only runs in a container as part of this setup.
-
-
-### I'm not running Nagios, but a compatible system (Icinga, Shinken, Centreon). Can I use this?
-
-Nagadmin only works with Nagios. Some of these systems are similar, so you may be able to migrate your existing setup to Nagios (powered by Nagadmin).
-
-
-### I need to check thousands of services. Can I use this?
-
-Not right now, or at least it won't work so well. Nagadmin hasn't been optimized for your use-case (yet) - read the introduction above.
-It targets smaller installations, which don't have quite that many services.
-
-
---------------------
-
-
-
-## Limitations
-
-Limitations listed below are either caused by features not being implemented (yet)
-or by conscious design decisions to omit them (and potentially replace them) with something else.
-
-
-### Host checks and notifications are not supported
-
-Because of this, all hosts are (internally) forced to have an OK state.
-We do this to allow service checks to run for them.
-
-
-### Service groups are not supported
-
-They seem to be yet another thing that the administrator is asked to enter, complicating the workflow and not adding too much value.
-
-
-### Defining templates for timeperiods/contacts/hosts/services is not supported
-
-This keeps things simple, by removing the complex inheritance model.
-
-
-### Service dependencies are not supported
-
-That's an advanced feature.
-
-Nagadmin supports automatic service dependencies though (see the `nagadmin.auto_service_dependency.master_service_regexes` parameter in `app/src/Devture/Bundle/NagiosBundle/Resources/config/services.yaml`).
-
-A service that has a name "ping" or "host-alive" (case-insensitive) is automatically made a parent service of all other
-services on the same host.
-This allows you to easily define an "important" service, which all other services depend on.
-It makes up for the missing "Host checks and notifications" feature mentioned above.
-
-When such an important/parent service is down, individual notifications for all of its children will be suppressed.
-
-
-### Service escalations are not supported
-
-That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
-
-
-### Event handlers are not supported
-
-That's considered an advanced feature, outside the scope of what Nagadmin aims to provide (at least at this point in time).
-
-
-### Existing configuration files cannot be imported
-
-If you've been using Nagios by configuring it manually, you'd need to replicate all your existing configuration again via Nagadmin's UI.
-
-
-### The system doesn't play well with thousands of services
-
-Nagadin targets a simpler use-case and smaller installations (at this time at least).
-The code and user interface are done in a way that doesn't currently scale to thousands of services.
-If you have to monitor thousands of services, it may also appear a bit limiting and simple to you anyway.
+[AGPL-3.0](LICENSE). The source code will always be available, and community contributions are welcome.
