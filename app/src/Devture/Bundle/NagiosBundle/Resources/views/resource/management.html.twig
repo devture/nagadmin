@@ -19,7 +19,7 @@
 				{% set variableName = '$USER' ~ i ~ '$' %}
 				<div class="row mb-3">
 					<label class="col-lg-2 col-form-label">{{ variableName }}</label>
-					<div class="col-lg-6">
+					<div class="col-lg-10">
 						<input type="text" name="variables[{{ variableName }}]"
 							value="{{ entity.getVariableByName(variableName) }}"
 							class="form-control" />
@@ -28,8 +28,8 @@
 			{% endfor %}
 		</fieldset>
 
-		<div class="offset-lg-2">
-			<button type="submit" class="btn btn-primary">
+		<div class="d-flex justify-content-between align-items-center">
+			<button type="submit" class="btn btn-lg btn-primary">
 				Save
 			</button>
 		</div>

@@ -24,7 +24,7 @@
 		<fieldset>
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Identifier</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" name="name" id="name"
 						class="form-control"
 						required="required"
@@ -36,7 +36,7 @@
 			{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
 				<div class="row mb-3">
 					<label class="col-lg-2 col-form-label">Associated with</label>
-					<div class="col-lg-6">
+					<div class="col-lg-10">
 						{% set selected_user = entity.user %}
 						<select name="userId" class="form-select">
 							<option value="">-- Choose one or leave empty --</option>
@@ -52,7 +52,7 @@
 
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-envelope"></i> Email</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" name="email" id="email"
 						class="form-control"
 						value="{{ entity.email }}" />
@@ -63,7 +63,7 @@
 
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Avatar</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					{% if isAdded %}
 						<div ng-app-lazy="nagadminApp" ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
 							<contact entity='contact_{{ entity.id }}' size="48"></contact>
@@ -75,7 +75,7 @@
 
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Addresses</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<p class="form-text">
 						You can enter some additional address values
 						if notification commands require them.
@@ -134,13 +134,13 @@
 				</div>
 			</div>
 
-			<div class="offset-lg-2">
-				<button type="submit" class="btn btn-primary">
+			<div class="d-flex justify-content-between align-items-center">
+				<button type="submit" class="btn btn-lg btn-primary">
 					Save
 				</button>
 
 				{% if isAdded %}
-				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+				<button class="btn btn-outline-danger btn-sm" id="form-delete-btn">
 					Delete
 				</button>
 				{% endif %}

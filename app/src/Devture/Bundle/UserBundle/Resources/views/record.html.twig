@@ -10,7 +10,7 @@
 			{% block devture_user_row_username %}
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Username</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" class="form-control" name="username" id="username" value="{{ entity.username }}" />
 					{{ render_form_violations(form, 'username') }}
 				</div>
@@ -20,7 +20,7 @@
 			{% block devture_user_row_email %}
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-envelope"></i> Email</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="email" class="form-control" name="email" id="email" value="{{ entity.email }}" />
 					{{ render_form_violations(form, 'email') }}
 				</div>
@@ -30,7 +30,7 @@
 			{% block devture_user_row_name %}
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Name</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" class="form-control" name="name" id="name" value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
 				</div>
@@ -40,7 +40,7 @@
 			{% block devture_user_row_password %}
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Password</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" class="form-control" name="password" id="password" autocomplete="off" />
 					{% if isAdded %}
 					<p class="form-text">Or leave empty to preserve the old one.</p>
@@ -71,13 +71,13 @@
 			{% endif %}
 			{% endblock %}
 
-			<div class="offset-lg-2">
-				<button type="submit" class="btn btn-primary">
+			<div class="d-flex justify-content-between align-items-center">
+				<button type="submit" class="btn btn-lg btn-primary">
 					Save
 				</button>
 
 				{% if isAdded %}
-				<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+				<button class="btn btn-outline-danger btn-sm" id="form-delete-btn">
 					Delete
 				</button>
 				{% endif %}

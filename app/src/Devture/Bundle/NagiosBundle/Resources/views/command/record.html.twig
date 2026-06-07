@@ -9,7 +9,7 @@
 		<fieldset>
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Type</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<select name="type" id="type" class="form-select">
 						<option
 							value="serviceCheck" {{ entity.type == 'serviceCheck' ? 'selected="selected"' : '' }}
@@ -24,7 +24,7 @@
 
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Identifier</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" name="name" id="name"
 						class="form-control"
 						required="required"
@@ -35,7 +35,7 @@
 
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Title</label>
-				<div class="col-lg-6">
+				<div class="col-lg-10">
 					<input type="text" name="title" id="title"
 						class="form-control"
 						required="required"
@@ -80,18 +80,18 @@
 				</div>
 			</div>
 
-			<div class="row offset-lg-2">
-				<button type="submit" class="btn btn-primary">
+			<div class="d-flex justify-content-between align-items-center">
+				<button type="submit" class="btn btn-lg btn-primary">
 					Save
 				</button>
 
 				{% if isAdded %}
 					{% if isUsed %}
-						<p class="text-danger">
+						<p class="text-danger mb-0">
 							This command is currently in use and cannot be deleted.
 						</p>
 					{% else %}
-						<button class="btn btn-danger" style="margin-left: 50px;" id="form-delete-btn">
+						<button class="btn btn-outline-danger btn-sm" id="form-delete-btn">
 							Delete
 						</button>
 					{% endif %}
