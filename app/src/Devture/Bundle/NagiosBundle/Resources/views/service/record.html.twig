@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}{{ isAdded ? 'Edit service: ' ~ entity.name : 'Add service' }} / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	{% if isAdded %}
 		{% include '@DevtureNagios/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'edit'} only %}

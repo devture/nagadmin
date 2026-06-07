@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Host: {{ entity.name }} / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
 		{% include '@DevtureNagios/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}

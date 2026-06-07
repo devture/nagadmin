@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Contacts / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
 		<div class="d-flex justify-content-end mb-3">

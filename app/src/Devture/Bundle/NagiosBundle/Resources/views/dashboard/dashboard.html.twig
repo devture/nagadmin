@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Dashboard / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	<div ng-controller="DashboardCtrl" ng-app-lazy="nagadminApp">
 		<div ng-cloak ng-hide="logs != null && logs.length == 0" class="float-end">

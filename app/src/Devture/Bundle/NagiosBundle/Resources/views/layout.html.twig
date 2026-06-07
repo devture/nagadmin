@@ -4,7 +4,7 @@
 	{% block head %}
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<title>{{ project_name }} / nagadmin</title>
+	<title>{% block title %}{{ project_name }}{% endblock %}</title>
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/bootstrap.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/fontawesome/css/all.min.css') }}" />
 	<link type="text/css" rel="stylesheet" href="{{ static_url('/css/style.css') }}" />

@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Commands / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	<div class="d-flex justify-content-end mb-3">
 		<a class="btn btn-primary" href="{{ path('devture_nagios.command.add', {'type': type}) }}">

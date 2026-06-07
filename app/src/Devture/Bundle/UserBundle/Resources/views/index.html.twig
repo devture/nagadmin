@@ -1,5 +1,7 @@
 {% extends layout %}
 
+{% block title %}Users / {{ parent() }}{% endblock %}
+
 {% block content %}
 	<div class="d-flex justify-content-end mb-3">
 		<a class="btn btn-primary" href="{{ path('devture_user.add') }}">

@@ -2,6 +2,8 @@
 
 {% import '@DevtureNagios/macros.html.twig' as macros %}
 
+{% block title %}{{ isAdded ? 'Edit contact: ' ~ entity.name : 'Add contact' }} / {{ parent() }}{% endblock %}
+
 {% macro render_command_picker(field_name, commands, selected_command) %}
 	<select name="{{ field_name }}" id="{{ field_name }}" class="form-select js-command-chooser" required="required">
 		<option value="">-- Pick one --</option>

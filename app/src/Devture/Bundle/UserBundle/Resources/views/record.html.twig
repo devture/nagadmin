@@ -1,5 +1,7 @@
 {% extends layout %}
 
+{% block title %}{{ isAdded ? 'Edit user: ' ~ entity.username : 'Add user' }} / {{ parent() }}{% endblock %}
+
 {% block content %}
 	{{ render_form_violations(form, '__other__') }}
 

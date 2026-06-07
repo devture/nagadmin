@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}{{ isAdded ? 'Edit time period: ' ~ entity.title : 'Add time period' }} / {{ parent() }}{% endblock %}
+
 {% macro render_rules_example() %}
 {% apply spaceless %}
 monday     08:00-24:00

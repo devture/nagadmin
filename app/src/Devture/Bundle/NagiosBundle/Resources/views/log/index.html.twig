@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Logs / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	<div ng-controller="LogsCtrl" ng-app-lazy="nagadminApp">
 		<div ng-if="logs == null">

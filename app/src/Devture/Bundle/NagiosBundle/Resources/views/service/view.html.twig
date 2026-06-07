@@ -2,6 +2,8 @@
 
 {% import '@DevtureNagios/macros.html.twig' as macros %}
 
+{% block title %}Service: {{ entity.name }} / {{ parent() }}{% endblock %}
+
 {% macro service_detailed_status(entity, status) %}
 	{% import '@DevtureNagios/macros.html.twig' as macros %}
 

@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}Services / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
 		<div class="row">

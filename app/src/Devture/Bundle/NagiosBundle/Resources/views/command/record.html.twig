@@ -1,5 +1,7 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
+{% block title %}{{ isAdded ? 'Edit command: ' ~ entity.title : 'Add command' }} / {{ parent() }}{% endblock %}
+
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}
 
