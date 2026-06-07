@@ -17,6 +17,7 @@ interface BinderInterface {
 
 	/**
 	 * @param ValidatorInterface $validator
+	 * @return void
 	 */
 	public function setValidator(?ValidatorInterface $validator = null);
 
@@ -28,6 +29,7 @@ interface BinderInterface {
 	/**
 	 * @param TokenManagerInterface $tokenManager
 	 * @param string $intention
+	 * @return void
 	 */
 	public function setCsrfProtection(?TokenManagerInterface $tokenManager = null, $intention = null);
 
@@ -52,7 +54,7 @@ interface BinderInterface {
 	 *
 	 * @param mixed $entity
 	 * @param Request $request
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @return boolean - whether binding (and subsequent validation, if enabled) were successful
 	 */
 	public function bind($entity, Request $request, array $options = array());

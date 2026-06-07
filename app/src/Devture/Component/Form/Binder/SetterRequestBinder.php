@@ -8,11 +8,16 @@ use Devture\Component\Form\Token\TokenManagerInterface;
 
 abstract class SetterRequestBinder implements BinderInterface {
 
-	private $validator;
-	private $violations;
-	private $csrfTokenManager;
-	private $csrfIntention;
+	private ?ValidatorInterface $validator;
+	private ViolationsList $violations;
+	private ?TokenManagerInterface $csrfTokenManager = null;
+	private ?string $csrfIntention = null;
 
+	/**
+	 * @param mixed $entity
+	 * @param array<string, mixed> $options
+	 * @return void
+	 */
 	abstract protected function doBindRequest($entity, Request $request, array $options = array());
 
 	public function __construct(?ValidatorInterface $validator = null) {
@@ -54,7 +59,8 @@ abstract class SetterRequestBinder implements BinderInterface {
 
 		if ($this->csrfTokenManager instanceof TokenManagerInterface) {
 			$token = $request->request->get($this->getCsrfTokenFieldName());
-			if (!$this->csrfTokenManager->isValid($this->csrfIntention, $token)) {
+			$token = is_string($token) ? $token : '';
+			if (!$this->csrfTokenManager->isValid((string) $this->csrfIntention, $token)) {
 				$this->violations->add('__other__', 'Cannot confirm your identity. Reload and try again.');
 				return false;
 			}
@@ -69,6 +75,11 @@ abstract class SetterRequestBinder implements BinderInterface {
 		return count($this->violations) === 0;
 	}
 
+	/**
+	 * @param mixed $entity
+	 * @param array<string, mixed> $values
+	 * @return void
+	 */
 	protected function bindAll($entity, array $values) {
 		foreach ($values as $key => $value) {
 			$setter = 'set' . ucfirst($key);
@@ -78,6 +89,12 @@ abstract class SetterRequestBinder implements BinderInterface {
 		}
 	}
 
+	/**
+	 * @param mixed $entity
+	 * @param array<string, mixed> $values
+	 * @param list<string> $keysWhitelisted
+	 * @return void
+	 */
 	protected function bindWhitelisted($entity, array $values, array $keysWhitelisted) {
 		$valuesAllowed = array();
 		foreach ($values as $key => $value) {

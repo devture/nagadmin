@@ -5,7 +5,7 @@ interface ValidatorInterface {
 
 	/**
 	 * @param object $object
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @return ViolationsList
 	 */
 	public function validate($object, array $options = array());

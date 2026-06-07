@@ -5,7 +5,7 @@ use Devture\Component\DBAL\Model\BaseModel;
 
 class AutoGenerator implements GeneratorInterface {
 
-	public function generate(BaseModel $entity) {
+	public function generate(BaseModel $entity): \MongoDB\BSON\ObjectId {
 		return new \MongoDB\BSON\ObjectId();
 	}
 

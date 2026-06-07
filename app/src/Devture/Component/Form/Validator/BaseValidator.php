@@ -7,7 +7,7 @@ abstract class BaseValidator implements ValidatorInterface {
 		return new ViolationsList();
 	}
 
-	protected function isEmpty($value) {
+	protected function isEmpty(mixed $value): bool {
 		return in_array($value, array('', null), true);
 	}
 

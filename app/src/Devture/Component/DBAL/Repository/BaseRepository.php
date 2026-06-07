@@ -24,7 +24,7 @@ abstract class BaseRepository implements RepositoryInterface {
 	 * object, no matter what $data contains this run.
 	 *
 	 * @see \Devture\Component\DBAL\Repository\RepositoryInterface::createModel()
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return T
 	 */
 	public function createModel(array $data) {
@@ -41,7 +41,7 @@ abstract class BaseRepository implements RepositoryInterface {
 
 	/**
 	 * @see \Devture\Component\DBAL\Repository\RepositoryInterface::createModel()
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return T
 	 */
 	protected function hydrateModel(array $data) {
@@ -53,7 +53,7 @@ abstract class BaseRepository implements RepositoryInterface {
 	 * Exports a model for persisting to the database.
 	 *
 	 * @param T $entity
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function exportModel($entity) {
 		if (!($entity instanceof BaseModel)) {
@@ -63,7 +63,7 @@ abstract class BaseRepository implements RepositoryInterface {
 	}
 
 	/**
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return T
 	 */
 	protected function loadModel(array $data) {
@@ -73,6 +73,10 @@ abstract class BaseRepository implements RepositoryInterface {
 		return $this->createModel($data);
 	}
 
+	/**
+	 * @param mixed $entity
+	 * @return void
+	 */
 	protected function validateModelClass($entity) {
 		if (!is_object($entity)) {
 			throw new \LogicException('Refusing to handle non-object when ' . $this->getModelClass() . ' was expected.');

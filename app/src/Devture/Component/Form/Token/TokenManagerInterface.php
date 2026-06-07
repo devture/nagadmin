@@ -5,11 +5,13 @@ interface TokenManagerInterface {
 
 	/**
 	 * @param string $salt
+	 * @return void
 	 */
 	public function setSalt($salt);
 
 	/**
 	 * @param string $intention
+	 * @return string
 	 */
 	public function generate($intention);
 

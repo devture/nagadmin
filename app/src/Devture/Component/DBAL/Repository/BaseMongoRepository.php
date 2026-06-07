@@ -13,8 +13,11 @@ use Devture\Component\DBAL\Exception\NotFound;
  */
 abstract class BaseMongoRepository extends BaseRepository {
 
-	protected $db;
+	protected Database $db;
 
+	/**
+	 * @return string
+	 */
 	abstract protected function getCollectionName();
 
 	public function __construct(Database $db) {
@@ -42,7 +45,7 @@ abstract class BaseMongoRepository extends BaseRepository {
 	}
 
 	/**
-	 * @param array $criteria
+	 * @param array<string, mixed> $criteria
 	 * @throws NotFound
 	 * @return T
 	 */
@@ -51,18 +54,18 @@ abstract class BaseMongoRepository extends BaseRepository {
 		if ($data === null) {
 			throw new NotFound('Missing object of class ' . $this->getModelClass() . ' for: ' . json_encode($criteria));
 		}
-		return $this->loadModel($data);
+		return $this->loadModel((array) $data);
 	}
 
 	/**
-	 * @param array $criteria
-	 * @param array $options find() options (e.g. `sort`, `limit`); passed straight to the driver.
+	 * @param array<string, mixed> $criteria
+	 * @param array<string, mixed> $options find() options (e.g. `sort`, `limit`); passed straight to the driver.
 	 * @return list<T>
 	 */
 	public function findBy(array $criteria, array $options = array()) {
 		$results = array();
 		foreach ($this->getDatabaseCollection()->find($criteria, $options) as $data) {
-			$results[] = $this->loadModel($data);
+			$results[] = $this->loadModel((array) $data);
 		}
 		return $results;
 	}
@@ -74,6 +77,10 @@ abstract class BaseMongoRepository extends BaseRepository {
 		return $this->findBy(array(), array());
 	}
 
+	/**
+	 * @param T $entity
+	 * @return void
+	 */
 	public function add($entity) {
 		$this->validateModelClass($entity);
 		if ($entity->getId() === null) {
@@ -83,6 +90,10 @@ abstract class BaseMongoRepository extends BaseRepository {
 		$this->getDatabaseCollection()->insertOne($exportedObject);
 	}
 
+	/**
+	 * @param T $entity
+	 * @return void
+	 */
 	public function update($entity) {
 		$this->validateModelClass($entity);
 		if ($entity->getId() === null) {
@@ -92,6 +103,10 @@ abstract class BaseMongoRepository extends BaseRepository {
 		$this->getDatabaseCollection()->replaceOne(array('_id' => $entity->getId()), $exportedObject, array('upsert' => true));
 	}
 
+	/**
+	 * @param T $entity
+	 * @return void
+	 */
 	public function delete($entity) {
 		$this->validateModelClass($entity);
 		if ($entity->getId() === null) {
@@ -109,7 +124,10 @@ abstract class BaseMongoRepository extends BaseRepository {
 		return new AutoGenerator();
 	}
 
-	private function isStringMongoId($string) {
+	private function isStringMongoId(mixed $string): bool {
+		if (!is_string($string)) {
+			return false;
+		}
 		try {
 			//ObjectId throws when given a string that is not a valid 24-char hex id.
 			return ($string === (string) new ObjectId($string));

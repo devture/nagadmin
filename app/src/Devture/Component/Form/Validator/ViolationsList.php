@@ -1,22 +1,35 @@
 <?php
 namespace Devture\Component\Form\Validator;
 
+/**
+ * @implements \IteratorAggregate<string, list<array{message: string, params: array<string, mixed>}>>
+ */
 class ViolationsList implements \IteratorAggregate, \Countable {
 
-	private $violations = array();
+	/**
+	 * @var array<string, list<array{message: string, params: array<string, mixed>}>>
+	 */
+	private array $violations = array();
 
-	public function add($key, $message, array $params = array()) {
+	/**
+	 * @param array<string, mixed> $params
+	 * @return void
+	 */
+	public function add(string $key, string $message, array $params = array()) {
 		$this->violations[$key][] = array('message' => $message, 'params' => $params);
 	}
 
-	public function get($key) {
+	/**
+	 * @return list<array{message: string, params: array<string, mixed>}>
+	 */
+	public function get(string $key): array {
 		if (!isset($this->violations[$key])) {
 			return array();
 		}
 		return $this->violations[$key];
 	}
 
-	public function merge(ViolationsList $other) {
+	public function merge(ViolationsList $other): void {
 		foreach ($other->violations as $key => $items) {
 			foreach ($items as $item) {
 				$this->violations[$key][] = $item;
