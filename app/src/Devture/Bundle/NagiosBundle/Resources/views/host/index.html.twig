@@ -2,14 +2,12 @@
 
 {% block devture_nagios_content %}
 	{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
-		<div class="clearfix">
-			<a class="btn btn-secondary float-end" href="{{ path('devture_nagios.host.add') }}">
+		<div class="d-flex justify-content-end mb-3">
+			<a class="btn btn-primary" href="{{ path('devture_nagios.host.add') }}">
 				<i class="fa-solid fa-plus"></i>
 				Add new
 			</a>
 		</div>
-
-		<div class="top-spaced-minor"></div>
 	{% endif %}
 
 	{% include '@DevtureNagios/host/list.html.twig' with {'items': items} %}

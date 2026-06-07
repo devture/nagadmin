@@ -1,14 +1,12 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<div class="clearfix">
-		<a class="btn btn-secondary float-end" href="{{ path('devture_nagios.time_period.add') }}">
+	<div class="d-flex justify-content-end mb-3">
+		<a class="btn btn-primary" href="{{ path('devture_nagios.time_period.add') }}">
 			<i class="fa-solid fa-plus"></i>
 			Add new
 		</a>
 	</div>
-
-	<div class="top-spaced-minor"></div>
 
 	{% include '@DevtureNagios/time_period/list.html.twig' with {'items': items} %}
 {% endblock %}

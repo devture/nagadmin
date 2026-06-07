@@ -1,27 +1,27 @@
 {% extends '@DevtureNagios/nagios_layout.html.twig' %}
 
 {% block devture_nagios_content %}
-	<div class="clearfix">
-		<a class="btn btn-secondary float-end" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
+	<div class="d-flex justify-content-end mb-3">
+		<a class="btn btn-primary" href="{{ path('devture_nagios.command.add', {'type': type}) }}">
 			<i class="fa-solid fa-plus"></i>
 			Add new
 		</a>
-
-		<ul class="nav nav-tabs">
-			<li class="nav-item">
-				<a class="nav-link {{ type == 'serviceCheck' ? 'active' : '' }}" href="{{ path('devture_nagios.command.manage', {'type': 'serviceCheck'}) }}">
-					<i class="fa-solid fa-square-check"></i>
-					Check commands
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ type == 'serviceNotification' ? 'active' : '' }}" href="{{ path('devture_nagios.command.manage', {'type': 'serviceNotification'}) }}">
-					<i class="fa-solid fa-share"></i>
-					Notification commands
-				</a>
-			</li>
-		</ul>
 	</div>
+
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<a class="nav-link {{ type == 'serviceCheck' ? 'active' : '' }}" href="{{ path('devture_nagios.command.manage', {'type': 'serviceCheck'}) }}">
+				<i class="fa-solid fa-square-check"></i>
+				Check commands
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link {{ type == 'serviceNotification' ? 'active' : '' }}" href="{{ path('devture_nagios.command.manage', {'type': 'serviceNotification'}) }}">
+				<i class="fa-solid fa-share"></i>
+				Notification commands
+			</a>
+		</li>
+	</ul>
 
 	<div class="top-spaced-minor"></div>
 

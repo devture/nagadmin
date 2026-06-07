@@ -1,14 +1,12 @@
 {% extends layout %}
 
 {% block content %}
-	<div class="clearfix">
-		<a class="btn btn-secondary float-end" href="{{ path('devture_user.add') }}">
+	<div class="d-flex justify-content-end mb-3">
+		<a class="btn btn-primary" href="{{ path('devture_user.add') }}">
 			<i class="fa-solid fa-plus"></i>
 			Add new
 		</a>
 	</div>
-
-	<br />
 
 	{% include "@DevtureUser/list.html.twig" with {'items': items} %}
 {% endblock %}
