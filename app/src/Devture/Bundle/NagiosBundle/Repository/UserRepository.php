@@ -11,7 +11,7 @@ class UserRepository extends \Devture\Bundle\UserBundle\Repository\MongoDB\UserR
 	 * Overrides the parent's index creation, which still uses the legacy
 	 * `ensureIndex()` API removed by the native mongodb/mongodb driver.
 	 */
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$userCollection = $this->db->selectCollection($this->getCollectionName());
 		$userCollection->createIndex(array('username' => 1), array('unique' => true));
 

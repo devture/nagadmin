@@ -34,7 +34,7 @@ class ServiceRepository extends BaseMongoRepository {
 		return 'service';
 	}
 
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
 		$collection->createIndex(array(
@@ -75,6 +75,8 @@ class ServiceRepository extends BaseMongoRepository {
 
 	/**
 	 * @see \Devture\Component\DBAL\Repository\BaseRepository::exportModel()
+	 * @param Service $model
+	 * @return array<string, mixed>
 	 */
 	protected function exportModel($model) {
 		$export = parent::exportModel($model);
@@ -92,18 +94,27 @@ class ServiceRepository extends BaseMongoRepository {
 		return $export;
 	}
 
+	/**
+	 * @return list<Service>
+	 */
 	public function findByHost(Host $host) {
 		return $this->findBy(array('hostId' => $host->getId()), array('sort' => array('name' => 1)));
 	}
 
-	public function countByHost(Host $host) {
+	public function countByHost(Host $host): int {
 		return $this->db->selectCollection($this->getCollectionName())->countDocuments(array('hostId' => $host->getId()));
 	}
 
+	/**
+	 * @return list<Service>
+	 */
 	public function findByCommand(Command $command) {
 		return $this->findBy(array('commandId' => $command->getId()), array('sort' => array('name' => 1)));
 	}
 
+	/**
+	 * @return list<Service>
+	 */
 	public function findByContact(Contact $contact) {
 		return $this->findBy(array('contactsIds' => $contact->getId()));
 	}

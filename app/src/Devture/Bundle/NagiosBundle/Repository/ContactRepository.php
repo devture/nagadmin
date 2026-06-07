@@ -42,7 +42,7 @@ class ContactRepository extends BaseMongoRepository {
 		return 'contact';
 	}
 
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
 		$collection->createIndex(array(
@@ -70,7 +70,10 @@ class ContactRepository extends BaseMongoRepository {
 
 		if (isset($data['userId'])) {
 			try {
-				$model->setUser($this->userRepository->find($data['userId']));
+				$user = $this->userRepository->find($data['userId']);
+				if ($user instanceof User) {
+					$model->setUser($user);
+				}
 			} catch (NotFound $e) {
 				//User got deleted or something
 			}
@@ -81,7 +84,8 @@ class ContactRepository extends BaseMongoRepository {
 
 	/**
 	 * @see \Devture\Component\DBAL\Repository\BaseRepository::exportModel()
-	 * @param $model Contact
+	 * @param Contact $model
+	 * @return array<string, mixed>
 	 */
 	protected function exportModel($model) {
 		$export = parent::exportModel($model);
@@ -98,10 +102,16 @@ class ContactRepository extends BaseMongoRepository {
 		return $export;
 	}
 
+	/**
+	 * @return list<Contact>
+	 */
 	public function findByCommand(Command $command) {
 		return $this->findBy(array('serviceNotificationCommandId' => $command->getId()));
 	}
 
+	/**
+	 * @return list<Contact>
+	 */
 	public function findByTimePeriod(TimePeriod $timePeriod) {
 		return $this->findBy(array('timePeriodId' => $timePeriod->getId()));
 	}

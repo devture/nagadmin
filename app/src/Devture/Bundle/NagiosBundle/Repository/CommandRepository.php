@@ -27,7 +27,7 @@ class CommandRepository extends BaseMongoRepository {
 		return 'command';
 	}
 
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
 		$collection->createIndex(array(
@@ -35,6 +35,10 @@ class CommandRepository extends BaseMongoRepository {
 		));
 	}
 
+	/**
+	 * @param string $type
+	 * @return list<\Devture\Bundle\NagiosBundle\Model\Command>
+	 */
 	public function findAllByType($type) {
 		return $this->findBy(array('type' => $type), array());
 	}

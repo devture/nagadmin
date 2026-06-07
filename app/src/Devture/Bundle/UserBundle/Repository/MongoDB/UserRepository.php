@@ -19,7 +19,7 @@ class UserRepository extends BaseMongoRepository implements UserRepositoryInterf
 
 	/**
 	 * @param \Devture\Bundle\UserBundle\Model\User $model
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function exportModel($model) {
 		$data = parent::exportModel($model);
@@ -27,7 +27,7 @@ class UserRepository extends BaseMongoRepository implements UserRepositoryInterf
 		return $data;
 	}
 
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$userCollection = $this->db->selectCollection($this->getCollectionName());
 		$userCollection->createIndex(array('username' => 1), array('unique' => true));
 
@@ -36,10 +36,18 @@ class UserRepository extends BaseMongoRepository implements UserRepositoryInterf
 		$userCollection->createIndex(array('email' => 1));
 	}
 
+	/**
+	 * @param string $username
+	 * @return \Devture\Bundle\UserBundle\Model\User
+	 */
 	public function findByUsername($username) {
 		return $this->findOneBy(array('username' => $username));
 	}
 
+	/**
+	 * @param string $email
+	 * @return \Devture\Bundle\UserBundle\Model\User
+	 */
 	public function findByEmail($email) {
 		return $this->findOneBy(array('email' => $email));
 	}

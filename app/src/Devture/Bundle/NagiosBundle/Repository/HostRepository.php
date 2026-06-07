@@ -28,7 +28,7 @@ class HostRepository extends BaseMongoRepository {
 		return 'host';
 	}
 
-	public function ensureIndexes() {
+	public function ensureIndexes(): void {
 		$collection = $this->db->selectCollection($this->getCollectionName());
 
 		$collection->createIndex(array(
@@ -36,10 +36,17 @@ class HostRepository extends BaseMongoRepository {
 		));
 	}
 
+	/**
+	 * @param string $name
+	 * @return \Devture\Bundle\NagiosBundle\Model\Host
+	 */
 	public function findByName($name) {
 		return $this->findOneBy(array('name' => $name));
 	}
 
+	/**
+	 * @return list<string>
+	 */
 	public function getDistinctGroups() {
 		$groupsMap = array();
 		foreach ($this->findBy(array(), array()) as $host) {
