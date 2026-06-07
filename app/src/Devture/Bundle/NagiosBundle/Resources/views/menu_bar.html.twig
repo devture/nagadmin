@@ -36,6 +36,25 @@
 		{% if is_granted('ROLE_DEVTURE_USER') %}
 			{{ _self.menu_item('devture_user.', path('devture_user.manage'), 'Users', 'fa-solid fa-user') }}
 		{% endif %}
+
+		<li class="nav-item">
+			<a class="nav-link" target="_blank" href="{{ nagios_url }}">
+				{% if program_status is none or info_status is none %}
+					<i class="fa-solid fa-circle fa-2xs text-danger"></i>
+					Nagios DOWN
+				{% elseif info_status.appearsOutdated %}
+					<i class="fa-solid fa-circle fa-2xs text-danger"></i>
+					Nagios {{ info_status.currentVersion }} DOWN?
+				{% else %}
+					<span class="js-tooltip"
+						data-bs-placement="bottom"
+						title="PID: {{ program_status.pid }}. Up since: {{ program_status.startTime|date('c') }}">
+						<i class="fa-solid fa-circle fa-2xs text-success"></i>
+						Nagios {{ info_status.currentVersion }}
+					</span>
+				{% endif %}
+			</a>
+		</li>
 	</ul>
 
 	<form class="d-flex" method="post" action="{{ path('devture_user.logout') }}">
