@@ -77,7 +77,6 @@ class Manager {
 					break;
 				} catch (FileMissingException $e) {
 					usleep(500000); //0.5 seconds
-					shell_exec('echo "temporary failure" > /tmp/failures.txt');
 				}
 			}
 		}
