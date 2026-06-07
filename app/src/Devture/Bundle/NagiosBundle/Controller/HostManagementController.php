@@ -8,6 +8,7 @@ use Devture\Bundle\NagiosBundle\Helper\AccessChecker;
 use Devture\Bundle\NagiosBundle\Helper\CurrentUserProvider;
 use Devture\Bundle\NagiosBundle\Log\Fetcher as LogFetcher;
 use Devture\Bundle\NagiosBundle\Model\Command;
+use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
@@ -130,7 +131,10 @@ class HostManagementController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
-    private function getBaseViewData($currentHost): array
+    /**
+     * @return array<string, mixed>
+     */
+    private function getBaseViewData(Host $currentHost): array
     {
         $groups = array_unique(array_merge($this->repository->getDistinctGroups(), $currentHost->getGroups()));
 

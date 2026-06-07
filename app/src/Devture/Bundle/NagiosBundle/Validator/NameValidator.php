@@ -3,8 +3,11 @@ namespace Devture\Bundle\NagiosBundle\Validator;
 
 class NameValidator {
 
-	static public function isValid($name) {
-		return preg_match("/^[a-z][a-z0-9_\-\.]+$/", $name);
+	/**
+	 * @param string $name
+	 */
+	static public function isValid($name): bool {
+		return (bool) preg_match("/^[a-z][a-z0-9_\-\.]+$/", $name);
 	}
 
 }

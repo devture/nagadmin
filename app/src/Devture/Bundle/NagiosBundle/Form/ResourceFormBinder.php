@@ -10,7 +10,7 @@ class ResourceFormBinder extends SetterRequestBinder {
 	/**
 	 * @param Resource $entity
 	 * @param Request $request
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 */
 	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$entity->clearVariables();

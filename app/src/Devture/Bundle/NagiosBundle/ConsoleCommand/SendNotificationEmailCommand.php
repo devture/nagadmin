@@ -36,7 +36,7 @@ class SendNotificationEmailCommand extends Command
             ->from($this->senderEmailAddress)
             ->to($input->getArgument('emailAddress'))
             ->subject($input->getArgument('subject'))
-            ->text(file_get_contents('php://stdin'));
+            ->text((string) file_get_contents('php://stdin'));
 
         $this->mailer->send($message);
 

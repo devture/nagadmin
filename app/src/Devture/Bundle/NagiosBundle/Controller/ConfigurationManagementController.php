@@ -63,6 +63,9 @@ class ConfigurationManagementController extends AbstractController
         return $this->render('@DevtureNagios/configuration/deploy.html.twig', ['error' => $error]);
     }
 
+    /**
+     * @return array{0: list<\Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile>, 1: bool, 2: string}
+     */
     private function getTestedConfiguration(): array
     {
         $files = $this->collector->collect();

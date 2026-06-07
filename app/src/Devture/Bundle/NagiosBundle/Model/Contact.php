@@ -85,7 +85,7 @@ class Contact extends BaseModel {
 	}
 
 	/**
-	 * @param int $slot
+	 * @param int|string $slot
 	 * @param string $address
 	 * @return void
 	 */
@@ -103,7 +103,7 @@ class Contact extends BaseModel {
 	}
 
 	/**
-	 * @param int $slot
+	 * @param int|string $slot
 	 * @return string|null
 	 */
 	public function getAddressBySlot($slot) {

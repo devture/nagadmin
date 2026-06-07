@@ -22,7 +22,7 @@ class ServiceFormBinder extends SetterRequestBinder {
 	/**
 	 * @param Service $entity
 	 * @param Request $request
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 */
 	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array(

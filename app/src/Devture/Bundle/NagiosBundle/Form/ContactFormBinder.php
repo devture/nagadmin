@@ -33,7 +33,7 @@ class ContactFormBinder extends SetterRequestBinder {
 	}
 
 	/**
-	 * @param string $id
+	 * @param mixed $id
 	 * @return Command
 	 */
 	private function getNotificationCommandById($id) {
@@ -47,7 +47,7 @@ class ContactFormBinder extends SetterRequestBinder {
 	/**
 	 * @param Contact $entity
 	 * @param Request $request
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 */
 	protected function doBindRequest($entity, Request $request, array $options = array()) {
 		$whitelisted = array('name', 'email');
@@ -56,7 +56,7 @@ class ContactFormBinder extends SetterRequestBinder {
 		if ($this->accessChecker->canUserDoConfigurationManagement($this->currentUserProvider->getUser())) {
 			try {
 				$user = $this->userRepository->find($request->request->get('userId'));
-				$entity->setUser($user);
+				$entity->setUser($user instanceof \Devture\Bundle\NagiosBundle\Model\User ? $user : null);
 			} catch (NotFound $e) {
 				$entity->setUser(null);
 			}

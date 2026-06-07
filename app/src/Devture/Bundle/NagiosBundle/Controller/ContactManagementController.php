@@ -41,7 +41,11 @@ class ContactManagementController extends AbstractController
     public function index(): Response
     {
         $user = $this->currentUserProvider->getUser();
-        $criteria = $this->accessChecker->canUserDoConfigurationManagement($user) ? [] : ['userId' => $user->getId()];
+        if ($user !== null && !$this->accessChecker->canUserDoConfigurationManagement($user)) {
+            $criteria = ['userId' => $user->getId()];
+        } else {
+            $criteria = [];
+        }
         $items = $this->repository->findBy($criteria, ['sort' => ['name' => 1]]);
 
         return $this->render('@DevtureNagios/contact/index.html.twig', ['items' => $items]);
@@ -123,6 +127,9 @@ class ContactManagementController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getBaseViewData(): array
     {
         return [

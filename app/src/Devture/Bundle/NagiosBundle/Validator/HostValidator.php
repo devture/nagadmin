@@ -16,7 +16,7 @@ class HostValidator extends BaseValidator {
 
 	/**
 	 * @param Host $entity
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @return \Devture\Component\Form\Validator\ViolationsList
 	 */
 	public function validate($entity, array $options = array()) {

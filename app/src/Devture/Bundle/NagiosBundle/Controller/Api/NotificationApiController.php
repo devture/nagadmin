@@ -112,7 +112,7 @@ class NotificationApiController extends AbstractController
 
     private function authOrPrepareFailureResponse(Request $request): ?JsonResponse
     {
-        $authorization = $request->headers->get('Authorization', '');
+        $authorization = $request->headers->get('Authorization', '') ?? '';
         $token = substr($authorization, strlen('Bearer '));
 
         if ($token === '') {

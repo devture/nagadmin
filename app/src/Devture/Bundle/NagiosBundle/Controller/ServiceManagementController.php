@@ -25,6 +25,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[Route('/service')]
 class ServiceManagementController extends AbstractController
 {
+    /**
+     * @param array<string, int> $defaults
+     */
     public function __construct(
         private readonly ServiceRepository $repository,
         private readonly HostRepository $hostRepository,
@@ -175,6 +178,9 @@ class ServiceManagementController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getBaseViewData(): array
     {
         return [
