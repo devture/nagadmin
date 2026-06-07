@@ -20,8 +20,8 @@ february 4 00:00-24:00
 		{{ render_form_csrf_token(form) }}
 
 		<fieldset>
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Identifier</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Identifier</label>
 				<div class="col-lg-6">
 					<input type="text" name="name" id="name"
 						class="form-control"
@@ -31,8 +31,8 @@ february 4 00:00-24:00
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Title</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Title</label>
 				<div class="col-lg-6">
 					<input type="text" name="title" id="title"
 						class="form-control"
@@ -42,8 +42,8 @@ february 4 00:00-24:00
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Rules</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Rules</label>
 				<div class="col-lg-10">
 					<div id="js-rules-container">
 					{% for rule in entity.rules %}
@@ -55,12 +55,12 @@ february 4 00:00-24:00
 						{% include '@DevtureNagios/time_period/rule_editor.html.twig' with {'entity': none, 'number': '__NUMBER__'} %}
 					</script>
 
-					<a class="btn btn-default btn-sm" href="javascript://" id="js-button-add-rule">
+					<a class="btn btn-secondary btn-sm" href="javascript://" id="js-button-add-rule">
 						<i class="fa-solid fa-plus"></i>
 						Add new rule
 					</a>
 
-					<p class="help-block top-spaced-minor">
+					<p class="form-text top-spaced-minor">
 						<strong>Example:</strong><br />
 						<pre style="max-width: 400px;"><code>{{ _self.render_rules_example() }}</code></pre>
 						To learn more, read the docs on
@@ -71,7 +71,7 @@ february 4 00:00-24:00
 				</div>
 			</div>
 
-			<div class="form-group col-lg-offset-2">
+			<div class="mb-3 offset-lg-2">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

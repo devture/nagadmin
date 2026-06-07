@@ -1,18 +1,17 @@
 <div class="dropdown" style="display: inline-block;">
-	<a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#" ng-click="expand()">
+	<a class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#" ng-click="expand()">
 		<i class="fa-solid fa-plus"></i>
-		<span class="hidden-inline-xs">Add service</span>
-		<span class="caret"></span>
+		<span class="d-none d-sm-inline">Add service</span>
 	</a>
 
 	<ul ng-if="expanded" class="dropdown-menu" role="menu" style="min-width: 0; right: 0; left: auto;">
 		<li ng-if="commands.length == 0">
-			<a href="javascript://">
+			<a class="dropdown-item" href="javascript://">
 				Loading..
 			</a>
 		</li>
 		<li ng-repeat="command in commands | orderBy:'title'">
-			<a href="{{ command | url_service_add:host }}">
+			<a class="dropdown-item" href="{{ command | url_service_add:host }}">
 				{{ command.title }}
 			</a>
 		</li>

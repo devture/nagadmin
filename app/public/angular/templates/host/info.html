@@ -5,7 +5,7 @@
 			{{ entity.host.name }}
 		</h4>
 	</a>
-	<div class="pull-right">
+	<div class="float-end">
 		<service-add-new-button ng-if="entity.host.editable" host="entity.host"></service-add-new-button>
 		<host-recheck-button ng-show="entity.servicesInfo.length != 0" host="entity.host" rechecking="isBeingRechecked" on-dirty="updateHostInfo"></host-recheck-button>
 	</div>

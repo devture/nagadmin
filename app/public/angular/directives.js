@@ -34,11 +34,11 @@ nagadminApp.directive('hostInfo', function (HostInfoUpdaterFactory, templatePath
 
 nagadminApp.directive('hostsInfoSummary', function () {
 	var templateHtml = '';
-	templateHtml += '<span class="label label-success label-nagadmin-status label-nagadmin-success-unobtrusive">{{ ok }} ok</span>';
+	templateHtml += '<span class="badge label-nagadmin-status label-nagadmin-success-unobtrusive">{{ ok }} ok</span>';
 	templateHtml += ' ';
-	templateHtml += '<span ng-show="pending != 0" class="label label-default label-nagadmin-status label-nagadmin-default-unobtrusive">{{ pending }} pending</span>';
+	templateHtml += '<span ng-show="pending != 0" class="badge label-nagadmin-status label-nagadmin-default-unobtrusive">{{ pending }} pending</span>';
 	templateHtml += ' ';
-	templateHtml += '<span class="label label-danger label-nagadmin-status label-nagadmin-important-unobtrusive">{{ failing }} failing</span>';
+	templateHtml += '<span class="badge label-nagadmin-status label-nagadmin-important-unobtrusive">{{ failing }} failing</span>';
 
 	return {
 		"restrict": "E",
@@ -184,7 +184,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 
 				if (entity === null) {
 					$scope.text = 'missing';
-					$scope.classes = 'label-default';
+					$scope.classes = 'text-bg-secondary';
 				} else {
 					if (entity.has_been_checked == 1) {
 						if (entity.current_state !== null) {
@@ -198,7 +198,7 @@ nagadminApp.directive('serviceStatusBadge', function (templatePathRegistry, huma
 						}
 					} else {
 						$scope.text = 'pending';
-						$scope.classes = 'label-default';
+						$scope.classes = 'text-bg-secondary';
 					}
 				}
 			};
@@ -250,7 +250,8 @@ nagadminApp.directive('relativeTime', function ($timeout, $window, templatePathR
 			});
 
 			$time.on('mouseover', function () {
-				$time.relativeTime().tooltip().tooltip('show');
+				$time.relativeTime();
+				bootstrap.Tooltip.getOrCreateInstance($time[0]).show();
 			});
 
 			//Periodically update relative time text
@@ -277,13 +278,13 @@ nagadminApp.directive('contact', function ($timeout, templatePathRegistry, avata
 			"entity": "=entity",
 			"size": "=size"
 		},
-		"template": '<img ng-src="{{ avatarUrl }}" class="img-rounded" style="border: 3px solid {{ entity.color }};" title="{{ entity.name }}" />',
+		"template": '<img ng-src="{{ avatarUrl }}" class="rounded" style="border: 3px solid {{ entity.color }};" title="{{ entity.name }}" />',
 		"link": function ($scope, $element) {
 			$scope.avatarUrl = avatar_urlFilter($scope.entity.avatar_url, $scope.size);
 
 			$element.on('mouseover', function () {
 				//Create the tooltip on initial interaction
-				$(this).find('img').tooltip().tooltip('show');
+				bootstrap.Tooltip.getOrCreateInstance($(this).find('img')[0]).show();
 			});
 		}
 	};

@@ -7,15 +7,6 @@ pre { white-space: pre-wrap; }
 /* Make .warning work even on tables with .table-striped */
 .table > tbody > .warning > td { background-color: #fcf8e3 !important ; }
 
-.hidden-inline-xs {
-	display: inline !important;
-}
-@media (max-width: 767px) {
-	.hidden-inline-xs {
-		display: none !important;
-	}
-}
-
 [ng-cloak] { display: none; }
 
 .devture-form-validation-errors {

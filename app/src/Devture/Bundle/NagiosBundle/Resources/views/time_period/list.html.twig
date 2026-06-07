@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th>Title</th>
-				<th class="hidden-xs">Time Period</th>
+				<th class="d-none d-sm-table-cell">Time Period</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -13,11 +13,11 @@
 			{% set link = path('devture_nagios.time_period.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.title }}
 					</a>
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-sm-table-cell">
 					{% include '@DevtureNagios/time_period/rules_table.html.twig' with {'rules': entity.rules} %}
 				</td>
 			</tr>

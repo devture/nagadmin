@@ -1,6 +1,6 @@
 {% macro menu_item(route, url, title, icon) %}
-	<li class="{{ is_route_prefix(route) ? 'active' : '' }}">
-		<a href="{{ url }}">
+	<li class="nav-item">
+		<a class="nav-link {{ is_route_prefix(route) ? 'active' : '' }}" href="{{ url }}">
 			{% if icon is not none %}
 				<i class="{{ icon }}"></i>
 			{% endif %}
@@ -10,7 +10,7 @@
 {% endmacro %}
 
 {% if is_logged_in() %}
-	<ul class="nav navbar-nav">
+	<ul class="navbar-nav me-auto">
 		{{ _self.menu_item('devture_nagios.dashboard', path('devture_nagios.dashboard'), 'Dashboard', 'fa-solid fa-house') }}
 
 		{% if is_granted('ROLE_CONFIGURATION_MANAGEMENT') %}
@@ -38,8 +38,8 @@
 		{% endif %}
 	</ul>
 
-	<form class="navbar-form navbar-right" method="post" action="{{ path('devture_user.logout') }}">
-		<button class="btn btn-default btn-sm">
+	<form class="d-flex" method="post" action="{{ path('devture_user.logout') }}">
+		<button class="btn btn-secondary btn-sm">
 			Log out
 		</button>
 	</form>

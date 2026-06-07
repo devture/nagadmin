@@ -4,7 +4,7 @@
 	<table class="table table-bordered table-striped table-condensed">
 		<thead>
 			<tr>
-				<th class="hidden-xs">Identifier</th>
+				<th class="d-none d-sm-table-cell">Identifier</th>
 				<th>Title</th>
 			</tr>
 		</thead>
@@ -12,13 +12,13 @@
 		{% for entity in items %}
 			{% set link = path('devture_nagios.command.edit', {'id': entity.id}) %}
 			<tr>
-				<td class="hidden-xs">
-					<a href="{{ link }}" class="btn-block">
+				<td class="d-none d-sm-table-cell">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.name }}
 					</a>
 				</td>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.title }}
 					</a>
 				</td>

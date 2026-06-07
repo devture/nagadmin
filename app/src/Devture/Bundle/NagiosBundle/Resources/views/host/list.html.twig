@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th class="hidden-xs">Address</th>
+				<th class="d-none d-sm-table-cell">Address</th>
 				<th>Groups</th>
 				<th>Services</th>
 			</tr>
@@ -16,24 +16,24 @@
 			{% set services_count = devture_nagios_count_host_services(entity) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.name }}
 					</a>
 				</td>
-				<td class="hidden-xs">
-					<a href="{{ link }}" class="btn-block">
+				<td class="d-none d-sm-table-cell">
+					<a href="{{ link }}" class="d-block">
 						<img src="//www.google.com/s2/favicons?domain={{ entity.address }}" alt="" />
 						{{ entity.address }}
 					</a>
 				</td>
 				<td>
 				{% for group in entity.groups %}
-					<span class="label label-nagadmin label-info"
+					<span class="badge label-nagadmin"
 						style="background-color: {{ group|devture_nagios_colorize }};">{{ group }}</span>
 				{% endfor %}
 				</td>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ services_count }} services
 					</a>
 				</td>

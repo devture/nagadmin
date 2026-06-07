@@ -11,8 +11,8 @@
 		{{ render_form_csrf_token(form) }}
 
 		<fieldset>
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
 				<div class="col-lg-6">
 					<a href="{{ path('devture_nagios.host.view', {'id': entity.host.id}) }}">
 						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
@@ -22,8 +22,8 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Identifier</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Identifier</label>
 				<div class="col-lg-10">
 					<input type="text" name="name" id="name"
 						class="form-control"
@@ -33,27 +33,27 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Status</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Status</label>
 				<div class="col-lg-10">
-					<label class="radio-inline">
-						<input type="radio" name="enabled" value="1" {{ entity.enabled ? 'checked="checked"' : '' }} />
-						Enabled
-					</label>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="enabled" id="enabled-yes" value="1" {{ entity.enabled ? 'checked="checked"' : '' }} />
+						<label class="form-check-label" for="enabled-yes">Enabled</label>
+					</div>
 
-					<label class="radio-inline">
-						<input type="radio" name="enabled" value="0" {{ not entity.enabled ? 'checked="checked"' : '' }} />
-						Disabled
-					</label>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="enabled" id="enabled-no" value="0" {{ not entity.enabled ? 'checked="checked"' : '' }} />
+						<label class="form-check-label" for="enabled-no">Disabled</label>
+					</div>
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-gear"></i> Command</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-gear"></i> Command</label>
 				<div class="col-lg-10">
 					<fieldset>
-						<div class="form-group row">
-							<label class="col-lg-2 control-label">Command</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label">Command</label>
 							<div class="col-lg-10">
 								<a href="{{ path('devture_nagios.command.edit', {'id': entity.command.id}) }}">
 									{{ entity.command.name }} / {{ entity.command.title }}
@@ -64,8 +64,8 @@
 							</div>
 						</div>
 						{% for argument in entity.command.arguments %}
-							<div class="form-group row">
-								<label class="col-lg-2 control-label">$ARG{{ loop.index }}$</label>
+							<div class="row mb-3">
+								<label class="col-lg-2 col-form-label">$ARG{{ loop.index }}$</label>
 								<div class="col-lg-10">
 									{% set command_argument = entity.getArgumentById(argument.id) %}
 									<strong>{{ argument.description }}</strong>:
@@ -82,38 +82,38 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-square-check"></i> Checks</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-square-check"></i> Checks</label>
 				<div class="col-lg-10">
 					<fieldset>
-						<div class="form-group row">
-							<label class="col-lg-2 control-label">Check Interval</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label">Check Interval</label>
 							<div class="col-lg-10">
-								<div class="input-group col-lg-3">
+								<div class="input-group" style="max-width: 16rem;">
 									<input type="number" min="1" class="form-control"
 										name="checkInterval" id="checkInterval"
 										required="required"
 										value="{{ entity.checkInterval }}" />
-									<span class="input-group-addon">minutes</span>
+									<span class="input-group-text">minutes</span>
 								</div>
-								<p class="help-block">
+								<p class="form-text">
 									How often to re-check the service when it's OK.
 								</p>
 								{{ render_form_violations(form, 'checkInterval') }}
 							</div>
 						</div>
 
-						<div class="form-group row">
-							<label class="col-lg-2 control-label">Retry Interval</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label">Retry Interval</label>
 							<div class="col-lg-10">
-								<div class="input-group col-lg-3">
+								<div class="input-group" style="max-width: 16rem;">
 									<input type="number" min="1" class="form-control"
 										name="retryInterval" id="retryInterval"
 										required="required"
 										value="{{ entity.retryInterval }}" />
-									<span class="input-group-addon">minutes</span>
+									<span class="input-group-text">minutes</span>
 								</div>
-								<p class="help-block">
+								<p class="form-text">
 									How often to re-check the service when it's starting to fail,
 									until the failure is confirmed.
 								</p>
@@ -121,17 +121,17 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
-							<label class="col-lg-2 control-label">Max Check Attempts</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label">Max Check Attempts</label>
 							<div class="col-lg-10">
-								<div class="input-group col-lg-3">
+								<div class="input-group" style="max-width: 16rem;">
 									<input type="number" min="1" class="form-control"
 										name="maxCheckAttempts" id="maxCheckAttempts"
 										required="required"
 										value="{{ entity.maxCheckAttempts }}" />
-									<span class="input-group-addon">times</span>
+									<span class="input-group-text">times</span>
 								</div>
-								<p class="help-block">
+								<p class="form-text">
 									Number of retries, before failure is confirmed and notifications get sent.
 								</p>
 								{{ render_form_violations(form, 'maxCheckAttempts') }}
@@ -141,28 +141,28 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-share"></i> Notifications</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-share"></i> Notifications</label>
 				<div class="col-lg-10">
 					<fieldset>
-						<div class="form-group row">
-							<label class="col-lg-2 control-label">Interval</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label">Interval</label>
 							<div class="col-lg-10">
-								<div class="input-group col-lg-3">
+								<div class="input-group" style="max-width: 16rem;">
 									<input type="number" name="notificationInterval" id="notificationInterval"
 										class="form-control"
 										required="required"
 										value="{{ entity.notificationInterval }}" />
-									<span class="input-group-addon">minutes</span>
+									<span class="input-group-text">minutes</span>
 								</div>
-								<p class="help-block">
+								<p class="form-text">
 									How often to re-send notifications.
 								</p>
 								{{ render_form_violations(form, 'notificationInterval') }}
 							</div>
 						</div>
-						<div class="form-group row">
-							<label class="col-lg-2 control-label"><i class="fa-solid fa-user"></i> People to Notify</label>
+						<div class="row mb-3">
+							<label class="col-lg-2 col-form-label"><i class="fa-solid fa-user"></i> People to Notify</label>
 							<div class="col-lg-10">
 								<select name="contactsIds[]" id="contactsIds"
 									multiple="multiple" class="js-chosen-select"
@@ -179,7 +179,7 @@
 				</div>
 			</div>
 
-			<div class="col-lg-offset-2 col-xs-offset-0">
+			<div class="offset-lg-2">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

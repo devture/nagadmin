@@ -21,13 +21,12 @@
 
 			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="_remember_me"> Remember me
-				</label>
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" name="_remember_me" id="_remember_me">
+				<label class="form-check-label" for="_remember_me">Remember me</label>
 			</div>
 
-			<button type="submit" class="btn btn-lg btn-primary btn-block">Log in</button>
+			<button type="submit" class="btn btn-lg btn-primary w-100">Log in</button>
 		</fieldset>
 	</form>
 {% endblock %}

@@ -8,8 +8,8 @@
 
 		<fieldset>
 			{% block devture_user_row_username %}
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Username</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Username</label>
 				<div class="col-lg-6">
 					<input type="text" class="form-control" name="username" id="username" value="{{ entity.username }}" />
 					{{ render_form_violations(form, 'username') }}
@@ -18,8 +18,8 @@
 			{% endblock %}
 
 			{% block devture_user_row_email %}
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-envelope"></i> Email</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-envelope"></i> Email</label>
 				<div class="col-lg-6">
 					<input type="email" class="form-control" name="email" id="email" value="{{ entity.email }}" />
 					{{ render_form_violations(form, 'email') }}
@@ -28,8 +28,8 @@
 			{% endblock %}
 
 			{% block devture_user_row_name %}
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Name</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Name</label>
 				<div class="col-lg-6">
 					<input type="text" class="form-control" name="name" id="name" value="{{ entity.name }}" />
 					{{ render_form_violations(form, 'name') }}
@@ -38,12 +38,12 @@
 			{% endblock %}
 
 			{% block devture_user_row_password %}
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Password</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Password</label>
 				<div class="col-lg-6">
 					<input type="text" class="form-control" name="password" id="password" autocomplete="off" />
 					{% if isAdded %}
-					<p class="help-block">Or leave empty to preserve the old one.</p>
+					<p class="form-text">Or leave empty to preserve the old one.</p>
 					{% endif %}
 					{{ render_form_violations(form, 'password') }}
 				</div>
@@ -52,18 +52,18 @@
 
 			{% block devture_user_row_roles %}
 			{% if roles|length != 0 %}
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Privileges</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Privileges</label>
 				<div class="col-lg-10">
 					{% for role, title in roles %}
 						{% set hasRole = entity.hasRole(role) %}
 						{% set class = (role == 'all' ? 'fbold' : 'js-cbx-role') %}
-						<label class="checkbox {{ class }}">
-							<input type="checkbox" name="roles[]" id="role_{{ role }}"
+						<div class="form-check {{ class }}">
+							<input class="form-check-input" type="checkbox" name="roles[]" id="role_{{ role }}"
 								value="{{ role }}"
 								{{ hasRole ? 'checked="checked"' : '' }} />
-								{{ title }}
-						</label>
+							<label class="form-check-label" for="role_{{ role }}">{{ title }}</label>
+						</div>
 					{% endfor %}
 					{{ render_form_violations(form, 'roles') }}
 				</div>
@@ -71,7 +71,7 @@
 			{% endif %}
 			{% endblock %}
 
-			<div class="col-lg-offset-2 col-xs-offset-0">
+			<div class="offset-lg-2">
 				<button type="submit" class="btn btn-primary">
 					Save
 				</button>

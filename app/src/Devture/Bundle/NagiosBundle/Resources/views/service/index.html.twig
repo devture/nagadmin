@@ -3,10 +3,10 @@
 {% block devture_nagios_content %}
 	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
 		<div class="row">
-			<div class="col-lg-3 col-xs-6">
+			<div class="col-lg-3 col-6">
 				<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
 
-				<div class="hidden-xs pull-right" ng-if="!loaded">
+				<div class="d-none d-sm-block float-end" ng-if="!loaded">
 					<div class="spinner text-center">
 						<div class="bounce1"></div>
 						<div class="bounce2"></div>
@@ -15,9 +15,9 @@
 				</div>
 			</div>
 
-			<div class="col-lg-9 col-xs-6">
-				<div class="row col-lg-5 col-lg-offset-7 text-right">
-					<select ng-show="hostsInfo.length > 0" ng-model="selectedHostId" class="form-control">
+			<div class="col-lg-9 col-6">
+				<div class="col-lg-5 offset-lg-7 text-end">
+					<select ng-show="hostsInfo.length > 0" ng-model="selectedHostId" class="form-select">
 						<option value="">-- All hosts --</option>
 						<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
 					</select>
@@ -25,7 +25,7 @@
 			</div>
 		</div>
 
-		<div class="visible-xs" ng-if="hostsInfo.length == 0">
+		<div class="d-block d-sm-none" ng-if="hostsInfo.length == 0">
 			<div class="spinner text-center">
 				<div class="bounce1"></div>
 				<div class="bounce2"></div>
@@ -37,9 +37,9 @@
 
 		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo"></host-info>
 
-		<div ng-cloak class="help-block" ng-if="loaded && filteredHostsInfo.length == 0">
+		<div ng-cloak class="form-text" ng-if="loaded && filteredHostsInfo.length == 0">
 			Not monitoring anything yet.
-			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-default btn-sm">Create a new host to get started</a>
+			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-secondary btn-sm">Create a new host to get started</a>
 		</div>
 	</div>
 {% endblock %}

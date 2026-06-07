@@ -1,21 +1,21 @@
 <fieldset>
-	<div class="form-group row">
-		<label class="col-lg-2 control-label">Argument</label>
-		<div class="col-lg-offset-2">
+	<div class="row mb-3">
+		<label class="col-lg-2 col-form-label">Argument</label>
+		<div class="offset-lg-2">
 			$ARG{{ ident }}$
 		</div>
 	</div>
-	<div class="form-group row">
-		<label class="col-lg-2 control-label">Description</label>
-		<div class="col-lg-offset-2">
+	<div class="row mb-3">
+		<label class="col-lg-2 col-form-label">Description</label>
+		<div class="offset-lg-2">
 			<input type="text" name="arguments[{{ ident }}][description]"
 				value="{{ entity is not none ? entity.description : '' }}"
 				class="form-control" />
 		</div>
 	</div>
-	<div class="form-group row">
-		<label class="col-lg-2 control-label">Default</label>
-		<div class="col-lg-offset-2">
+	<div class="row mb-3">
+		<label class="col-lg-2 col-form-label">Default</label>
+		<div class="offset-lg-2">
 			<input type="text" name="arguments[{{ ident }}][defaultValue]"
 				value="{{ entity is not none ? entity.defaultValue : '' }}"
 				class="form-control" />

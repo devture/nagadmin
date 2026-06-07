@@ -12,7 +12,7 @@ nagadminApp.filter('humanize_state', function () {
 });
 
 nagadminApp.filter('state_label_class', function () {
-	var map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-danger', 'unknown': 'label-default'};
+	var map = {'ok': 'text-bg-success', 'warning': 'text-bg-warning', 'critical': 'text-bg-danger', 'unknown': 'text-bg-secondary'};
 	return function (state) {
 		return map[state];
 	};

@@ -7,8 +7,8 @@
 
 	<div ng-app-lazy="nagadminApp">
 		<fieldset>
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
 				<div class="col-lg-10 clearfix">
 					<img src="//www.google.com/s2/favicons?domain={{ entity.address }}" alt="" />
 					{{ entity.name }}
@@ -16,18 +16,18 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Groups</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Groups</label>
 				<div class="col-lg-10">
 				{% for group in entity.groups %}
-					<span class="label label-nagadmin label-info"
+					<span class="badge label-nagadmin"
 						style="background-color: {{ group|devture_nagios_colorize }};">{{ group }}</span>
 				{% endfor %}
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Services</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-signal"></i> Services</label>
 				<div class="col-lg-10">
 					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
 						<div ng-controller="HostInfoCtrl">
@@ -45,8 +45,8 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-book"></i> Logs</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-book"></i> Logs</label>
 				<div class="col-lg-10">
 					{% if logs|length == 0 %}
 						No recent log entries related to this host.

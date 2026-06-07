@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th>Username</th>
-				<th class="hidden-xs">Email</th>
+				<th class="d-none d-sm-table-cell">Email</th>
 				<th>Name</th>
 			</tr>
 		</thead>
@@ -14,17 +14,17 @@
 			{% set link = path('devture_user.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						<strong>{{ entity.username }}</strong>
 					</a>
 				</td>
-				<td class="hidden-xs">
-					<a href="{{ link }}" class="btn-block">
+				<td class="d-none d-sm-table-cell">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.email }}
 					</a>
 				</td>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.name }}
 					</a>
 				</td>

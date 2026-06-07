@@ -12,8 +12,8 @@
 	{% else %}
 		<div>
 			<fieldset>
-				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Status</label>
+				<div class="row mb-3">
+					<label class="col-lg-2 col-form-label"><i class="fa-solid fa-signal"></i> Status</label>
 					<div class="col-lg-10">
 						<div style="width: 100px; display: inline-block;">
 							{{ macros.service_status(status) }}
@@ -32,20 +32,20 @@
 						{% endif %}
 					</div>
 				</div>
-				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="fa-solid fa-flag"></i> Check Result</label>
+				<div class="row mb-3">
+					<label class="col-lg-2 col-form-label"><i class="fa-solid fa-flag"></i> Check Result</label>
 					<div class="col-lg-10 clearfix">
 						{{ status.pluginOutput }}
 					</div>
 				</div>
-				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="fa-solid fa-list-check"></i> Performance</label>
+				<div class="row mb-3">
+					<label class="col-lg-2 col-form-label"><i class="fa-solid fa-list-check"></i> Performance</label>
 					<div class="col-lg-10 clearfix">
 						{{ status.performanceData }}
 					</div>
 				</div>
-				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="fa-solid fa-chevron-left"></i> Last Check</label>
+				<div class="row mb-3">
+					<label class="col-lg-2 col-form-label"><i class="fa-solid fa-chevron-left"></i> Last Check</label>
 					<div class="col-lg-10">
 						{% if status.lastCheckTime == 0 %}
 							Never
@@ -54,23 +54,23 @@
 						{% endif %}
 					</div>
 				</div>
-				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="fa-solid fa-chevron-right"></i> Next Check</label>
+				<div class="row mb-3">
+					<label class="col-lg-2 col-form-label"><i class="fa-solid fa-chevron-right"></i> Next Check</label>
 					<div class="col-lg-10 clearfix">
 						{% if status.nextCheckTime < none|date('U') %}
-							<span class="text-error">
+							<span class="text-danger">
 								{{ macros.relative_time(status.nextCheckTime) }} ago
 							</span>
 						{% else %}
 							in {{ macros.relative_time(status.nextCheckTime) }}
 						{% endif %}
-						<div class="pull-right" style="width: 250px;">
-							<a class="btn btn-default btn-sm pull-right" href="javascript://" id="js-btn-service-check-schedule">
+						<div class="float-end" style="width: 250px;">
+							<a class="btn btn-secondary btn-sm float-end" href="javascript://" id="js-btn-service-check-schedule">
 								<i class="fa-solid fa-arrows-rotate"></i>
 								check now
 							</a>
-							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
-								<div class="progress-bar" style="width: 0;"></div>
+							<div class="progress d-none" id="js-progress-service-check-schedule">
+								<div class="progress-bar progress-bar-striped" style="width: 0;"></div>
 							</div>
 						</div>
 					</div>
@@ -87,8 +87,8 @@
 
 	<div ng-app-lazy="nagadminApp">
 		<fieldset>
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
 				<div class="col-lg-10">
 					<a href="{{ path('devture_nagios.host.view', {'id': entity.host.id}) }}">
 						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
@@ -98,8 +98,8 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Service</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-signal"></i> Service</label>
 				<div class="col-lg-10 clearfix">
 					{{ entity.name }}
 					{% if not entity.enabled %}
@@ -108,13 +108,13 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-user"></i> Users to notify</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-user"></i> Users to notify</label>
 				<div class="col-lg-10 clearfix">
 				{% for contact in entity.contacts %}
 					{% if is_granted('NAGIOS_MANAGE', contact) %}
 						<a
-							class="well well-small"
+							class="border rounded"
 							style="display: inline-block; padding: 2px 5px;"
 							href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
 							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
@@ -123,7 +123,7 @@
 						</a>
 					{% else %}
 						<span
-							class="well well-small"
+							class="border rounded"
 							style="display: inline-block; padding: 2px 5px;"
 							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
 							<contact entity='contact_{{ contact.id }}' size="24"></contact>
@@ -136,15 +136,15 @@
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label">Status</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label">Status</label>
 				<div class="col-lg-10">
 					{{ _self.service_detailed_status(entity) }}
 				</div>
 			</div>
 
-			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="fa-solid fa-book"></i> Logs</label>
+			<div class="row mb-3">
+				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-book"></i> Logs</label>
 				<div class="col-lg-10">
 					{% if logs|length == 0 %}
 						No recent log entries related to this service.
@@ -190,7 +190,7 @@
 						var $bar = $progress.find('.progress-bar');
 
 						$button.remove();
-						$progress.removeClass('hide');
+						$progress.removeClass('d-none');
 						$bar.css('width', '0%');
 						$bar.animate({"width": "100%"}, waitingTime, 'linear', function () {
 							window.location.reload();

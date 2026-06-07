@@ -1,23 +1,23 @@
 {% macro service_label_class_from_state(state) %}
 {% apply spaceless %}
-	{% set map = {'ok': 'label-success', 'warning': 'label-warning', 'critical': 'label-danger', 'unknown': 'label-default'} %}
+	{% set map = {'ok': 'text-bg-success', 'warning': 'text-bg-warning', 'critical': 'text-bg-danger', 'unknown': 'text-bg-secondary'} %}
 	{{ map[state] }}
 {% endapply %}
 {% endmacro %}
 
 {% macro service_status(status) %}
 	{% if status is none %}
-		<div class="text-center label label-default" style="display: block;">
+		<div class="text-center badge text-bg-secondary" style="display: block;">
 			missing
 		</div>
 	{% else %}
 		{% if status.checked %}
-			<div class="text-center label {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
+			<div class="text-center badge {{ _self.service_label_class_from_state(status.currentStateHuman) }}"
 				style="display: block;">
 				{{ status.currentStateHuman }}
 			</div>
 		{% else %}
-			<div class="text-center label label-default" style="display: block;">
+			<div class="text-center badge text-bg-secondary" style="display: block;">
 				pending
 			</div>
 		{% endif %}

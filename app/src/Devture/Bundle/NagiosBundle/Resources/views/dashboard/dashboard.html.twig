@@ -2,8 +2,8 @@
 
 {% block devture_nagios_content %}
 	<div ng-controller="DashboardCtrl" ng-app-lazy="nagadminApp">
-		<div ng-cloak ng-hide="logs != null && logs.length == 0" class="pull-right">
-			<a class="btn btn-default btn-sm" href="{{ path('devture_nagios.log.manage') }}">
+		<div ng-cloak ng-hide="logs != null && logs.length == 0" class="float-end">
+			<a class="btn btn-secondary btn-sm" href="{{ path('devture_nagios.log.manage') }}">
 				<i class="fa-solid fa-book"></i>
 				see all {{ '{{ logs.length }}' }} log entries
 			</a>
@@ -18,7 +18,7 @@
 		</div>
 		<log-list-table entities="logs" limit="3"></log-list-table>
 
-		<div ng-cloak ng-hide="hostsInfo == 0" class="pull-right">
+		<div ng-cloak ng-hide="hostsInfo == 0" class="float-end">
 			<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
 		</div>
 		<h3>Services</h3>
@@ -30,9 +30,9 @@
 			</div>
 		</div>
 		<host-info ng-repeat="hostInfo in hostsInfo" entity="hostInfo"></host-info>
-		<div ng-cloak class="help-block" ng-if="hostsInfo !== null && hostsInfo.length == 0">
+		<div ng-cloak class="form-text" ng-if="hostsInfo !== null && hostsInfo.length == 0">
 			Not monitoring anything yet.
-			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-default btn-sm">Create a new host to get started</a>
+			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-secondary btn-sm">Create a new host to get started</a>
 		</div>
 	</div>
 {% endblock %}

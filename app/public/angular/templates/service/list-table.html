@@ -4,8 +4,8 @@
 		<th style="width: 50px;"></th>
 		<th>Service</th>
 		<th>Checked</th>
-		<th class="hidden-xs">Status</th>
-		<th class="hidden-xs" style="min-width: 140px;">Notify</th>
+		<th class="d-none d-sm-table-cell">Status</th>
+		<th class="d-none d-sm-table-cell" style="min-width: 140px;">Notify</th>
 	</tr>
 </thead>
 <tbody>
@@ -14,7 +14,7 @@
 			<service-status-badge entity="serviceInfo.status"></service-status-badge>
 		</td>
 		<td style="width: 210px;">
-			<a href-to="service" href-via="'url_service_view'" class="btn-block">
+			<a href-to="service" href-via="'url_service_view'" class="d-block">
 				{{ service.name }}
 
 				<strong ng-hide="service.enabled">(disabled)</strong>
@@ -35,13 +35,13 @@
 				</span>
 			</span>
 		</td>
-		<td class="hidden-xs">
+		<td class="d-none d-sm-table-cell">
 			{{ serviceInfo.status.plugin_output }}
 			<div ng-show="serviceInfo.status == null">
 				-- There is no information about this service --
 			</div>
 		</td>
-		<td class="hidden-xs">
+		<td class="d-none d-sm-table-cell">
 			<span ng-repeat="contact in service.contacts">
 				<contact entity="contact" size="24"></contact>
 			</span>

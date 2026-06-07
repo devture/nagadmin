@@ -7,7 +7,7 @@
 		<thead>
 			<tr>
 				<th>Date</th>
-				<th class="hidden-xs">Type</th>
+				<th class="d-none d-sm-table-cell">Type</th>
 				<th>Value</th>
 			</tr>
 		</thead>
@@ -17,11 +17,11 @@
 				<td nowrap="nowrap">
 					{{ macros.relative_time(entity.timestamp) }} ago
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-sm-table-cell">
 					{{ entity.type }}
 				</td>
 				<td>
-					<span class="visible-xs"><strong>{{ entity.type }}</strong>:</span>
+					<span class="d-inline d-sm-none"><strong>{{ entity.type }}</strong>:</span>
 					<span style="word-break: break-all">
 						{{ entity.value }}
 					</span>
@@ -37,7 +37,7 @@
 					{% endif %}
 
 					{% if info_link is not none %}
-						<a class="btn btn-default btn-xs pull-right" href="{{ info_link }}">
+						<a class="btn btn-secondary btn-sm float-end" href="{{ info_link }}">
 						{% if entity.host %}
 							<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
 						{% else %}

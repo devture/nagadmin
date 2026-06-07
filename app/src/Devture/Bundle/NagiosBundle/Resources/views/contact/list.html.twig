@@ -8,7 +8,7 @@
 			<tr>
 				<th style="width: 30px;"></th>
 				<th>Identifier</th>
-				<th class="hidden-xs">Addresses</th>
+				<th class="d-none d-sm-table-cell">Addresses</th>
 				<th>Notify</th>
 			</tr>
 		</thead>
@@ -17,24 +17,24 @@
 			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="btn-block"
+					<a href="{{ link }}" class="d-block"
 						ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
 						<contact entity='contact_{{ entity.id }}' size="24"></contact>
 					</a>
 				</td>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.name }}
 					</a>
 				</td>
-				<td class="hidden-xs">
+				<td class="d-none d-sm-table-cell">
 					{% set addresses = (entity.email ? [entity.email] : [])|merge(entity.addresses) %}
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ addresses|join(', ') }}
 					</a>
 				</td>
 				<td>
-					<a href="{{ link }}" class="btn-block">
+					<a href="{{ link }}" class="d-block">
 						{{ entity.timePeriod.title }}
 					</a>
 				</td>
