@@ -21,7 +21,7 @@
 				</span>
 
 				<div ng-if="entity.infoLink != null">
-					<a class="btn btn-secondary btn-sm float-end" href="{{ entity.infoLink }}">
+					<a class="btn btn-outline-secondary btn-sm float-end" href="{{ entity.infoLink }}">
 						<img ng-if="entity.host.address != null" ng-src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
 						<i ng-if="entity.host.address == null" class="fa-solid fa-circle-info"></i>
 					</a>
