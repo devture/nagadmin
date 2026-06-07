@@ -3,18 +3,27 @@ namespace Devture\Bundle\NagiosBundle\Deployment;
 
 class ObjectDefinition {
 
-	private $type;
-	private $directives = array();
+	private string $type;
 
-	public function __construct($type) {
+	/**
+	 * @var list<array{name: string, value: string|int}>
+	 */
+	private array $directives = array();
+
+	public function __construct(string $type) {
 		$this->type = $type;
 	}
 
+	/**
+	 * @param string $name
+	 * @param string|int $value
+	 * @return void
+	 */
 	public function addDirective($name, $value) {
 		$this->directives[] = array('name' => $name, 'value' => $value);
 	}
 
-	public function getConfiguration() {
+	public function getConfiguration(): string {
 		ob_start();
 		echo "define ", $this->type, " {\n";
 
@@ -23,7 +32,7 @@ class ObjectDefinition {
 		}
 
 		echo "}";
-		return ob_get_clean();
+		return (string) ob_get_clean();
 	}
 
 }

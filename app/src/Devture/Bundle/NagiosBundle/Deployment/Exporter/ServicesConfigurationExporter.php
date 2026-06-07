@@ -53,7 +53,7 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 		return $configurationFile;
 	}
 
-	private function escapeShellArg(Service $service, $argumentValue) {
+	private function escapeShellArg(Service $service, string $argumentValue): string {
 		//Macros won't work in command arguments (because we escape $ bellow).
 		//Let's handle this single macro here (at generation time), for convenience.
 		if ($argumentValue === '$HOSTADDRESS$') {

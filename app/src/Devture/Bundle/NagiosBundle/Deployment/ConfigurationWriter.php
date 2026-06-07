@@ -5,7 +5,7 @@ use Symfony\Component\Finder\Finder;
 
 class ConfigurationWriter {
 
-	public function cleanup($path) {
+	public function cleanup(string $path): void {
 		foreach (Finder::create()->files()->in($path) as $file) {
 			unlink($file->getRealPath());
 		}
@@ -17,7 +17,8 @@ class ConfigurationWriter {
 
 	/**
 	 * @param string $path
-	 * @param array $configurationFiles
+	 * @param list<ConfigurationFile> $configurationFiles
+	 * @return void
 	 */
 	public function write($path, array $configurationFiles) {
 		$path = rtrim($path, '/');

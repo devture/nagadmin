@@ -12,6 +12,10 @@ class ConfigurationTester {
 		$this->writer = $writer;
 	}
 
+	/**
+	 * @param list<ConfigurationFile> $configurationFiles
+	 * @return array{0: bool, 1: string}
+	 */
 	public function test(array $configurationFiles) {
 		$path = rtrim(sys_get_temp_dir(), '/') . '/' . uniqid('nagadmin-test');
 
@@ -50,6 +54,13 @@ class ConfigurationTester {
 		return array($isValid, $checkOutput);
 	}
 
+	/**
+	 * @param string $path
+	 * @param list<ConfigurationFile> $configurationFiles
+	 * @param string $checkResultPath
+	 * @param string $logFilePath
+	 * @return ConfigurationFile
+	 */
 	private function createMainConfigFile($path, array $configurationFiles, $checkResultPath, $logFilePath) {
 		$mainConfigFile = new ConfigurationFile('nagios.cfg', ConfigurationFile::TYPE_CONFIGURATION_FILE);
 

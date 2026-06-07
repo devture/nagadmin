@@ -6,33 +6,46 @@ class ConfigurationFile {
 	const TYPE_CONFIGURATION_FILE = 0;
 	const TYPE_RESOURCE_FILE = 1;
 
-	private $path;
-	private $type;
-	private $definitions = array();
-	private $variables = array();
+	private string $path;
+	private int $type;
 
-	public function __construct($path, $type) {
+	/**
+	 * @var list<ObjectDefinition>
+	 */
+	private array $definitions = array();
+
+	/**
+	 * @var list<array{name: string, value: string}>
+	 */
+	private array $variables = array();
+
+	public function __construct(string $path, int $type) {
 		$this->path = $path;
 		$this->type = $type;
 	}
 
-	public function getPath() {
+	public function getPath(): string {
 		return $this->path;
 	}
 
-	public function getType() {
+	public function getType(): int {
 		return $this->type;
 	}
 
-	public function addObjectDefinition(ObjectDefinition $definition) {
+	public function addObjectDefinition(ObjectDefinition $definition): void {
 		$this->definitions[] = $definition;
 	}
 
+	/**
+	 * @param string $name
+	 * @param string $value
+	 * @return void
+	 */
 	public function addVariable($name, $value) {
 		$this->variables[] = array('name' => $name, 'value' => $value);
 	}
 
-	public function getConfiguration() {
+	public function getConfiguration(): string {
 		ob_start();
 
 		foreach ($this->definitions as $definition) {
@@ -43,7 +56,7 @@ class ConfigurationFile {
 			echo $variableData['name'], "=", $variableData['value'], "\n\n";
 		}
 
-		return ob_get_clean();
+		return (string) ob_get_clean();
 	}
 
 }

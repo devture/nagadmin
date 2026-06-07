@@ -8,17 +8,17 @@ use Devture\Bundle\NagiosBundle\NagiosCommand\Submitter;
 class DeploymentHandler implements DeploymentHandlerInterface {
 
 	private $writer;
-	private $path;
+	private string $path;
 	private $submitter;
 
-	public function __construct(ConfigurationWriter $writer, $path, Submitter $submitter) {
+	public function __construct(ConfigurationWriter $writer, string $path, Submitter $submitter) {
 		$this->writer = $writer;
 		$this->path = $path;
 		$this->submitter = $submitter;
 	}
 
 	/**
-	 * @param array $configurationFiles
+	 * @param list<\Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile> $configurationFiles
 	 * @throws DeploymentFailedException
 	 */
 	public function deploy(array $configurationFiles, bool $reloadNagios): void {

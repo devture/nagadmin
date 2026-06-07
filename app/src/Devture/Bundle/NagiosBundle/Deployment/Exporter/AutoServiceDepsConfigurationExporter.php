@@ -11,8 +11,15 @@ class AutoServiceDepsConfigurationExporter implements ConfigurationExporterInter
 
 	private $hostRepository;
 	private $serviceRepository;
-	private $masterServicesRegexes;
 
+	/**
+	 * @var list<string>
+	 */
+	private array $masterServicesRegexes;
+
+	/**
+	 * @param list<string> $masterServicesRegexes
+	 */
 	public function __construct(HostRepository $hostRepository, ServiceRepository $serviceRepository, array $masterServicesRegexes) {
 		$this->hostRepository = $hostRepository;
 		$this->serviceRepository = $serviceRepository;
@@ -59,7 +66,7 @@ class AutoServiceDepsConfigurationExporter implements ConfigurationExporterInter
 		return $configurationFile;
 	}
 
-	private function isMasterService(Service $service) {
+	private function isMasterService(Service $service): bool {
 		$name = $service->getName();
 		foreach ($this->masterServicesRegexes as $regex) {
 			if (preg_match($regex, $name)) {

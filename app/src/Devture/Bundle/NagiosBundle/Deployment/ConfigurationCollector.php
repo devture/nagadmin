@@ -5,14 +5,17 @@ use Devture\Bundle\NagiosBundle\Deployment\Exporter\ConfigurationExporterInterfa
 
 class ConfigurationCollector {
 
-	private $exporters = array();
+	/**
+	 * @var list<ConfigurationExporterInterface>
+	 */
+	private array $exporters = array();
 
-	public function addExporter(ConfigurationExporterInterface $exporter) {
+	public function addExporter(ConfigurationExporterInterface $exporter): void {
 		$this->exporters[] = $exporter;
 	}
 
 	/**
-	 * @return ConfigurationFile[]
+	 * @return list<ConfigurationFile>
 	 */
 	public function collect() {
 		$files = array();
