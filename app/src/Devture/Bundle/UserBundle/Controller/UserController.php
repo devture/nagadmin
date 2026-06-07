@@ -17,6 +17,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    /**
+     * @param array<string, string> $roles
+     */
     public function __construct(
         private readonly UserRepositoryInterface $repository,
         private readonly UserFormBinder $formBinder,

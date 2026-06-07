@@ -38,7 +38,7 @@ class UserFormBinder extends SetterRequestBinder
         $this->bindWhitelisted($entity, $request->request->all(), $whitelisted);
 
         $password = $request->request->get('password');
-        if ($password !== '' && $password !== null) {
+        if (is_string($password) && $password !== '') {
             if (strlen($password) > 4096) {
                 $this->getViolations()->add('password', 'The password is too long.');
             } else {

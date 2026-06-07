@@ -31,7 +31,11 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->user->getUsername();
+        $username = $this->user->getUsername();
+        if ($username === '') {
+            throw new \LogicException('The user has no username and cannot be used as a security identity.');
+        }
+        return $username;
     }
 
     public function getPassword(): ?string

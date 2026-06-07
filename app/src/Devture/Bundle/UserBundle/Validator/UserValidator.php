@@ -13,11 +13,18 @@ class UserValidator extends BaseValidator {
 	private $repository;
 	private $knownRoles;
 
+	/**
+	 * @param array<string, mixed> $knownRoles
+	 */
 	public function __construct(UserRepositoryInterface $repository, array $knownRoles) {
 		$this->repository = $repository;
 		$this->knownRoles = array_keys($knownRoles);
 	}
 
+	/**
+	 * @param User $entity
+	 * @param array<string, mixed> $options
+	 */
 	public function validate($entity, array $options = array()) {
 		$violations = parent::validate($entity, $options);
 
@@ -51,10 +58,10 @@ class UserValidator extends BaseValidator {
 		return $violations;
 	}
 
-	private function validateEmail(User $entity, ViolationsList $violations) {
+	private function validateEmail(User $entity, ViolationsList $violations): void {
 		$email = $entity->getEmail();
 
-		if ($this->isEmpty($email)) {
+		if ($email === null || $email === '') {
 			//Empty is okay, non-required field.
 			return;
 		}
