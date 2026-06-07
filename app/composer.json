@@ -65,10 +65,7 @@
         "symfony/polyfill-php84": "*"
     },
     "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
+        "auto-scripts": {},
         "post-install-cmd": [
             "@auto-scripts"
         ],

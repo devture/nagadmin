@@ -30,16 +30,25 @@ run-bg env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (dock
 stop env='dev': (docker-compose env "down")
 
 # Installs PHP dependencies via composer
-composer-install:
+composer-install: _var-composer-cache
 	./bin/composer install --optimize-autoloader --ignore-platform-req=php
 
 # Updates PHP dependencies via composer
-composer-update:
+composer-update: _var-composer-cache
 	./bin/composer update --optimize-autoloader --ignore-platform-req=php
 
 # Runs static analysis (PHPStan) against the app's PHP code
 php-analyze: _prepare_deps
 	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
+
+# Clears the Symfony cache (Symfony rebuilds it on the next request)
+cache-clear:
+	@docker run \
+	--rm \
+	--mount type=bind,src={{ justfile_directory() }},dst=/justfile_directory \
+	{{ alpine_container_image }} \
+	/bin/sh -c 'rm -rf /justfile_directory/var/cache'
+	@{{ just_executable() }} --justfile {{ justfile() }} _var-cache
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
@@ -111,6 +120,9 @@ _var-exim-spool: (_ensure_dir_prepared_recursive "var/container-data/exim-spool"
 
 # The Twig cache, written by the php container (runs as {{ container_user }}).
 _var-cache: (_ensure_dir_prepared_recursive "var/cache")
+
+# Composer's download cache, left owned by the invoking user (composer runs as them).
+_var-composer-cache: (_ensure_dir_created "var/composer-cache")
 
 # Used for MongoDB dump/import I/O; written by the mongodb container (runs as root).
 _var-mongodb-io: (_ensure_dir_created "var/mongodb-io")

@@ -14,14 +14,12 @@ if [ -t 1 ]; then
 	docker_run_flags='-it'
 fi
 
-mkdir $HOME/.cache || true
-
 docker run \
 	$docker_run_flags \
 	--rm \
 	-e UID=`id -u` \
 	-e GID=`id -g` \
-	--mount type=bind,src=$HOME/.cache,dst=/cache \
+	--mount type=bind,src=`pwd`/var/composer-cache,dst=/cache \
 	--mount type=bind,src=`pwd`,dst=/app \
 	--tmpfs=/home/user \
 	--entrypoint=/bin/sh \
