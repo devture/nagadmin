@@ -7,23 +7,38 @@ abstract class Status {
 	const TYPE_PROGRAM_STATUS = 'programstatus';
 	const TYPE_SERVICE_STATUS = 'servicestatus';
 
-	private $type;
-	private $directives = array();
+	private string $type;
 
-	public function __construct($type, $directives) {
+	/**
+	 * @var array<string, string>
+	 */
+	private array $directives;
+
+	/**
+	 * @param array<string, string> $directives
+	 */
+	public function __construct(string $type, array $directives) {
 		$this->type = $type;
 		$this->directives = $directives;
 	}
 
-	public function getType() {
+	public function getType(): string {
 		return $this->type;
 	}
 
+	/**
+	 * @param string $name
+	 * @param mixed $defaultValue
+	 * @return mixed
+	 */
 	public function getDirective($name, $defaultValue = null) {
 		return (isset($this->directives[$name]) ? $this->directives[$name] : $defaultValue);
 	}
 
-	public function getDirectives() {
+	/**
+	 * @return array<string, string>
+	 */
+	public function getDirectives(): array {
 		return $this->directives;
 	}
 

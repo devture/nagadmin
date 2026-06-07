@@ -3,14 +3,20 @@ namespace Devture\Bundle\NagiosBundle\Status;
 
 class InfoStatus extends Status {
 
+	/**
+	 * @return string
+	 */
 	public function getCurrentVersion() {
 		return $this->getDirective('version');
 	}
 
-	public function isUpdateAvailable() {
+	public function isUpdateAvailable(): bool {
 		return ((int) $this->getDirective('update_available') === 1);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getNewVersion() {
 		return $this->getDirective('new_version');
 	}

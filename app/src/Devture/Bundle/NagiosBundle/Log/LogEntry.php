@@ -6,13 +6,13 @@ use Devture\Bundle\NagiosBundle\Model\Service;
 
 class LogEntry {
 
-	private $type;
-	private $timestamp;
-	private $value;
-	private $host;
-	private $service;
+	private string $type;
+	private int $timestamp;
+	private string $value;
+	private ?Host $host;
+	private ?Service $service;
 
-	public function __construct($type, $timestamp, $value, ?Host $host, ?Service $service) {
+	public function __construct(string $type, int $timestamp, string $value, ?Host $host, ?Service $service) {
 		$this->type = $type;
 		$this->timestamp = $timestamp;
 		$this->value = $value;
@@ -20,19 +20,19 @@ class LogEntry {
 		$this->service = $service;
 	}
 
-	public function getId() {
+	public function getId(): string {
 		return sha1($this->type . $this->timestamp . $this->value);
 	}
 
-	public function getType() {
+	public function getType(): string {
 		return $this->type;
 	}
 
-	public function getTimestamp() {
+	public function getTimestamp(): int {
 		return $this->timestamp;
 	}
 
-	public function getValue() {
+	public function getValue(): string {
 		return $this->value;
 	}
 

@@ -9,9 +9,9 @@ class Fetcher {
 	const STATE_FREE = 0;
 	const STATE_DEFINITION = 1;
 
-	private $statusFilePath;
+	private string $statusFilePath;
 
-	public function __construct($statusFilePath) {
+	public function __construct(string $statusFilePath) {
 		$this->statusFilePath = $statusFilePath;
 	}
 
@@ -23,10 +23,13 @@ class Fetcher {
 		if (!file_exists($this->statusFilePath)) {
 			throw new FileMissingException(sprintf('Cannot find status file at `%s`', $this->statusFilePath));
 		}
-		return $this->parse(file_get_contents($this->statusFilePath));
+		return $this->parse((string) file_get_contents($this->statusFilePath));
 	}
 
-	private function parse($contents) {
+	/**
+	 * @return list<Status>
+	 */
+	private function parse(string $contents): array {
 		$lines = explode("\n", $contents);
 		$state = self::STATE_FREE;
 		$lastDefinitionType = null;

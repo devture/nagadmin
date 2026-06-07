@@ -11,13 +11,21 @@ use Devture\Component\DBAL\Exception\NotFound;
 
 class Fetcher {
 
-	private $logFilePath;
+	private string $logFilePath;
 	private $hostRepository;
 	private $serviceRepository;
-	private $hostsMap;
-	private $servicesMap;
 
-	public function __construct($logFilePath, HostRepository $hostRepository, ServiceRepository $serviceRepository) {
+	/**
+	 * @var array<string, Host>|null
+	 */
+	private ?array $hostsMap = null;
+
+	/**
+	 * @var array<string, Service>|null
+	 */
+	private ?array $servicesMap = null;
+
+	public function __construct(string $logFilePath, HostRepository $hostRepository, ServiceRepository $serviceRepository) {
 		$this->logFilePath = $logFilePath;
 		$this->hostRepository = $hostRepository;
 		$this->serviceRepository = $serviceRepository;
@@ -31,22 +39,31 @@ class Fetcher {
 		if (!file_exists($this->logFilePath)) {
 			throw new FileMissingException(sprintf('Cannot find log file at `%s`', $this->logFilePath));
 		}
-		return $this->parse(file_get_contents($this->logFilePath));
+		return $this->parse((string) file_get_contents($this->logFilePath));
 	}
 
+	/**
+	 * @return array<int, LogEntry>
+	 */
 	public function fetchForHost(Host $host) {
 		return array_filter($this->fetch(), function (LogEntry $logEntry) use ($host) {
 			return ($logEntry->getHost() === $host);
 		});
 	}
 
+	/**
+	 * @return array<int, LogEntry>
+	 */
 	public function fetchForService(Service $service) {
 		return array_filter($this->fetch(), function (LogEntry $logEntry) use ($service) {
 			return ($logEntry->getService() === $service);
 		});
 	}
 
-	private function parse($contents) {
+	/**
+	 * @return list<LogEntry>
+	 */
+	private function parse(string $contents) {
 		$lines = explode("\n", $contents);
 
 		$objects = array();
@@ -65,8 +82,8 @@ class Fetcher {
 					$type = 'SYSTEM';
 					$value = $matches[6];
 				} else {
-					$type = $matches[4];
-					$value = $matches[5];
+					$type = $matches[4] ?? '';
+					$value = $matches[5] ?? '';
 				}
 
 				$host = null;
@@ -108,16 +125,28 @@ class Fetcher {
 		return array_reverse($objects);
 	}
 
+	/**
+	 * @param string $value
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getServiceAlertAssociations($value) {
 		list($hostName, $serviceName, $_rest) = explode(';', $value, 3);
 		return $this->getServiceAssociationByNames($hostName, $serviceName);
 	}
 
+	/**
+	 * @param string $value
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getCurrentServiceStateAssociations($value) {
 		list($hostName, $serviceName, $_rest) = explode(';', $value, 3);
 		return $this->getServiceAssociationByNames($hostName, $serviceName);
 	}
 
+	/**
+	 * @param string $value
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getWarningAssociations($value) {
 		if (preg_match("/^Service '([^']+)' on host '([^']+)'/", $value, $matches)) {
 			return $this->getServiceAssociationByNames($matches[2], $matches[1]);
@@ -130,11 +159,19 @@ class Fetcher {
 		return array(null, null);
 	}
 
+	/**
+	 * @param string $value
+	 * @return Host|null
+	 */
 	private function getCurrentHostStateAssociations($value) {
 		list($hostName, $_rest) = explode(';', $value, 2);
 		return $this->lookupHostByName($hostName);
 	}
 
+	/**
+	 * @param string $value
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getExternalCommandAssociations($value) {
 		if (preg_match("/^SCHEDULE_SVC_CHECK;([^;]+);([^;]+)/", $value, $matches)) {
 			return $this->getServiceAssociationByNames($matches[1], $matches[2]);
@@ -142,6 +179,10 @@ class Fetcher {
 		return array(null, null);
 	}
 
+	/**
+	 * @param string $value
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getServiceNotificationAssociations($value) {
 		if (preg_match("/^(?:[^;]+);([^;]+);([^;]+)/", $value, $matches)) {
 			return $this->getServiceAssociationByNames($matches[1], $matches[2]);
@@ -149,6 +190,11 @@ class Fetcher {
 		return array(null, null);
 	}
 
+	/**
+	 * @param string $hostName
+	 * @param string $serviceName
+	 * @return array{Host|null, Service|null}
+	 */
 	private function getServiceAssociationByNames($hostName, $serviceName) {
 		$this->loadServicesMap();
 
@@ -158,18 +204,16 @@ class Fetcher {
 			return array(null, null);
 		}
 
-		/* @var $service Service */
 		$service = $this->servicesMap[$ident];
 
 		return array($service->getHost(), $service);
 	}
 
-	private function loadServicesMap() {
+	private function loadServicesMap(): void {
 		if ($this->servicesMap !== null) {
 			return;
 		}
 
-		/* @var $service Service */
 		$this->servicesMap = array();
 		foreach ($this->serviceRepository->findAll() as $service) {
 			$this->servicesMap[$service->getHost()->getName() . '/' . $service->getName()] = $service;
@@ -190,12 +234,11 @@ class Fetcher {
 		return $this->hostsMap[$hostName];
 	}
 
-	private function loadHostsMap() {
+	private function loadHostsMap(): void {
 		if ($this->hostsMap !== null) {
 			return;
 		}
 
-		/* @var $host Host */
 		$this->hostsMap = array();
 		foreach ($this->hostRepository->findAll() as $host) {
 			$this->hostsMap[$host->getName()] = $host;

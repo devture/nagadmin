@@ -8,9 +8,12 @@ class Manager {
 
 	private $fetcher;
 
-	private $statusLoaded = false;
+	private bool $statusLoaded = false;
 
-	private $servicesStatusMap = array(); //identifier -> ServiceStatus
+	/**
+	 * @var array<string, ServiceStatus> identifier -> ServiceStatus
+	 */
+	private array $servicesStatusMap = array();
 
 	/**
 	 * @var InfoStatus|NULL
@@ -60,7 +63,7 @@ class Manager {
 		return (isset($this->servicesStatusMap[$serviceIdentifier]) ? $this->servicesStatusMap[$serviceIdentifier] : null);
 	}
 
-	private function load() {
+	private function load(): void {
 		if (!$this->statusLoaded) {
 			$this->statusLoaded = true;
 
@@ -80,7 +83,7 @@ class Manager {
 		}
 	}
 
-	private function doLoad() {
+	private function doLoad(): void {
 		foreach ($this->fetcher->fetch() as $status) {
 			if ($status instanceof ServiceStatus) {
 				$serviceIdentifier = $status->getHostname() . '/' . $status->getServiceDescription();
