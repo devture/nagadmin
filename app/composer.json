@@ -26,7 +26,8 @@
         "vonage/client": "4.3.*"
     },
     "require-dev": {
-        "phpstan/phpstan": "2.1.*"
+        "phpstan/phpstan": "2.1.*",
+        "symfony/web-profiler-bundle": "8.1.*"
     },
     "config": {
         "allow-plugins": {
