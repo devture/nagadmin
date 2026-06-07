@@ -18,6 +18,11 @@ pre { white-space: pre-wrap; }
 }
 
 .navbar-nagadmin { border-radius: 0; border-top: 0; border-left: 0; border-right: 0; }
+.navbar-nagadmin .navbar-nav .nav-link.active {
+	background-color: #ced4da;
+	border-radius: 0.25rem;
+	color: #212529;
+}
 
 #footer {
 	color: #666464;
