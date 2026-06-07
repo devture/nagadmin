@@ -9,12 +9,12 @@ class Contact extends BaseModel {
 	const ADDRESS_SLOTS_COUNT = 6;
 
 	/**
-	 * @var TimePeriod
+	 * @var TimePeriod|null
 	 */
 	private $timePeriod;
 
 	/**
-	 * @var Command
+	 * @var Command|null
 	 */
 	private $serviceNotificationCommand;
 
@@ -27,7 +27,7 @@ class Contact extends BaseModel {
 		$this->timePeriod = $timePeriod;
 	}
 
-	public function getTimePeriod(): TimePeriod {
+	public function getTimePeriod(): ?TimePeriod {
 		return $this->timePeriod;
 	}
 
@@ -35,7 +35,7 @@ class Contact extends BaseModel {
 		$this->serviceNotificationCommand = $command;
 	}
 
-	public function getServiceNotificationCommand(): Command {
+	public function getServiceNotificationCommand(): ?Command {
 		return $this->serviceNotificationCommand;
 	}
 

@@ -4,7 +4,9 @@ namespace Devture\Bundle\NagiosBundle\Deployment\Exporter;
 use Devture\Bundle\NagiosBundle\Repository\ContactRepository;
 use Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile;
 use Devture\Bundle\NagiosBundle\Deployment\ObjectDefinition;
+use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\Contact;
+use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 
 class ContactsConfigurationExporter implements ConfigurationExporterInterface {
 
@@ -19,13 +21,19 @@ class ContactsConfigurationExporter implements ConfigurationExporterInterface {
 
 		/* @var $contact Contact */
 		foreach ($this->repository->findAll() as $contact) {
+			$timePeriod = $contact->getTimePeriod();
+			$command = $contact->getServiceNotificationCommand();
+			if (!($timePeriod instanceof TimePeriod) || !($command instanceof Command)) {
+				continue;
+			}
+
 			$definition = new ObjectDefinition('contact');
 			$definition->addDirective('use', 'nagadmin-contact');
 			$definition->addDirective('contact_name', $contact->getName());
 			$definition->addDirective('email', $contact->getEmail());
-			$definition->addDirective('host_notification_period', $contact->getTimePeriod()->getName());
-			$definition->addDirective('service_notification_period', $contact->getTimePeriod()->getName());
-			$definition->addDirective('service_notification_commands', $contact->getServiceNotificationCommand()->getName());
+			$definition->addDirective('host_notification_period', $timePeriod->getName());
+			$definition->addDirective('service_notification_period', $timePeriod->getName());
+			$definition->addDirective('service_notification_commands', $command->getName());
 			foreach ($contact->getAddresses() as $slot => $address) {
 				$definition->addDirective('address' . $slot, $address);
 			}
