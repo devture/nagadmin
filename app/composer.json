@@ -27,7 +27,8 @@
     },
     "require-dev": {
         "phpstan/phpstan": "2.1.*",
-        "symfony/web-profiler-bundle": "8.1.*"
+        "symfony/web-profiler-bundle": "8.1.*",
+        "vincentlanglet/twig-cs-fixer": "3.14.*"
     },
     "config": {
         "allow-plugins": {

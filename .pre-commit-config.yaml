@@ -37,3 +37,12 @@ repos:
         files: '\.php$'
         exclude: '^app/vendor/'
         pass_filenames: false
+
+      # Twig template formatting and style (Twig CS Fixer)
+      - id: twig-format-check
+        name: Twig Formatting and Style (Twig CS Fixer)
+        entry: just twig-format-check
+        language: system
+        files: '\.twig$'
+        exclude: '^app/vendor/'
+        pass_filenames: false

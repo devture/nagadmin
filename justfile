@@ -41,6 +41,14 @@ composer-update: _var-composer-cache
 php-analyze: _prepare_deps
 	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
 
+# Checks Twig template formatting and style (Twig CS Fixer)
+twig-format-check: _prepare_deps
+	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
+
+# Fixes Twig template formatting and style (Twig CS Fixer)
+twig-format: _prepare_deps
+	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
+
 # Clears the Symfony cache (Symfony rebuilds it on the next request)
 cache-clear:
 	@docker run \

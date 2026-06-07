@@ -15,9 +15,27 @@ just php-analyze
 ```
 
 The configuration lives in [`app/phpstan.neon`](../app/phpstan.neon). The code
-is kept passing at **level 5**. Higher levels are reachable over time by adding
-the missing type declarations (parameter, return and property types) they
-require — bump the `level` in the config and work through what it reports.
+is kept passing at **level 8** (PHPStan's strictest level).
+
+## Twig templates (Twig CS Fixer)
+
+[Twig CS Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer) checks the Twig
+templates for consistent formatting and style. Like PHPStan it is a `require-dev`
+dependency and runs inside the `php` container:
+
+```sh
+just twig-format-check
+```
+
+To apply the fixes automatically:
+
+```sh
+just twig-format
+```
+
+The ruleset lives in
+[`app/.twig-cs-fixer.dist.php`](../app/.twig-cs-fixer.dist.php) (tab indentation
+plus delimiter/operator/punctuation spacing and trailing-whitespace rules).
 
 ## Pre-commit hooks (prek)
 
@@ -26,7 +44,7 @@ commit. The hooks are defined in
 [`.pre-commit-config.yaml`](../.pre-commit-config.yaml): built-in checks
 (trailing whitespace, final newlines, YAML/JSON validity, merge-conflict
 markers, accidentally-committed large files or private keys) plus the PHPStan
-analysis above.
+analysis and Twig CS Fixer checks above.
 
 prek itself is pinned and provided through [mise](https://mise.jdx.dev/), so the
 only prerequisite is having `mise` installed; the recipes install prek into a
