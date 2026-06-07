@@ -3,22 +3,29 @@ namespace Devture\Bundle\NagiosBundle\Model;
 
 class HostInfo {
 
-	private $host;
-	private $servicesInfo;
+	private Host $host;
 
+	/**
+	 * @var list<ServiceInfo>
+	 */
+	private array $servicesInfo;
+
+	/**
+	 * @param list<ServiceInfo> $servicesInfo
+	 */
 	public function __construct(Host $host, array $servicesInfo) {
 		$this->host = $host;
 		$this->servicesInfo = $servicesInfo;
 	}
 
-	/**
-	 * @return Host
-	 */
-	public function getHost() {
+	public function getHost(): Host {
 		return $this->host;
 	}
 
-	public function getServicesInfo() {
+	/**
+	 * @return list<ServiceInfo>
+	 */
+	public function getServicesInfo(): array {
 		return $this->servicesInfo;
 	}
 
