@@ -47,3 +47,20 @@ Run the hooks manually anytime:
 just prek-run-on-staged   # only the staged files
 just prek-run-on-all      # the whole repository
 ```
+
+## Logs
+
+Logging goes through [Monolog](https://github.com/Seldaek/monolog) and is written
+to the container's **stderr** — never to log files — so it flows to
+systemd-journald (via the `devture-nagadmin` service) like every other container's
+output, and the journal handles rotation/retention.
+
+In **dev** the application logs live at `notice` level, so a `docker compose logs
+-f php` tail shows warnings, errors and uncaught exceptions as they happen without
+the per-request router/security debug chatter. In **prod** the logs are buffered
+and only flushed when an error occurs (so a clean request logs nothing), then the
+full debug trail for that request is emitted. Tune both in
+[`app/config/packages/monolog.yaml`](../app/config/packages/monolog.yaml).
+
+The php-fpm pool sets `catch_workers_output` so the application's stderr is
+emitted on the php container (not bounced back through nginx as `[error]`).
