@@ -15,14 +15,13 @@ class ContactEventsSubscriber extends ContainerAwareSubscriber {
 		);
 	}
 
-	public function onBeforeContactDelete(ModelEvent $event) {
-		/* @var $contact Contact */
+	public function onBeforeContactDelete(ModelEvent $event): void {
+		/** @var Contact $contact */
 		$contact = $event->getModel();
 
-		/* @var $serviceRepository ServiceRepository */
+		/** @var ServiceRepository $serviceRepository */
 		$serviceRepository = $this->get('devture_nagios.service.repository');
 
-		/* @var $service Service */
 		foreach ($serviceRepository->findByContact($contact) as $service) {
 			$service->removeContact($contact);
 			$serviceRepository->update($service);

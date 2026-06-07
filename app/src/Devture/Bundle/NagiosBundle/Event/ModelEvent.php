@@ -6,13 +6,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ModelEvent extends Event {
 
-	private $model;
+	private BaseModel $model;
 
 	public function __construct(BaseModel $model) {
 		$this->model = $model;
 	}
 
-	public function getModel() {
+	public function getModel(): BaseModel {
 		return $this->model;
 	}
 

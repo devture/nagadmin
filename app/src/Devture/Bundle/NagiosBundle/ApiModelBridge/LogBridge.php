@@ -7,6 +7,9 @@ use Devture\Bundle\NagiosBundle\Model\Service;
 
 class LogBridge {
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(LogEntry $entity) {
 		$host = $entity->getHost();
 		$service = $entity->getService();

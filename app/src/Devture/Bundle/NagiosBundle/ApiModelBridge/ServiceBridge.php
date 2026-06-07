@@ -14,6 +14,9 @@ class ServiceBridge {
 		$this->contactBridge = $contactBridge;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(Service $entity) {
 		$contacts = array_map(function (Contact $contact) {
 			return $this->contactBridge->export($contact);

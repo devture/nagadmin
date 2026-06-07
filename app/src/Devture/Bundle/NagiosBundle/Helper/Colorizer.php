@@ -3,12 +3,22 @@ namespace Devture\Bundle\NagiosBundle\Helper;
 
 class Colorizer {
 
-	private $colors;
+	/**
+	 * @var list<string>
+	 */
+	private array $colors;
 
+	/**
+	 * @param list<string> $colors
+	 */
 	public function __construct(array $colors) {
 		$this->colors = $colors;
 	}
 
+	/**
+	 * @param mixed $value
+	 * @return string
+	 */
 	public function colorize($value) {
 		$value = (string)$value;
 

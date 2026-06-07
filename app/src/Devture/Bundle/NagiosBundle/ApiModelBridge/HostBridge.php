@@ -15,6 +15,9 @@ class HostBridge {
 		$this->accessChecker = $accessChecker;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(Host $entity) {
 		return array(
 			'id' => (string) $entity->getId(),

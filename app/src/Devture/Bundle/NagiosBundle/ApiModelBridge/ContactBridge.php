@@ -12,6 +12,9 @@ class ContactBridge {
 		$this->colorizer = $colorizer;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(Contact $entity) {
 		return array(
 			'id' => (string) $entity->getId(),
@@ -21,7 +24,7 @@ class ContactBridge {
 		);
 	}
 
-	private function getAvatarUrl(Contact $contact, $size) {
+	private function getAvatarUrl(Contact $contact, string $size): string {
 		//Force the default image for gravatars based on non-email values.
 		//This is to avoid a collision of the hash based on address fields with some
 		//random internet user's email address (who might have a photo for an avatar)

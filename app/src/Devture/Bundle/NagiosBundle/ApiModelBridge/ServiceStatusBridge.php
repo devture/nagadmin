@@ -5,6 +5,9 @@ use Devture\Bundle\NagiosBundle\Status\ServiceStatus;
 
 class ServiceStatusBridge {
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(ServiceStatus $entity) {
 		static $exportedDirectives = array(
 			'current_attempt',

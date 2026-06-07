@@ -14,11 +14,11 @@ class TimePeriodEventsSubscriber extends ContainerAwareSubscriber {
 		);
 	}
 
-	public function onBeforeTimePeriodDelete(ModelEvent $event) {
-		/* @var $timePeriod TimePeriod */
+	public function onBeforeTimePeriodDelete(ModelEvent $event): void {
+		/** @var TimePeriod $timePeriod */
 		$timePeriod = $event->getModel();
 
-		/* @var $contactRepository ContactRepository */
+		/** @var ContactRepository $contactRepository */
 		$contactRepository = $this->get('devture_nagios.contact.repository');
 
 		foreach ($contactRepository->findByTimePeriod($timePeriod) as $contact) {

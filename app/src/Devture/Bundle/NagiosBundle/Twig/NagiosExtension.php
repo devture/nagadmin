@@ -62,21 +62,33 @@ class NagiosExtension extends AbstractExtension
         return $this->colorizer->colorize($value);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function exportContactApiModel(Contact $contact): array
     {
         return $this->contactBridge->export($contact);
     }
 
+    /**
+     * @return \Devture\Bundle\NagiosBundle\Status\InfoStatus|null
+     */
     public function getInfoStatus()
     {
         return $this->statusManager->getInfoStatus();
     }
 
+    /**
+     * @return \Devture\Bundle\NagiosBundle\Status\ProgramStatus|null
+     */
     public function getProgramStatus()
     {
         return $this->statusManager->getProgramStatus();
     }
 
+    /**
+     * @return \Devture\Bundle\NagiosBundle\Status\ServiceStatus|null
+     */
     public function getServiceStatus(Service $service)
     {
         return $this->statusManager->getServiceStatus($service);

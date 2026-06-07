@@ -59,7 +59,7 @@ class FormExtension extends AbstractExtension
             return '';
         }
 
-        $token = htmlspecialchars((string) $tokenManager->generate($form->getCsrfIntention()), ENT_QUOTES);
+        $token = htmlspecialchars((string) $tokenManager->generate((string) $form->getCsrfIntention()), ENT_QUOTES);
 
         return '<input type="hidden" name="' . $form->getCsrfTokenFieldName() . '" value="' . $token . '" />';
     }

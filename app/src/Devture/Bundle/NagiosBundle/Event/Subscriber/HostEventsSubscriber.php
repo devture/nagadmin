@@ -14,11 +14,11 @@ class HostEventsSubscriber extends ContainerAwareSubscriber {
 		);
 	}
 
-	public function onBeforeHostDelete(ModelEvent $event) {
-		/* @var $host Host */
+	public function onBeforeHostDelete(ModelEvent $event): void {
+		/** @var Host $host */
 		$host = $event->getModel();
 
-		/* @var $serviceRepository ServiceRepository */
+		/** @var ServiceRepository $serviceRepository */
 		$serviceRepository = $this->get('devture_nagios.service.repository');
 
 		foreach ($serviceRepository->findByHost($host) as $service) {

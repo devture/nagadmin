@@ -14,6 +14,9 @@ class ServiceInfoBridge {
 		$this->serviceStatusBridge = $serviceStatusBridge;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(ServiceInfo $entity) {
 		$status = $entity->getStatus();
 		$service = $entity->getService();

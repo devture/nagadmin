@@ -14,6 +14,9 @@ class HostInfoBridge {
 		$this->servicesInfoBridge = $servicesInfoBridge;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function export(HostInfo $entity) {
 		$servicesInfo = array_map(function (ServiceInfo $serviceInfo) {
 			return $this->servicesInfoBridge->export($serviceInfo);

@@ -11,7 +11,7 @@ class Manager {
 		$this->submitter = $submitter;
 	}
 
-	public function scheduleServiceCheck(Service $service) {
+	public function scheduleServiceCheck(Service $service): void {
 		$timeNow = time();
 		$command = sprintf(
 			'[%d] SCHEDULE_SVC_CHECK;%s;%s;%d',

@@ -15,21 +15,21 @@ class CommandEventsSubscriber extends ContainerAwareSubscriber {
 		);
 	}
 
-	public function onBeforeCommandDelete(ModelEvent $event) {
-		/* @var $command Command */
+	public function onBeforeCommandDelete(ModelEvent $event): void {
+		/** @var Command $command */
 		$command = $event->getModel();
 
 		$commandType = $command->getType();
 
 		if ($commandType === Command::TYPE_SERVICE_CHECK) {
-			/* @var $serviceRepository ServiceRepository */
+			/** @var ServiceRepository $serviceRepository */
 			$serviceRepository = $this->get('devture_nagios.service.repository');
 
 			foreach ($serviceRepository->findByCommand($command) as $service) {
 				$serviceRepository->delete($service);
 			}
 		} else if ($commandType === Command::TYPE_SERVICE_NOTIFICATION) {
-			/* @var $contactRepository ContactRepository */
+			/** @var ContactRepository $contactRepository */
 			$contactRepository = $this->get('devture_nagios.contact.repository');
 
 			foreach ($contactRepository->findByCommand($command) as $contact) {
