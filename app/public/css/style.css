@@ -32,17 +32,7 @@ pre { white-space: pre-wrap; }
 .label-nagadmin-success-unobtrusive { background-color: white !important; border: 1px solid #468847; text-shadow: 0; color: #468847 !important; }
 .label-nagadmin-default-unobtrusive { background-color: white !important; border: 1px solid gray; text-shadow: 0; color: gray !important; }
 
-/* Fix the "x" button on Chosen multiple-selects (12px -> 16px) */
-.chzn-container-multi .chzn-choices .search-choice .search-choice-close { width: 16px !important; }
-
-.chzn-container-single .chzn-single div b {
-	background-position: 0 -1px !important;
-}
-
-.chzn-container-single .chzn-single.chzn-single-with-drop div b {
-	background-position: -18px -1px !important;
-}
-.chzn-container-multi .chzn-choices .search-field input { height: auto !important; }
+.chosen-container-multi .chosen-choices .search-field input { height: auto !important; }
 
 .spin-animate {
 	-webkit-animation-name: spin-animate;
