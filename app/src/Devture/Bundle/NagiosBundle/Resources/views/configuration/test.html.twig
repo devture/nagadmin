@@ -8,10 +8,10 @@
 				<div class="col-lg-10">
 					<div class="alert alert-{{ isValid ? 'success' : 'danger' }}">
 						{% if isValid %}
-							<i class="glyphicon glyphicon-thumbs-up"></i>
+							<i class="fa-solid fa-thumbs-up"></i>
 							The configuration was checked and seems safe to deploy.
 						{% else %}
-							<i class="glyphicon glyphicon-thumbs-down"></i>
+							<i class="fa-solid fa-thumbs-down"></i>
 							The configuration was checked and seems broken.
 						{% endif %}
 					</div>
@@ -22,7 +22,7 @@
 							<input type="hidden" name="token" value="{{ csrf_token('deploy') }}" />
 							Changes are automatically deployed. You don't have to, but you can also
 							<button type="submit" class="btn btn-link btn-large" id="js-deployment-button-submit">
-								<i class="glyphicon glyphicon-retweet glyphicon glyphicon-white"></i>
+								<i class="fa-solid fa-retweet"></i>
 								deploy manually now
 							</button>
 						</form>

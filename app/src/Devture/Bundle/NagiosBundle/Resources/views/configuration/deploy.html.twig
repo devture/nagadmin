@@ -1,9 +1,9 @@
 <div class="text-center alert alert-{{ error is none ? 'success' : 'error' }}">
 {% if error is none %}
-	<i class="glyphicon glyphicon-ok"></i>
+	<i class="fa-solid fa-check"></i>
 	Configuration deployed.
 {% else %}
-	<i class="glyphicon glyphicon-remove"></i>
+	<i class="fa-solid fa-xmark"></i>
 	Configuration deployment failed.
 {% endif %}
 </div>

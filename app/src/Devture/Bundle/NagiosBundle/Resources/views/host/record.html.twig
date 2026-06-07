@@ -59,7 +59,7 @@
 
 			{% if isAdded %}
 			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Services</label>
+				<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Services</label>
 				<div class="col-lg-10">
 					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
 						<div ng-controller="HostInfoCtrl">

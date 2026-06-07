@@ -13,7 +13,7 @@
 		<div>
 			<fieldset>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Status</label>
+					<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Status</label>
 					<div class="col-lg-10">
 						<div style="width: 100px; display: inline-block;">
 							{{ macros.service_status(status) }}
@@ -33,19 +33,19 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-flag"></i> Check Result</label>
+					<label class="col-lg-2 control-label"><i class="fa-solid fa-flag"></i> Check Result</label>
 					<div class="col-lg-10 clearfix">
 						{{ status.pluginOutput }}
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-tasks"></i> Performance</label>
+					<label class="col-lg-2 control-label"><i class="fa-solid fa-list-check"></i> Performance</label>
 					<div class="col-lg-10 clearfix">
 						{{ status.performanceData }}
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-chevron-left"></i> Last Check</label>
+					<label class="col-lg-2 control-label"><i class="fa-solid fa-chevron-left"></i> Last Check</label>
 					<div class="col-lg-10">
 						{% if status.lastCheckTime == 0 %}
 							Never
@@ -55,7 +55,7 @@
 					</div>
 				</div>
 				<div class="form-group row">
-					<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-chevron-right"></i> Next Check</label>
+					<label class="col-lg-2 control-label"><i class="fa-solid fa-chevron-right"></i> Next Check</label>
 					<div class="col-lg-10 clearfix">
 						{% if status.nextCheckTime < none|date('U') %}
 							<span class="text-error">
@@ -66,7 +66,7 @@
 						{% endif %}
 						<div class="pull-right" style="width: 250px;">
 							<a class="btn btn-default btn-sm pull-right" href="javascript://" id="js-btn-service-check-schedule">
-								<i class="glyphicon glyphicon-refresh"></i>
+								<i class="fa-solid fa-arrows-rotate"></i>
 								check now
 							</a>
 							<div class="progress progress-striped hide" id="js-progress-service-check-schedule">
@@ -88,7 +88,7 @@
 	<div ng-app-lazy="nagadminApp">
 		<fieldset>
 			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-th-large"></i> Host</label>
+				<label class="col-lg-2 control-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
 				<div class="col-lg-10">
 					<a href="{{ path('devture_nagios.host.view', {'id': entity.host.id}) }}">
 						<img src="//www.google.com/s2/favicons?domain={{ entity.host.address }}" alt="" />
@@ -99,7 +99,7 @@
 			</div>
 
 			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-signal"></i> Service</label>
+				<label class="col-lg-2 control-label"><i class="fa-solid fa-signal"></i> Service</label>
 				<div class="col-lg-10 clearfix">
 					{{ entity.name }}
 					{% if not entity.enabled %}
@@ -109,7 +109,7 @@
 			</div>
 
 			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-user"></i> Users to notify</label>
+				<label class="col-lg-2 control-label"><i class="fa-solid fa-user"></i> Users to notify</label>
 				<div class="col-lg-10 clearfix">
 				{% for contact in entity.contacts %}
 					{% if is_granted('NAGIOS_MANAGE', contact) %}
@@ -144,7 +144,7 @@
 			</div>
 
 			<div class="form-group row">
-				<label class="col-lg-2 control-label"><i class="glyphicon glyphicon-book"></i> Logs</label>
+				<label class="col-lg-2 control-label"><i class="fa-solid fa-book"></i> Logs</label>
 				<div class="col-lg-10">
 					{% if logs|length == 0 %}
 						No recent log entries related to this service.
