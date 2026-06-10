@@ -154,13 +154,7 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _frontend-node_modules _public-assets-frontend-completed
-
-_frontend-node_modules:
-	#!/bin/sh
-	if [ ! -d app/frontend/node_modules ]; then
-		{{ just_executable() }} --justfile {{ justfile() }} js-pull-dependencies
-	fi
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _public-assets-frontend-completed
 
 _public-assets-frontend: (_ensure_dir_created "app/public/assets/frontend")
 
