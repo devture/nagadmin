@@ -70,6 +70,20 @@ comploader.register("jquery.autoresize", {
 	]
 });
 
+comploader.register("react.component.DashboardLogsApp", {
+	"requires": ["react"],
+	"scripts": [
+		"{{ static_url('/assets/frontend/DashboardLogsApp.js') }}"
+	]
+});
+
+comploader.register("react.component.DashboardHostsApp", {
+	"requires": ["react"],
+	"scripts": [
+		"{{ static_url('/assets/frontend/DashboardHostsApp.js') }}"
+	]
+});
+
 comploader.register("react.component.ServicesApp", {
 	"requires": ["react"],
 	"scripts": [
