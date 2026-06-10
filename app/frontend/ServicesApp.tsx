@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { BounceSpinner } from './generic/widgets/BounceSpinner';
 import { ApiCommunicator } from './hosts/ApiCommunicator';
 import { HostInfoCard } from './hosts/HostInfoCard';
 import { HostsInfoSummary } from './hosts/HostsInfoSummary';
@@ -58,14 +59,6 @@ class ServicesApp extends React.Component<ServicesAppProps, ServicesAppState> {
 		return hostsInfo.filter((hostInfo) => hostInfo.id === this.state.selectedHostId);
 	}
 
-	private renderSpinner() {
-		return <div className="spinner text-center">
-			<div className="bounce1"></div>
-			<div className="bounce2"></div>
-			<div className="bounce3"></div>
-		</div>;
-	}
-
 	render() {
 		const loaded = (this.state.hostsInfo !== null);
 		const hostsInfo = (this.state.hostsInfo || []);
@@ -78,7 +71,7 @@ class ServicesApp extends React.Component<ServicesAppProps, ServicesAppState> {
 
 					{!loaded &&
 						<div className="d-none d-sm-block float-end">
-							{this.renderSpinner()}
+							<BounceSpinner />
 						</div>}
 				</div>
 
@@ -100,7 +93,7 @@ class ServicesApp extends React.Component<ServicesAppProps, ServicesAppState> {
 
 			{!loaded &&
 				<div className="d-block d-sm-none">
-					{this.renderSpinner()}
+					<BounceSpinner />
 				</div>}
 
 			<hr />

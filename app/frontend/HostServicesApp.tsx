@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { BounceSpinner } from './generic/widgets/BounceSpinner';
 import { ApiCommunicator } from './hosts/ApiCommunicator';
 import { HostInfoCard } from './hosts/HostInfoCard';
 import { HostInfo, HostsViewUrlTemplates } from './hosts/types';
@@ -39,11 +40,7 @@ class HostServicesApp extends React.Component<HostServicesAppProps, HostServices
 
 	render() {
 		if (this.state.hostInfo === null) {
-			return <div className="spinner text-center">
-				<div className="bounce1"></div>
-				<div className="bounce2"></div>
-				<div className="bounce3"></div>
-			</div>;
+			return <BounceSpinner />;
 		}
 
 		return <HostInfoCard

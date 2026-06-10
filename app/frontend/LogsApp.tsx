@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { BounceSpinner } from './generic/widgets/BounceSpinner';
 import { ApiCommunicator } from './logs/ApiCommunicator';
 import { LogEntriesPoller } from './logs/LogEntriesPoller';
 import { LogListTable, LogViewUrlTemplates } from './logs/LogListTable';
@@ -51,11 +52,7 @@ class LogsApp extends React.Component<LogsAppProps, LogsAppState> {
 
 	render() {
 		if (this.state.logs === null) {
-			return <div className="spinner text-center">
-				<div className="bounce1"></div>
-				<div className="bounce2"></div>
-				<div className="bounce3"></div>
-			</div>;
+			return <BounceSpinner />;
 		}
 
 		return <LogListTable
