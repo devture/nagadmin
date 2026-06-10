@@ -123,7 +123,7 @@ services:
             $senderNameOrNumber: '%nagadmin.sms.sender_id%'
             $suppressSending: '%nagadmin.sms.suppress_sending%'
 
-    # API-model exporters (domain models -> JSON for the Angular live-status UI).
+    # API-model exporters (domain models -> JSON for the React live-status UI).
     # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).
     Devture\Bundle\NagiosBundle\ApiModelBridge\:
         resource: '../../ApiModelBridge/'

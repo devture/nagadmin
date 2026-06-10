@@ -85,26 +85,6 @@
 			});
 		}
 	});
-
-	(function () {
-		var lazyNgAppLoad = function () {
-			$('[ng-app-lazy]').each(function () {
-				var $appRoot = $(this),
-					appName = $appRoot.attr('ng-app-lazy');
-
-				if ($appRoot.data('bootstrapped')) {
-					return;
-				}
-				$appRoot.data('bootstrapped', true);
-
-				comploader.load(appName, function () {
-					angular.bootstrap($appRoot, [appName]);
-				});
-			});
-		};
-
-		$(lazyNgAppLoad);
-	})();
 {% endblock %}
 </script>
 
