@@ -2,3 +2,7 @@
 /var
 /config/parameters.json
 /.env
+
+/app/frontend/node_modules
+/app/public/assets/frontend/*
+!/app/public/assets/frontend/.gitkeep

@@ -57,6 +57,33 @@ twig-format-check: _prepare_deps
 twig-format: _prepare_deps
 	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
 
+# Populates app/frontend/node_modules, so that IDE autocompletion works
+js-pull-dependencies: _public-assets-frontend
+	./bin/node /bin/sh -c 'if [ -d /app/src/node_modules ]; then rm -rf /app/src/node_modules; fi && cp -r /app/node_modules /app/src/node_modules'
+
+# Transpiles React files from the jsx/tsx classes to regular js
+js-build: _public-assets-frontend
+	./bin/node /bin/sh -c 'esbuild /app/src/*.*sx --bundle --minify --sourcemap --external:'react' --outdir=/app/build/'
+
+# Watches and transpiles React files from the jsx/tsx classes to regular js
+js-build-continuously: _public-assets-frontend
+	./bin/node /bin/sh -c 'esbuild /app/src/*.*sx --bundle --minify --sourcemap --external:'react' --outdir=/app/build/ --watch'
+
+# Runs comprehensive analysis on React/TypeScript code (lint + type check)
+js-analyze: js-analyze-lint js-analyze-type-check
+
+# Runs ESLint on React/TypeScript code
+js-analyze-lint: _public-assets-frontend
+	./bin/node /bin/sh -c 'cd /app/src && eslint .'
+
+# Runs TypeScript compiler type checking
+js-analyze-type-check: _public-assets-frontend
+	./bin/node /bin/sh -c 'cd /app/src && tsc --noEmit'
+
+# Runs ESLint on React/TypeScript code and auto-fixes issues
+js-autofix: _public-assets-frontend
+	./bin/node /bin/sh -c 'cd /app/src && eslint . --fix'
+
 # Clears the Symfony cache (Symfony rebuilds it on the next request)
 cache-clear:
 	@docker run \
@@ -127,7 +154,23 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _frontend-node_modules _public-assets-frontend-completed
+
+_frontend-node_modules:
+	#!/bin/sh
+	if [ ! -d app/frontend/node_modules ]; then
+		{{ just_executable() }} --justfile {{ justfile() }} js-pull-dependencies
+	fi
+
+_public-assets-frontend: (_ensure_dir_created "app/public/assets/frontend")
+
+# Internal - builds the JS bundles once (the `completed` marker prevents rebuilds on every run)
+_public-assets-frontend-completed: _public-assets-frontend
+	#!/bin/sh
+	if [ ! -f app/public/assets/frontend/completed ]; then
+		{{ just_executable() }} --justfile {{ justfile() }} js-build
+		touch app/public/assets/frontend/completed
+	fi
 
 # The exim-relay mail spool (persistent store-and-forward queue); written by the
 # mailer container (runs as {{ container_user }}). Only mounted in production, but

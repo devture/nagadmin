@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# This captures arguments, preserving quotes, so they can be forwarded to another shell.
+# See: https://stackoverflow.com/a/8723305
+C=''
+for i in "$@"; do
+    i="${i//\\/\\\\}"
+    C="$C \"${i//\"/\\\"}\""
+done
+
+docker_run_flags=''
+if [ -t 0 ] && [ -t 1 ]; then
+	# Got tty on both stdin and stdout - enable interactive mode
+	docker_run_flags='-it'
+fi
+
+docker build -t localhost/devture-nagadmin/node:latest -f etc/docker/node/Dockerfile app/frontend/
+
+# /app/src is also writable, because we have a justfile target which downloads TypeScript-related `node_modules` there.
+docker run \
+	$docker_run_flags \
+	--rm \
+	--user=`id -u`:`id -g` \
+	--mount type=bind,src=`pwd`/app/frontend,dst=/app/src \
+	--mount type=bind,src=`pwd`/app/public/assets/frontend,dst=/app/build \
+	--entrypoint=/bin/sh \
+	localhost/devture-nagadmin/node:latest -c \
+	"$C"
