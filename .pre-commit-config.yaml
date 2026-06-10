@@ -55,3 +55,12 @@ repos:
         files: '\.twig$'
         exclude: '^app/vendor/'
         pass_filenames: false
+
+      # JavaScript/TypeScript analysis (ESLint + TypeScript)
+      - id: js-analyze
+        name: JS/TS Analysis (ESLint + TypeScript)
+        entry: just js-analyze
+        language: system
+        files: '^app/frontend/.*\.(tsx?|jsx?|mjs)$'
+        exclude: '^app/frontend/node_modules/'
+        pass_filenames: false
