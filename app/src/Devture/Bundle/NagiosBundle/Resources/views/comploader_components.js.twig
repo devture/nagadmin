@@ -70,6 +70,13 @@ comploader.register("jquery.autoresize", {
 	]
 });
 
+comploader.register("react.component.ContactAvatar", {
+	"requires": ["react"],
+	"scripts": [
+		"{{ static_url('/assets/frontend/ContactAvatar.js') }}"
+	]
+});
+
 comploader.register("react.component.HelloWorldApp", {
 	"requires": ["react"],
 	"scripts": [
