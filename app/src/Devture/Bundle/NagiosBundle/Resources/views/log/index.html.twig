@@ -3,15 +3,13 @@
 {% block title %}Logs / {{ parent() }}{% endblock %}
 
 {% block devture_nagios_content %}
-	<div ng-controller="LogsCtrl" ng-app-lazy="nagadminApp">
-		<div ng-if="logs == null">
-			<div class="spinner text-center">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</div>
-
-		<log-list-table entities="logs"></log-list-table>
-	</div>
+	{% set reactProps = {
+		'urls': {
+			'logsList': path('devture_nagios.api.log.list'),
+			'logsListIfNewerThan': path('devture_nagios.api.log.list', {'ifNewerThanId': '__LAST_SEEN_ID__'}),
+			'hostView': path('devture_nagios.host.view', {'id': '__ID__'}),
+			'serviceView': path('devture_nagios.service.view', {'id': '__ID__'}),
+		},
+	} %}
+	{{ reactjs_render_component('LogsApp', reactProps) }}
 {% endblock %}
