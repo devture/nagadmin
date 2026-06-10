@@ -16,6 +16,8 @@ type HostRecheckButtonState = {
 
 export class HostRecheckButton extends React.Component<HostRecheckButtonProps, HostRecheckButtonState> {
 
+	private toggleRef = React.createRef<HTMLAnchorElement>();
+
 	constructor(props: HostRecheckButtonProps) {
 		super(props);
 
@@ -28,6 +30,12 @@ export class HostRecheckButton extends React.Component<HostRecheckButtonProps, H
 
 	private recheck(event: React.MouseEvent, recheckType: string) {
 		event.preventDefault();
+
+		// Close the dropdown explicitly. Bootstrap's auto-close runs after the toggle
+		// has already received the `disabled` class and refuses to hide it then.
+		if (this.toggleRef.current) {
+			window.bootstrap.Dropdown.getOrCreateInstance(this.toggleRef.current).hide();
+		}
 
 		this.setState({isRecheckRunning: true});
 
@@ -70,6 +78,7 @@ export class HostRecheckButton extends React.Component<HostRecheckButtonProps, H
 	render() {
 		return <div className="dropdown" style={{display: 'inline-block'}}>
 			<a
+				ref={this.toggleRef}
 				className={'btn btn-outline-primary btn-sm dropdown-toggle' + (this.isRechecking() ? ' disabled' : '')}
 				data-bs-toggle="dropdown"
 				href="#">
