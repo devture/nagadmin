@@ -48,7 +48,7 @@ class Installer {
 		}
 
 		// This may throw
-		$this->handler->deploy($files, false);
+		$this->handler->deploy($files);
 	}
 
 }

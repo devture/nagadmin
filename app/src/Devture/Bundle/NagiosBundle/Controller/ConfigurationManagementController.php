@@ -55,7 +55,7 @@ class ConfigurationManagementController extends AbstractController
 
         $error = null;
         try {
-            $this->deploymentHandler->deploy($files, true);
+            $this->deploymentHandler->deploy($files);
         } catch (DeploymentFailedException $e) {
             $error = $e->getMessage();
         }

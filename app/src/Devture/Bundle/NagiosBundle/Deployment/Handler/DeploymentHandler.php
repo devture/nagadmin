@@ -21,7 +21,7 @@ class DeploymentHandler implements DeploymentHandlerInterface {
 	 * @param list<\Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile> $configurationFiles
 	 * @throws DeploymentFailedException
 	 */
-	public function deploy(array $configurationFiles, bool $reloadNagios): void {
+	public function deploy(array $configurationFiles): void {
 		if (!file_exists($this->path)) {
 			throw new DeploymentFailedException('Cannot deploy to non-existent path `' . $this->path . '`');
 		}
@@ -34,10 +34,7 @@ class DeploymentHandler implements DeploymentHandlerInterface {
 
 		$this->writer->write($this->path, $configurationFiles);
 
-		if ($reloadNagios) {
-			$command = sprintf('[%d] SHUTDOWN_PROGRAM', time());
-			$this->submitter->submit($command);
-		}
+		$this->submitter->submit(sprintf('[%d] SHUTDOWN_PROGRAM', time()));
 	}
 
 }

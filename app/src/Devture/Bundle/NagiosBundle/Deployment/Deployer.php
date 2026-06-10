@@ -21,7 +21,7 @@ class Deployer {
 		$files = $this->collector->collect();
 		list($isValid, $_checkOutput) = $this->tester->test($files);
 		if ($isValid) {
-			$this->handler->deploy($files, true);
+			$this->handler->deploy($files);
 			return true;
 		}
 		return false;

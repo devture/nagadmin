@@ -9,6 +9,6 @@ interface DeploymentHandlerInterface {
 	 * @param list<\Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile> $configurationFiles
 	 * @throws DeploymentFailedException
 	 */
-	public function deploy(array $configurationFiles, bool $reloadNagios): void;
+	public function deploy(array $configurationFiles): void;
 
 }
