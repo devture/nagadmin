@@ -48,6 +48,13 @@
 	});
 })();
 
+comploader.register("react", {
+	"scripts": [
+		"{{ static_url('/assets/react/react.production.min.js') }}",
+		"{{ static_url('/assets/react/react-dom.production.min.js') }}"
+	]
+});
+
 comploader.register("chosen", {
 	"stylesheets": [
 		"{{ static_url('/js/chosen/chosen.css') }}"
