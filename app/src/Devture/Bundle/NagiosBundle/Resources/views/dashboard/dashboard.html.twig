@@ -3,38 +3,28 @@
 {% block title %}Dashboard / {{ parent() }}{% endblock %}
 
 {% block devture_nagios_content %}
-	<div ng-controller="DashboardCtrl" ng-app-lazy="nagadminApp">
-		<div ng-cloak ng-hide="logs != null && logs.length == 0" class="float-end">
-			<a class="btn btn-primary btn-sm" href="{{ path('devture_nagios.log.manage') }}">
-				<i class="fa-solid fa-book"></i>
-				See all {{ '{{ logs.length }}' }} log entries
-			</a>
-		</div>
-		<h3>Logs</h3>
-		<div ng-if="logs == null">
-			<div class="spinner text-center">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</div>
-		<log-list-table entities="logs" limit="3"></log-list-table>
+	{% set logsReactProps = {
+		'urls': {
+			'logsList': path('devture_nagios.api.log.list'),
+			'logsListIfNewerThan': path('devture_nagios.api.log.list', {'ifNewerThanId': '__LAST_SEEN_ID__'}),
+			'logManage': path('devture_nagios.log.manage'),
+			'hostView': path('devture_nagios.host.view', {'id': '__ID__'}),
+			'serviceView': path('devture_nagios.service.view', {'id': '__ID__'}),
+		},
+	} %}
+	{{ reactjs_render_component('DashboardLogsApp', logsReactProps) }}
 
-		<div ng-cloak ng-hide="hostsInfo == 0" class="float-end">
-			<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
-		</div>
-		<h3>Services</h3>
-		<div ng-if="hostsInfo == null">
-			<div class="spinner text-center">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</div>
-		<host-info ng-repeat="hostInfo in hostsInfo" entity="hostInfo"></host-info>
-		<div ng-cloak class="form-text" ng-if="hostsInfo !== null && hostsInfo.length == 0">
-			Not monitoring anything yet.
-			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-primary btn-sm">Create a new host to get started</a>
-		</div>
-	</div>
+	{% set hostsReactProps = {
+		'urls': {
+			'hostsInfoAll': path('devture_nagios.api.host.info'),
+			'hostInfo': path('devture_nagios.api.host.info', {'id': '__ID__'}),
+			'recheckServices': path('devture_nagios.api.host.recheck_services', {'id': '__ID__', 'recheckType': '__RECHECK_TYPE__', 'token': csrf_token('nagadmin')}),
+			'commandsList': path('devture_nagios.api.command.list', {'type': 'serviceCheck'}),
+			'hostView': path('devture_nagios.host.view', {'id': '__ID__'}),
+			'hostAdd': path('devture_nagios.host.add'),
+			'serviceView': path('devture_nagios.service.view', {'id': '__ID__'}),
+			'serviceAdd': path('devture_nagios.service.add', {'commandId': '__COMMAND_ID__', 'hostId': '__HOST_ID__'}),
+		},
+	} %}
+	{{ reactjs_render_component('DashboardHostsApp', hostsReactProps) }}
 {% endblock %}
