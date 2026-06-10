@@ -17,9 +17,8 @@
 			{% set link = path('devture_nagios.contact.edit', {'id': entity.id}) %}
 			<tr>
 				<td>
-					<a href="{{ link }}" class="d-block"
-						ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
-						<contact entity='contact_{{ entity.id }}' size="24"></contact>
+					<a href="{{ link }}" class="d-block">
+						{{ reactjs_render_component('ContactAvatar', {'entity': entity|contact_api_model_export, 'size': 24}, {'class': 'd-inline-block'}) }}
 					</a>
 				</td>
 				<td>

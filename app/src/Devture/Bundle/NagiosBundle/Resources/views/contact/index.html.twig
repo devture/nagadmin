@@ -12,7 +12,5 @@
 		</div>
 	{% endif %}
 
-	<div ng-app-lazy="nagadminApp">
-		{% include '@DevtureNagios/contact/list.html.twig' with {'items': items} %}
-	</div>
+	{% include '@DevtureNagios/contact/list.html.twig' with {'items': items} %}
 {% endblock %}

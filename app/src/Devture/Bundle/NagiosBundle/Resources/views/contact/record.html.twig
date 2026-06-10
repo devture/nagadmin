@@ -67,9 +67,7 @@
 				<label class="col-lg-2 col-form-label">Avatar</label>
 				<div class="col-lg-10">
 					{% if isAdded %}
-						<div ng-app-lazy="nagadminApp" ng-init='contact_{{ entity.id }} = {{ entity|contact_api_model_export|json_encode|raw }}'>
-							<contact entity='contact_{{ entity.id }}' size="48"></contact>
-						</div>
+						{{ reactjs_render_component('ContactAvatar', {'entity': entity|contact_api_model_export, 'size': 48}) }}
 					{% endif %}
 					Contacts get their own <a target="_blank" href="http://gravatar.com/">Gravatar</a> based on their email address or other address values.
 				</div>

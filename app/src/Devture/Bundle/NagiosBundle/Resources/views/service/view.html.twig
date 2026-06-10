@@ -87,7 +87,7 @@
 		{% include '@DevtureNagios/service/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
 	{% endif %}
 
-	<div ng-app-lazy="nagadminApp">
+	<div>
 		<fieldset>
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
@@ -118,18 +118,16 @@
 						<a
 							class="border rounded"
 							style="display: inline-block; padding: 2px 5px;"
-							href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}"
-							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
-							<contact entity='contact_{{ contact.id }}' size="24"></contact>
-							{{ contact.name }}
+							href="{{ path('devture_nagios.contact.edit', {'id': contact.id}) }}">
+							{{- reactjs_render_component('ContactAvatar', {'entity': contact|contact_api_model_export, 'size': 24}, {'class': 'd-inline-block me-1'}) -}}
+							{{ contact.name -}}
 						</a>
 					{% else %}
 						<span
 							class="border rounded"
-							style="display: inline-block; padding: 2px 5px;"
-							ng-init='contact_{{ contact.id }} = {{ contact|contact_api_model_export|json_encode|raw }}'>
-							<contact entity='contact_{{ contact.id }}' size="24"></contact>
-							{{ contact.name }}
+							style="display: inline-block; padding: 2px 5px;">
+							{{- reactjs_render_component('ContactAvatar', {'entity': contact|contact_api_model_export, 'size': 24}, {'class': 'd-inline-block me-1'}) -}}
+							{{ contact.name -}}
 						</span>
 					{% endif %}
 				{% else %}
