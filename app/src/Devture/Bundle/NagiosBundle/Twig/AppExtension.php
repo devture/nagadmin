@@ -23,54 +23,54 @@ use Twig\TwigFunction;
  */
 class AppExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(
-        private readonly Security $security,
-        private readonly RequestStack $requestStack,
-        #[Autowire('%nagadmin.project_name%')]
-        private readonly string $projectName,
-    ) {
-    }
+	public function __construct(
+		private readonly Security $security,
+		private readonly RequestStack $requestStack,
+		#[Autowire('%nagadmin.project_name%')]
+		private readonly string $projectName,
+	) {
+	}
 
-    public function getGlobals(): array
-    {
-        return ['project_name' => $this->projectName];
-    }
+	public function getGlobals(): array
+	{
+		return ['project_name' => $this->projectName];
+	}
 
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('is_logged_in', $this->isLoggedIn(...)),
-            new TwigFunction('get_user', $this->getUser(...)),
-            new TwigFunction('is_route_prefix', $this->isRoutePrefix(...)),
-        ];
-    }
+	public function getFunctions(): array
+	{
+		return [
+			new TwigFunction('is_logged_in', $this->isLoggedIn(...)),
+			new TwigFunction('get_user', $this->getUser(...)),
+			new TwigFunction('is_route_prefix', $this->isRoutePrefix(...)),
+		];
+	}
 
-    public function isLoggedIn(): bool
-    {
-        return $this->security->getUser() instanceof SecurityUser;
-    }
+	public function isLoggedIn(): bool
+	{
+		return $this->security->getUser() instanceof SecurityUser;
+	}
 
-    public function getUser(): ?User
-    {
-        $user = $this->security->getUser();
-        if (!$user instanceof SecurityUser) {
-            return null;
-        }
+	public function getUser(): ?User
+	{
+		$user = $this->security->getUser();
+		if (!$user instanceof SecurityUser) {
+			return null;
+		}
 
-        $domainUser = $user->getNagiosUser();
+		$domainUser = $user->getNagiosUser();
 
-        return $domainUser instanceof User ? $domainUser : null;
-    }
+		return $domainUser instanceof User ? $domainUser : null;
+	}
 
-    public function isRoutePrefix(string $prefix): bool
-    {
-        $request = $this->requestStack->getCurrentRequest();
-        if ($request === null) {
-            return false;
-        }
+	public function isRoutePrefix(string $prefix): bool
+	{
+		$request = $this->requestStack->getCurrentRequest();
+		if ($request === null) {
+			return false;
+		}
 
-        $route = (string) $request->attributes->get('_route');
+		$route = (string) $request->attributes->get('_route');
 
-        return $route !== '' && str_starts_with($route, $prefix);
-    }
+		return $route !== '' && str_starts_with($route, $prefix);
+	}
 }

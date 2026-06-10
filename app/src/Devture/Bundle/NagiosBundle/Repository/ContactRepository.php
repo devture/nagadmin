@@ -10,8 +10,6 @@ use Devture\Bundle\NagiosBundle\Model\Contact;
 use Devture\Bundle\NagiosBundle\Model\TimePeriod;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\User;
-use Devture\Bundle\NagiosBundle\Repository\TimePeriodRepository;
-use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 
@@ -25,8 +23,13 @@ class ContactRepository extends BaseMongoRepository {
 	private $commandRepository;
 	private $userRepository;
 
-	public function __construct(EventDispatcherInterface $dispatcher, TimePeriodRepository $timePeriodRepository,
-								CommandRepository $commandRepository, UserRepositoryInterface $userRepository, Database $db) {
+	public function __construct(
+		EventDispatcherInterface $dispatcher,
+		TimePeriodRepository $timePeriodRepository,
+		CommandRepository $commandRepository,
+		UserRepositoryInterface $userRepository,
+		Database $db,
+	) {
 		parent::__construct($db);
 		$this->dispatcher = $dispatcher;
 		$this->timePeriodRepository = $timePeriodRepository;

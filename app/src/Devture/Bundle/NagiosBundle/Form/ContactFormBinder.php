@@ -21,9 +21,14 @@ class ContactFormBinder extends SetterRequestBinder {
 	private $accessChecker;
 	private $currentUserProvider;
 
-	public function __construct(TimePeriodRepository $timePeriodRepository, CommandRepository $commandRepository,
-								UserRepositoryInterface $userRepository, AccessChecker $accessChecker, CurrentUserProvider $currentUserProvider,
-								ContactValidator $validator) {
+	public function __construct(
+		TimePeriodRepository $timePeriodRepository,
+		CommandRepository $commandRepository,
+		UserRepositoryInterface $userRepository,
+		AccessChecker $accessChecker,
+		CurrentUserProvider $currentUserProvider,
+		ContactValidator $validator,
+	) {
 		parent::__construct($validator);
 		$this->timePeriodRepository = $timePeriodRepository;
 		$this->commandRepository = $commandRepository;

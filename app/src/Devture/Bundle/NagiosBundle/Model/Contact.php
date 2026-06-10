@@ -2,7 +2,6 @@
 namespace Devture\Bundle\NagiosBundle\Model;
 
 use Devture\Component\DBAL\Model\BaseModel;
-use Devture\Bundle\NagiosBundle\Model\User;
 
 class Contact extends BaseModel {
 
@@ -91,7 +90,7 @@ class Contact extends BaseModel {
 	 */
 	public function addAddress($slot, $address) {
 		$addresses = $this->getAddresses();
-		$addresses[(string)$slot] = $address;
+		$addresses[(string) $slot] = $address;
 		$this->setAttribute('addresses', $addresses);
 	}
 
@@ -108,7 +107,7 @@ class Contact extends BaseModel {
 	 */
 	public function getAddressBySlot($slot) {
 		$addresses = $this->getAddresses();
-		return isset($addresses[(string)$slot]) ? $addresses[(string)$slot] : null;
+		return isset($addresses[(string) $slot]) ? $addresses[(string) $slot] : null;
 	}
 
 }

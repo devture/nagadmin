@@ -88,7 +88,7 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 				'"' . //close the new double-quoted-string
 				"'" //reopen the single quotes we originally broke out of
 			),
-			$argumentValue
+			$argumentValue,
 		);
 		return "'" . $argumentValue . "'";
 	}

@@ -64,9 +64,9 @@ class Fetcher {
 			if ($line === '}') {
 				if ($lastDefinitionType === Status::TYPE_SERVICE_STATUS) {
 					$objects[] = new ServiceStatus($lastDefinitionType, $lastDefinitionDirectives);
-				} else if ($lastDefinitionType === Status::TYPE_PROGRAM_STATUS) {
+				} elseif ($lastDefinitionType === Status::TYPE_PROGRAM_STATUS) {
 					$objects[] = new ProgramStatus($lastDefinitionType, $lastDefinitionDirectives);
-				} else if ($lastDefinitionType === Status::TYPE_INFO) {
+				} elseif ($lastDefinitionType === Status::TYPE_INFO) {
 					$objects[] = new InfoStatus($lastDefinitionType, $lastDefinitionDirectives);
 				}
 				$state = self::STATE_FREE;

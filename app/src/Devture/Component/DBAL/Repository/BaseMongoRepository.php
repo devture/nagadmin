@@ -37,7 +37,7 @@ abstract class BaseMongoRepository extends BaseRepository {
 
 		if ($this->isStringMongoId($id)) {
 			$id = new ObjectId($id);
-		} else if (is_numeric($id)) {
+		} elseif (is_numeric($id)) {
 			$id = (int) $id;
 		}
 

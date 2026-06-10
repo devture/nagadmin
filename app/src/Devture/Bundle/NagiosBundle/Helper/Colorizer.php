@@ -20,7 +20,7 @@ class Colorizer {
 	 * @return string
 	 */
 	public function colorize($value) {
-		$value = (string)$value;
+		$value = (string) $value;
 
 		$sum = hexdec(substr(hash('crc32', $value), 0, 2));
 

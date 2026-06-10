@@ -15,21 +15,21 @@ use Vonage\SMS\Message\SMS;
  */
 class SmsSender
 {
-    public function __construct(
-        private readonly VonageClient $vonageClient,
-        private readonly string $senderNameOrNumber,
-        private readonly bool $suppressSending,
-    ) {
-    }
+	public function __construct(
+		private readonly VonageClient $vonageClient,
+		private readonly string $senderNameOrNumber,
+		private readonly bool $suppressSending,
+	) {
+	}
 
-    public function send(string $phoneNumber, string $text): void
-    {
-        if ($this->suppressSending) {
-            return;
-        }
+	public function send(string $phoneNumber, string $text): void
+	{
+		if ($this->suppressSending) {
+			return;
+		}
 
-        $this->vonageClient->sms()->send(
-            new SMS($phoneNumber, $this->senderNameOrNumber, $text),
-        );
-    }
+		$this->vonageClient->sms()->send(
+			new SMS($phoneNumber, $this->senderNameOrNumber, $text),
+		);
+	}
 }

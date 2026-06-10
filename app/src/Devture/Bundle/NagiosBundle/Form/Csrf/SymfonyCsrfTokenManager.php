@@ -17,22 +17,22 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  */
 class SymfonyCsrfTokenManager implements TokenManagerInterface
 {
-    public function __construct(private readonly CsrfTokenManagerInterface $csrfTokenManager)
-    {
-    }
+	public function __construct(private readonly CsrfTokenManagerInterface $csrfTokenManager)
+	{
+	}
 
-    public function setSalt($salt): void
-    {
-        // No-op: Symfony CSRF tokens are session-scoped.
-    }
+	public function setSalt($salt): void
+	{
+		// No-op: Symfony CSRF tokens are session-scoped.
+	}
 
-    public function generate($intention)
-    {
-        return $this->csrfTokenManager->getToken($intention)->getValue();
-    }
+	public function generate($intention)
+	{
+		return $this->csrfTokenManager->getToken($intention)->getValue();
+	}
 
-    public function isValid($intention, $token)
-    {
-        return $this->csrfTokenManager->isTokenValid(new CsrfToken($intention, (string) $token));
-    }
+	public function isValid($intention, $token)
+	{
+		return $this->csrfTokenManager->isTokenValid(new CsrfToken($intention, (string) $token));
+	}
 }

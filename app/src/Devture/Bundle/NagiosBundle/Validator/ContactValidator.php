@@ -51,7 +51,7 @@ class ContactValidator extends BaseValidator {
 		}
 
 		foreach ($entity->getAddresses() as $slot => $address) {
-			$slot = (int)$slot;
+			$slot = (int) $slot;
 			if ($slot < 1 || $slot > Contact::ADDRESS_SLOTS_COUNT) {
 				$violations->add('addresses', 'Slot %slot% is not allowed.', array('%slot%' => $slot));
 			}

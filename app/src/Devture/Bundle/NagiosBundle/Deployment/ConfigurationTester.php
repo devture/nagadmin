@@ -2,7 +2,6 @@
 namespace Devture\Bundle\NagiosBundle\Deployment;
 
 use Symfony\Component\Process\Process;
-use Devture\Bundle\NagiosBundle\Deployment\ConfigurationFile;
 
 class ConfigurationTester {
 
@@ -72,7 +71,7 @@ class ConfigurationTester {
 			$type = $configurationFile->getType();
 			if ($type === ConfigurationFile::TYPE_CONFIGURATION_FILE) {
 				$mainConfigFile->addVariable('cfg_file', $path . '/' . $configurationFile->getPath());
-			} else if ($type === ConfigurationFile::TYPE_RESOURCE_FILE) {
+			} elseif ($type === ConfigurationFile::TYPE_RESOURCE_FILE) {
 				$mainConfigFile->addVariable('resource_file', $path . '/' . $configurationFile->getPath());
 			}
 		}

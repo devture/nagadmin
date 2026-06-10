@@ -17,30 +17,30 @@ use Twig\TwigFunction;
  */
 class StaticFileStamperExtension extends AbstractExtension
 {
-    private readonly string $basePath;
+	private readonly string $basePath;
 
-    public function __construct(
-        #[Autowire('%kernel.project_dir%/public')]
-        string $basePath,
-        private readonly string $baseUri = '',
-    ) {
-        $this->basePath = rtrim($basePath, '/');
-    }
+	public function __construct(
+		#[Autowire('%kernel.project_dir%/public')]
+		string $basePath,
+		private readonly string $baseUri = '',
+	) {
+		$this->basePath = rtrim($basePath, '/');
+	}
 
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('static_url', $this->getStaticUrl(...)),
-        ];
-    }
+	public function getFunctions(): array
+	{
+		return [
+			new TwigFunction('static_url', $this->getStaticUrl(...)),
+		];
+	}
 
-    public function getStaticUrl(string $relativePath): string
-    {
-        $filePath = $this->basePath . '/' . ltrim($relativePath, '/');
-        if (file_exists($filePath)) {
-            return $this->baseUri . $relativePath . '?' . filemtime($filePath);
-        }
+	public function getStaticUrl(string $relativePath): string
+	{
+		$filePath = $this->basePath . '/' . ltrim($relativePath, '/');
+		if (file_exists($filePath)) {
+			return $this->baseUri . $relativePath . '?' . filemtime($filePath);
+		}
 
-        return $this->baseUri . $relativePath;
-    }
+		return $this->baseUri . $relativePath;
+	}
 }

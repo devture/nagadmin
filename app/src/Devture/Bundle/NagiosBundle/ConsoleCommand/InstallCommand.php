@@ -10,22 +10,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'install',
-    description: 'Performs initial installation: sets resource variables and deploys the Nagios configuration.',
+	name: 'install',
+	description: 'Performs initial installation: sets resource variables and deploys the Nagios configuration.',
 )]
 class InstallCommand extends Command
 {
-    public function __construct(private readonly Installer $installer)
-    {
-        parent::__construct();
-    }
+	public function __construct(private readonly Installer $installer)
+	{
+		parent::__construct();
+	}
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this->installer->install();
+	protected function execute(InputInterface $input, OutputInterface $output): int
+	{
+		$this->installer->install();
 
-        (new SymfonyStyle($input, $output))->success('Installed: resource variables set and configuration deployed.');
+		(new SymfonyStyle($input, $output))->success('Installed: resource variables set and configuration deployed.');
 
-        return Command::SUCCESS;
-    }
+		return Command::SUCCESS;
+	}
 }

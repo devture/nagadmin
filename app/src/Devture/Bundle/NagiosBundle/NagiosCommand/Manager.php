@@ -18,7 +18,7 @@ class Manager {
 			$timeNow,
 			$service->getHost()->getName(),
 			$service->getName(),
-			$timeNow
+			$timeNow,
 		);
 		$this->submitter->submit($command);
 	}

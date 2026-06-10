@@ -87,9 +87,9 @@ class Manager {
 			if ($status instanceof ServiceStatus) {
 				$serviceIdentifier = $status->getHostname() . '/' . $status->getServiceDescription();
 				$this->servicesStatusMap[$serviceIdentifier] = $status;
-			} else if ($status instanceof InfoStatus) {
+			} elseif ($status instanceof InfoStatus) {
 				$this->infoStatus = $status;
-			} else if ($status instanceof ProgramStatus) {
+			} elseif ($status instanceof ProgramStatus) {
 				$this->programStatus = $status;
 			}
 		}

@@ -7,8 +7,6 @@ use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Command;
 use Devture\Bundle\NagiosBundle\Model\Contact;
-use Devture\Bundle\NagiosBundle\Repository\HostRepository;
-use Devture\Bundle\NagiosBundle\Repository\CommandRepository;
 
 /**
  * @extends BaseMongoRepository<\Devture\Bundle\NagiosBundle\Model\Service>

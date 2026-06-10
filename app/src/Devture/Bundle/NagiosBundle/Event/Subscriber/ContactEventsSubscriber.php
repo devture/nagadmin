@@ -4,7 +4,6 @@ namespace Devture\Bundle\NagiosBundle\Event\Subscriber;
 use Devture\Bundle\NagiosBundle\Event\Events;
 use Devture\Bundle\NagiosBundle\Event\ModelEvent;
 use Devture\Bundle\NagiosBundle\Model\Contact;
-use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 
 class ContactEventsSubscriber extends ContainerAwareSubscriber {

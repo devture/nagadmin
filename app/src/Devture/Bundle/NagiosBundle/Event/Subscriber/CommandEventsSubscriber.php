@@ -28,7 +28,7 @@ class CommandEventsSubscriber extends ContainerAwareSubscriber {
 			foreach ($serviceRepository->findByCommand($command) as $service) {
 				$serviceRepository->delete($service);
 			}
-		} else if ($commandType === Command::TYPE_SERVICE_NOTIFICATION) {
+		} elseif ($commandType === Command::TYPE_SERVICE_NOTIFICATION) {
 			/** @var ContactRepository $contactRepository */
 			$contactRepository = $this->get('devture_nagios.contact.repository');
 

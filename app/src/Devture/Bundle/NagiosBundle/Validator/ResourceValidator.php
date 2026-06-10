@@ -2,7 +2,6 @@
 namespace Devture\Bundle\NagiosBundle\Validator;
 
 use Devture\Component\Form\Validator\BaseValidator;
-use Devture\Component\DBAL\Exception\NotFound;
 use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ResourceValidator extends BaseValidator {
@@ -17,7 +16,7 @@ class ResourceValidator extends BaseValidator {
 
 		foreach ($entity->getVariables() as $name => $value) {
 			if (preg_match('/^\$USER([0-9]+)\$$/', $name, $matches)) {
-				$slotNumber = (int)$matches[1];
+				$slotNumber = (int) $matches[1];
 				if ($slotNumber < 1 || $slotNumber > Resource::USER_VARIABLES_COUNT) {
 					$violations->add('variables', 'Variable slot number for `%name%` is invalid.', array('%name%' => $name));
 				}

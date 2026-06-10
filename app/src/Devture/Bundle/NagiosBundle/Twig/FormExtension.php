@@ -25,42 +25,42 @@ use Twig\TwigFunction;
  */
 class FormExtension extends AbstractExtension
 {
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('render_form_violations', $this->renderFormViolations(...), [
-                'is_safe' => ['html'],
-                'needs_environment' => true,
-            ]),
-            new TwigFunction('render_form_csrf_token', $this->renderFormCsrfToken(...), [
-                'is_safe' => ['html'],
-            ]),
-        ];
-    }
+	public function getFunctions(): array
+	{
+		return [
+			new TwigFunction('render_form_violations', $this->renderFormViolations(...), [
+				'is_safe' => ['html'],
+				'needs_environment' => true,
+			]),
+			new TwigFunction('render_form_csrf_token', $this->renderFormCsrfToken(...), [
+				'is_safe' => ['html'],
+			]),
+		];
+	}
 
-    public function renderFormViolations(Environment $twig, BinderInterface $form, string $fieldKey): string
-    {
-        $errors = $form->getViolations()->get($fieldKey);
-        if (count($errors) === 0) {
-            return '';
-        }
+	public function renderFormViolations(Environment $twig, BinderInterface $form, string $fieldKey): string
+	{
+		$errors = $form->getViolations()->get($fieldKey);
+		if (count($errors) === 0) {
+			return '';
+		}
 
-        $messages = array_map(static function (array $error): string {
-            return str_replace(array_keys($error['params']), array_values($error['params']), $error['message']);
-        }, $errors);
+		$messages = array_map(static function (array $error): string {
+			return str_replace(array_keys($error['params']), array_values($error['params']), $error['message']);
+		}, $errors);
 
-        return $twig->render('@DevtureNagios/form/violation_errors.html.twig', ['fieldKey' => $fieldKey, 'messages' => $messages]);
-    }
+		return $twig->render('@DevtureNagios/form/violation_errors.html.twig', ['fieldKey' => $fieldKey, 'messages' => $messages]);
+	}
 
-    public function renderFormCsrfToken(BinderInterface $form): string
-    {
-        $tokenManager = $form->getCsrfTokenManager();
-        if (!$tokenManager instanceof TokenManagerInterface) {
-            return '';
-        }
+	public function renderFormCsrfToken(BinderInterface $form): string
+	{
+		$tokenManager = $form->getCsrfTokenManager();
+		if (!$tokenManager instanceof TokenManagerInterface) {
+			return '';
+		}
 
-        $token = htmlspecialchars((string) $tokenManager->generate((string) $form->getCsrfIntention()), ENT_QUOTES);
+		$token = htmlspecialchars((string) $tokenManager->generate((string) $form->getCsrfIntention()), ENT_QUOTES);
 
-        return '<input type="hidden" name="' . $form->getCsrfTokenFieldName() . '" value="' . $token . '" />';
-    }
+		return '<input type="hidden" name="' . $form->getCsrfTokenFieldName() . '" value="' . $token . '" />';
+	}
 }

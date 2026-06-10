@@ -7,7 +7,6 @@ use Devture\Bundle\NagiosBundle\Repository\ServiceRepository;
 use Devture\Bundle\NagiosBundle\Repository\HostRepository;
 use Devture\Bundle\NagiosBundle\Model\Host;
 use Devture\Bundle\NagiosBundle\Model\Service;
-use Devture\Component\DBAL\Exception\NotFound;
 
 class Fetcher {
 
@@ -102,17 +101,17 @@ class Fetcher {
 
 				if ($type === 'SERVICE ALERT') {
 					list($host, $service) = $this->getServiceAlertAssociations($value);
-				} else if ($type === 'CURRENT SERVICE STATE') {
+				} elseif ($type === 'CURRENT SERVICE STATE') {
 					list($host, $service) = $this->getCurrentServiceStateAssociations($value);
-				} else if ($type === 'Warning') {
+				} elseif ($type === 'Warning') {
 					list($host, $service) = $this->getWarningAssociations($value);
-				} else if ($type === 'CURRENT HOST STATE') {
+				} elseif ($type === 'CURRENT HOST STATE') {
 					$host = $this->getCurrentHostStateAssociations($value);
-				} else if ($type === 'EXTERNAL COMMAND') {
+				} elseif ($type === 'EXTERNAL COMMAND') {
 					list($host, $service) = $this->getExternalCommandAssociations($value);
-				} else if ($type === 'SERVICE NOTIFICATION') {
+				} elseif ($type === 'SERVICE NOTIFICATION') {
 					list($host, $service) = $this->getServiceNotificationAssociations($value);
-				} else if ($type === 'SERVICE FLAPPING ALERT') {
+				} elseif ($type === 'SERVICE FLAPPING ALERT') {
 					list($host, $service) = $this->getServiceAlertAssociations($value);
 				}
 

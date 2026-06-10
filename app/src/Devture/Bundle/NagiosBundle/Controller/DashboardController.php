@@ -9,15 +9,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/', name: 'homepage', methods: ['GET'])]
-    public function homepage(): RedirectResponse
-    {
-        return $this->redirectToRoute('devture_nagios.dashboard');
-    }
+	#[Route('/', name: 'homepage', methods: ['GET'])]
+	public function homepage(): RedirectResponse
+	{
+		return $this->redirectToRoute('devture_nagios.dashboard');
+	}
 
-    #[Route('/dashboard', name: 'devture_nagios.dashboard', methods: ['GET'])]
-    public function dashboard(): Response
-    {
-        return $this->render('@DevtureNagios/dashboard/dashboard.html.twig');
-    }
+	#[Route('/dashboard', name: 'devture_nagios.dashboard', methods: ['GET'])]
+	public function dashboard(): Response
+	{
+		return $this->render('@DevtureNagios/dashboard/dashboard.html.twig');
+	}
 }

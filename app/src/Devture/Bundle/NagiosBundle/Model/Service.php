@@ -71,7 +71,7 @@ class Service extends BaseModel {
 	 * @return void
 	 */
 	public function setMaxCheckAttempts($value) {
-		$this->setAttribute('maxCheckAttempts', is_numeric($value) ? (int)$value : $value);
+		$this->setAttribute('maxCheckAttempts', is_numeric($value) ? (int) $value : $value);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Service extends BaseModel {
 	 * @return void
 	 */
 	public function setCheckInterval($value) {
-		$this->setAttribute('checkInterval', is_numeric($value) ? (int)$value : $value);
+		$this->setAttribute('checkInterval', is_numeric($value) ? (int) $value : $value);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Service extends BaseModel {
 	 * @return void
 	 */
 	public function setRetryInterval($value) {
-		$this->setAttribute('retryInterval', is_numeric($value) ? (int)$value : $value);
+		$this->setAttribute('retryInterval', is_numeric($value) ? (int) $value : $value);
 	}
 
 	/**
@@ -116,7 +116,7 @@ class Service extends BaseModel {
 	 * @return void
 	 */
 	public function setNotificationInterval($value) {
-		$this->setAttribute('notificationInterval', is_numeric($value) ? (int)$value : $value);
+		$this->setAttribute('notificationInterval', is_numeric($value) ? (int) $value : $value);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Service extends BaseModel {
 	 * @return void
 	 */
 	public function setNotificationPeriod($value) {
-		$this->setAttribute('notificationPeriod', is_numeric($value) ? (int)$value : $value);
+		$this->setAttribute('notificationPeriod', is_numeric($value) ? (int) $value : $value);
 	}
 
 	/**

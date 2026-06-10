@@ -10,30 +10,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'send-notification:sms',
-    description: 'Sends an SMS notification message.',
+	name: 'send-notification:sms',
+	description: 'Sends an SMS notification message.',
 )]
 class SendNotificationSmsCommand extends Command
 {
-    public function __construct(
-        private readonly SmsSender $smsSender,
-    ) {
-        parent::__construct();
-    }
+	public function __construct(
+		private readonly SmsSender $smsSender,
+	) {
+		parent::__construct();
+	}
 
-    protected function configure(): void
-    {
-        $this->addArgument('phoneNumber', InputArgument::REQUIRED, 'The phone number to send the SMS to.');
-        $this->addArgument('message', InputArgument::REQUIRED, 'The message to send.');
-    }
+	protected function configure(): void
+	{
+		$this->addArgument('phoneNumber', InputArgument::REQUIRED, 'The phone number to send the SMS to.');
+		$this->addArgument('message', InputArgument::REQUIRED, 'The message to send.');
+	}
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this->smsSender->send(
-            $input->getArgument('phoneNumber'),
-            $input->getArgument('message'),
-        );
+	protected function execute(InputInterface $input, OutputInterface $output): int
+	{
+		$this->smsSender->send(
+			$input->getArgument('phoneNumber'),
+			$input->getArgument('message'),
+		);
 
-        return Command::SUCCESS;
-    }
+		return Command::SUCCESS;
+	}
 }
