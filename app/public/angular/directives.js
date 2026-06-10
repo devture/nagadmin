@@ -101,10 +101,14 @@ nagadminApp.directive('hostRecheckButton', function ($timeout, $window, ServiceC
 			"onDirty": "=onDirty"
 		},
 		"templateUrl": templatePathRegistry.host.recheckButton,
-		"link": function ($scope) {
+		"link": function ($scope, $element) {
 			var isRecheckRunning = false;
 
 			$scope.recheck = function (recheckType) {
+				//Close the dropdown explicitly. Bootstrap's auto-close runs after the toggle
+				//has already received the `disabled` class and refuses to hide it then.
+				bootstrap.Dropdown.getOrCreateInstance($element.find('.dropdown-toggle')[0]).hide();
+
 				isRecheckRunning = true;
 
 				ServiceCheckScheduler.scheduleOnHost($scope.host, recheckType).success(function (data) {
