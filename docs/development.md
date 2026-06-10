@@ -17,6 +17,27 @@ just php-analyze
 The configuration lives in [`app/phpstan.neon`](../app/phpstan.neon). The code
 is kept passing at **level 8** (PHPStan's strictest level).
 
+## PHP code formatting (PHP CS Fixer)
+
+[PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) checks the PHP code
+for consistent formatting and style. Like PHPStan it is a `require-dev`
+dependency and runs inside the `php` container:
+
+```sh
+just php-format-check
+```
+
+To apply the fixes automatically:
+
+```sh
+just php-format
+```
+
+The ruleset lives in
+[`app/.php-cs-fixer.dist.php`](../app/.php-cs-fixer.dist.php) (tab indentation
+plus a curated set of whitespace, casing, import and trailing-comma rules — not
+a full reformat preset).
+
 ## Twig templates (Twig CS Fixer)
 
 [Twig CS Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer) checks the Twig

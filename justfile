@@ -41,6 +41,14 @@ composer-update: _var-composer-cache
 php-analyze: _prepare_deps
 	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
 
+# Checks PHP code formatting and style (PHP CS Fixer)
+php-format-check: _prepare_deps
+	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
+
+# Fixes PHP code formatting and style (PHP CS Fixer)
+php-format: _prepare_deps
+	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+
 # Checks Twig template formatting and style (Twig CS Fixer)
 twig-format-check: _prepare_deps
 	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
