@@ -58,6 +58,39 @@ The ruleset lives in
 [`app/.twig-cs-fixer.dist.php`](../app/.twig-cs-fixer.dist.php) (tab indentation
 plus delimiter/operator/punctuation spacing and trailing-whitespace rules).
 
+## Front-end code (React/TypeScript)
+
+The live-status UI is built from the TypeScript/React sources in
+[`app/frontend/`](../app/frontend/), bundled by [esbuild](https://esbuild.github.io/)
+into `app/public/assets/frontend/` (generated; not committed). Everything runs
+in an ephemeral Node.js container (`bin/node`), so there are no host dependencies.
+
+```sh
+just js-build
+```
+
+The first `just run` builds the bundles automatically; a
+`app/public/assets/frontend/completed` marker file then prevents rebuilds on
+subsequent runs. This means that after pulling changes to `app/frontend/`
+(including when upgrading a deployment), you need to run `just js-build`
+yourself.
+
+While developing, rebuild on every change:
+
+```sh
+just js-build-continuously
+```
+
+Linting (ESLint 9) and type-checking (strict TypeScript) together:
+
+```sh
+just js-analyze
+```
+
+`just js-autofix` applies the auto-fixable ESLint fixes, and
+`just js-pull-dependencies` populates `app/frontend/node_modules` on the host
+so IDE autocompletion works.
+
 ## Pre-commit hooks (prek)
 
 [prek](https://github.com/j178/prek) runs a set of quick checks before each
@@ -65,7 +98,7 @@ commit. The hooks are defined in
 [`.pre-commit-config.yaml`](../.pre-commit-config.yaml): built-in checks
 (trailing whitespace, final newlines, YAML/JSON validity, merge-conflict
 markers, accidentally-committed large files or private keys) plus the PHPStan
-analysis, PHP CS Fixer and Twig CS Fixer checks above.
+analysis, PHP CS Fixer, Twig CS Fixer and JS/TS analysis checks above.
 
 prek itself is pinned and provided through [mise](https://mise.jdx.dev/), so the
 only prerequisite is having `mise` installed; the recipes install prek into a
