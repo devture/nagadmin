@@ -7,7 +7,7 @@
 		{% include '@DevtureNagios/host/toolbar.html.twig' with {'entity': entity, 'currentSection': 'status'} only %}
 	{% endif %}
 
-	<div ng-app-lazy="nagadminApp">
+	<div>
 		<fieldset>
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-table-cells-large"></i> Host</label>
@@ -31,19 +31,18 @@
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label"><i class="fa-solid fa-signal"></i> Services</label>
 				<div class="col-lg-10">
-					<div ng-app-lazy="nagadminApp" ng-init='hostId = {{ ('' ~ entity.id)|json_encode|raw }}'>
-						<div ng-controller="HostInfoCtrl">
-							<div ng-if="hostInfo == null">
-								<div class="spinner text-center">
-									<div class="bounce1"></div>
-									<div class="bounce2"></div>
-									<div class="bounce3"></div>
-								</div>
-							</div>
-
-							<host-info entity="hostInfo" ng-if="hostInfo != null"></host-info>
-						</div>
-					</div>
+					{% set reactProps = {
+						'hostId': '' ~ entity.id,
+						'urls': {
+							'hostInfo': path('devture_nagios.api.host.info', {'id': '__ID__'}),
+							'recheckServices': path('devture_nagios.api.host.recheck_services', {'id': '__ID__', 'recheckType': '__RECHECK_TYPE__', 'token': csrf_token('nagadmin')}),
+							'commandsList': path('devture_nagios.api.command.list', {'type': 'serviceCheck'}),
+							'hostView': path('devture_nagios.host.view', {'id': '__ID__'}),
+							'serviceView': path('devture_nagios.service.view', {'id': '__ID__'}),
+							'serviceAdd': path('devture_nagios.service.add', {'commandId': '__COMMAND_ID__', 'hostId': '__HOST_ID__'}),
+						},
+					} %}
+					{{ reactjs_render_component('HostServicesApp', reactProps) }}
 				</div>
 			</div>
 

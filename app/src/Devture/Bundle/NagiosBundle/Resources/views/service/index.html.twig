@@ -3,45 +3,17 @@
 {% block title %}Services / {{ parent() }}{% endblock %}
 
 {% block devture_nagios_content %}
-	<div ng-controller="HostsInfoCtrl" ng-app-lazy="nagadminApp">
-		<div class="row">
-			<div class="col-lg-3 col-6">
-				<hosts-info-summary hosts-info="hostsInfo"></hosts-info-summary>
-
-				<div class="d-none d-sm-block float-end" ng-if="!loaded">
-					<div class="spinner text-center">
-						<div class="bounce1"></div>
-						<div class="bounce2"></div>
-						<div class="bounce3"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-9 col-6">
-				<div class="col-lg-5 offset-lg-7 text-end">
-					<select ng-show="hostsInfo.length > 0" ng-model="selectedHostId" class="form-select">
-						<option value="">-- All hosts --</option>
-						<option ng-repeat="hostInfo in hostsInfo" value="{{ '{{ hostInfo.id }}' }}">{{ '{{ hostInfo.host.name }}' }}</option>
-					</select>
-				</div>
-			</div>
-		</div>
-
-		<div class="d-block d-sm-none" ng-if="hostsInfo.length == 0">
-			<div class="spinner text-center">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</div>
-
-		<hr />
-
-		<host-info ng-repeat="hostInfo in filteredHostsInfo" entity="hostInfo"></host-info>
-
-		<div ng-cloak class="form-text" ng-if="loaded && filteredHostsInfo.length == 0">
-			Not monitoring anything yet.
-			<a href="{{ path('devture_nagios.host.add') }}" class="btn btn-primary btn-sm">Create a new host to get started</a>
-		</div>
-	</div>
+	{% set reactProps = {
+		'urls': {
+			'hostsInfoAll': path('devture_nagios.api.host.info'),
+			'hostInfo': path('devture_nagios.api.host.info', {'id': '__ID__'}),
+			'recheckServices': path('devture_nagios.api.host.recheck_services', {'id': '__ID__', 'recheckType': '__RECHECK_TYPE__', 'token': csrf_token('nagadmin')}),
+			'commandsList': path('devture_nagios.api.command.list', {'type': 'serviceCheck'}),
+			'hostView': path('devture_nagios.host.view', {'id': '__ID__'}),
+			'hostAdd': path('devture_nagios.host.add'),
+			'serviceView': path('devture_nagios.service.view', {'id': '__ID__'}),
+			'serviceAdd': path('devture_nagios.service.add', {'commandId': '__COMMAND_ID__', 'hostId': '__HOST_ID__'}),
+		},
+	} %}
+	{{ reactjs_render_component('ServicesApp', reactProps) }}
 {% endblock %}
