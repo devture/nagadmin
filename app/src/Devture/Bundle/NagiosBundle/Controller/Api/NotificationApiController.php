@@ -105,7 +105,14 @@ class NotificationApiController extends AbstractController
             ->subject($subject)
             ->text($messageText);
 
-        $this->mailer->send($message);
+        try {
+            $this->mailer->send($message);
+        } catch (\Throwable $e) {
+            return $this->json([
+                'ok' => false,
+                'message' => sprintf('Sending failed: %s', $e->getMessage()),
+            ], 503);
+        }
 
         return $this->json(['ok' => true]);
     }
