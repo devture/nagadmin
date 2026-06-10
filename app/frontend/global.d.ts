@@ -18,4 +18,5 @@ interface Window {
 			getOrCreateInstance(element: Element): BootstrapTooltip;
 		};
 	};
+	relativizeTime(date: Date, other: Date): string;
 }
