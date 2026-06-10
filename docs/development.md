@@ -65,7 +65,7 @@ commit. The hooks are defined in
 [`.pre-commit-config.yaml`](../.pre-commit-config.yaml): built-in checks
 (trailing whitespace, final newlines, YAML/JSON validity, merge-conflict
 markers, accidentally-committed large files or private keys) plus the PHPStan
-analysis and Twig CS Fixer checks above.
+analysis, PHP CS Fixer and Twig CS Fixer checks above.
 
 prek itself is pinned and provided through [mise](https://mise.jdx.dev/), so the
 only prerequisite is having `mise` installed; the recipes install prek into a

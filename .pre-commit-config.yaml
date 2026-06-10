@@ -38,6 +38,15 @@ repos:
         exclude: '^app/vendor/'
         pass_filenames: false
 
+      # PHP code formatting and style (PHP CS Fixer)
+      - id: php-format-check
+        name: PHP Formatting and Style (PHP CS Fixer)
+        entry: just php-format-check
+        language: system
+        files: '\.php$'
+        exclude: '^app/vendor/'
+        pass_filenames: false
+
       # Twig template formatting and style (Twig CS Fixer)
       - id: twig-format-check
         name: Twig Formatting and Style (Twig CS Fixer)
