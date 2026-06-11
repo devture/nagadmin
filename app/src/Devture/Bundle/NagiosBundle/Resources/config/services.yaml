@@ -125,6 +125,15 @@ services:
             $senderNameOrNumber: '%nagadmin.sms.sender_id%'
             $suppressSending: '%nagadmin.notifications.suppress_sending%'
 
+    # ntfy notifications (notification API + console command).
+    ntfy.http_client:
+        class: GuzzleHttp\Client
+
+    Devture\Bundle\NagiosBundle\Notification\NtfySender:
+        arguments:
+            $httpClient: '@ntfy.http_client'
+            $suppressSending: '%nagadmin.notifications.suppress_sending%'
+
     # API-model exporters (domain models -> JSON for the React live-status UI).
     # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).
     Devture\Bundle\NagiosBundle\ApiModelBridge\:

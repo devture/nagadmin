@@ -2,6 +2,7 @@
 
 namespace Devture\Bundle\NagiosBundle\Controller\Api;
 
+use Devture\Bundle\NagiosBundle\Notification\NtfySender;
 use Devture\Bundle\NagiosBundle\Notification\SmsSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -23,6 +24,7 @@ class NotificationApiController extends AbstractController
 	public function __construct(
 		private readonly MailerInterface $mailer,
 		private readonly SmsSender $smsSender,
+		private readonly NtfySender $ntfySender,
 		#[Autowire('%nagadmin.notifications.api_secret%')]
 		private readonly string $apiSecret,
 		#[Autowire('%nagadmin.notifications.sender_email%')]
@@ -60,6 +62,49 @@ class NotificationApiController extends AbstractController
 
 		try {
 			$this->smsSender->send($phoneNumber, $messageText);
+		} catch (\Throwable $e) {
+			return $this->json([
+				'ok' => false,
+				'message' => sprintf('Sending failed: %s', $e->getMessage()),
+			], 503);
+		}
+
+		return $this->json(['ok' => true]);
+	}
+
+	#[Route('/send-ntfy', name: 'devture_nagios.api.notification.send_ntfy', methods: ['POST'])]
+	public function sendNtfy(Request $request): JsonResponse
+	{
+		$failureResponse = $this->authOrPrepareFailureResponse($request);
+		if ($failureResponse !== null) {
+			return $failureResponse;
+		}
+
+		$parts = explode("\n", trim($request->getContent()), 3);
+		if (count($parts) !== 3) {
+			return $this->json([
+				'ok' => false,
+				'message' => sprintf(
+					'Payload needs to contain 3 new-line separated parts: topic URL, title, message text (may contain new lines). Got %d parts',
+					count($parts),
+				),
+			], 400);
+		}
+
+		list($topicUrl, $title, $messageText) = $parts;
+
+		if (!filter_var($topicUrl, FILTER_VALIDATE_URL) || !in_array(parse_url($topicUrl, PHP_URL_SCHEME), ['http', 'https'], true)) {
+			return $this->json(['ok' => false, 'message' => 'The topic URL parameter in the body payload is not a valid http(s) URL'], 422);
+		}
+		if (!$title) {
+			return $this->json(['ok' => false, 'message' => 'Empty title parameter in body payload'], 422);
+		}
+		if (!$messageText) {
+			return $this->json(['ok' => false, 'message' => 'Empty message text parameter in body payload'], 422);
+		}
+
+		try {
+			$this->ntfySender->send($topicUrl, $title, $messageText);
 		} catch (\Throwable $e) {
 			return $this->json([
 				'ok' => false,
