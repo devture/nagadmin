@@ -171,6 +171,13 @@ Yes. The stack seeds a single `nagiosadmin` user from `.env`, but `htpasswd.user
 `var/container-data/nagios/etc/`) is a standard file you can add users to (`htpasswd -b -s … alice <pw>`), then
 authorize them in `cgi.cfg`. Such changes persist.
 
+**What notification channels are supported?**
+E-mail (via `MAILER_DSN`, typically the bundled exim relay), SMS (via [Vonage](https://www.vonage.com)) and
+[ntfy](https://ntfy.sh) push notifications. Stock notification commands for all three are seeded into the database.
+For ntfy, put the contact's full topic URL (e.g. `https://ntfy.sh/my_topic` — any server works) in its Address 1
+field. In development, e-mail is caught by mailcrab and the other channels are suppressed
+(`NAGADMIN_NOTIFICATIONS_SUPPRESS_SENDING`), so nobody gets notified for real.
+
 **Can I use custom check plugins?**
 Yes. Drop them into `var/nagios-custom-plugins/` (executable, with the right shebang) and reference them in commands as
 `$USER1$/custom/<plugin>`. The directory is mounted read-only into the Nagios container, which provides `sh`,
