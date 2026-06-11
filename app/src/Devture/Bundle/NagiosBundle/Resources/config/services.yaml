@@ -5,7 +5,9 @@ parameters:
     # Notification e-mail / SMS settings (notification API + console commands).
     nagadmin.notifications.sender_email: '%env(NAGADMIN_NOTIFICATION_SENDER_EMAIL)%'
     nagadmin.sms.sender_id: '%env(NAGADMIN_SMS_SENDER_ID)%'
-    nagadmin.sms.suppress_sending: '%env(bool:NAGADMIN_SMS_SUPPRESS_SENDING)%'
+    # Kill-switch for all notification channels lacking a dev-mode catcher
+    # (e-mail is exempt: dev redirects it to mailcrab via MAILER_DSN).
+    nagadmin.notifications.suppress_sending: '%env(bool:NAGADMIN_NOTIFICATIONS_SUPPRESS_SENDING)%'
     # Display name for this deployment and the external Nagios web UI URL
     # (both surfaced in the layout/navbar).
     nagadmin.project_name: '%env(NAGADMIN_PROJECT_NAME)%'
@@ -121,7 +123,7 @@ services:
     Devture\Bundle\NagiosBundle\Notification\SmsSender:
         arguments:
             $senderNameOrNumber: '%nagadmin.sms.sender_id%'
-            $suppressSending: '%nagadmin.sms.suppress_sending%'
+            $suppressSending: '%nagadmin.notifications.suppress_sending%'
 
     # API-model exporters (domain models -> JSON for the React live-status UI).
     # All autowire by type (HostBridge resolves the current user via CurrentUserProvider).

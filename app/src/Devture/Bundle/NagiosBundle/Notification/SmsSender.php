@@ -9,9 +9,10 @@ use Vonage\SMS\Message\SMS;
  * Sends SMS notifications (notification API + console command) through the
  * Vonage SDK.
  *
- * When suppression is enabled (the default in development, where — unlike for
- * e-mail — there is no SMS catcher), messages are silently dropped instead of
- * being delivered, so the development environment never sends real text messages.
+ * When suppression is enabled (NAGADMIN_NOTIFICATIONS_SUPPRESS_SENDING — the
+ * default in development, where — unlike for e-mail — there is no SMS catcher),
+ * messages are silently dropped instead of being delivered, so the development
+ * environment never sends real text messages.
  */
 class SmsSender
 {
