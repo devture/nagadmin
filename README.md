@@ -171,6 +171,11 @@ Yes. The stack seeds a single `nagiosadmin` user from `.env`, but `htpasswd.user
 `var/container-data/nagios/etc/`) is a standard file you can add users to (`htpasswd -b -s … alice <pw>`), then
 authorize them in `cgi.cfg`. Such changes persist.
 
+**Can I use custom check plugins?**
+Yes. Drop them into `var/nagios-custom-plugins/` (executable, with the right shebang) and reference them in commands as
+`$USER1$/custom/<plugin>`. The directory is mounted read-only into the Nagios container, which provides `sh`,
+`bash`, `python3`, `curl` and the standard monitoring plugins for them to build on.
+
 **Can I import my existing Nagios configuration files?**
 No. You'd need to start from scratch via the UI.
 

@@ -154,7 +154,7 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _public-assets-frontend-completed
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _var-nagios-custom-plugins _public-assets-frontend-completed
 
 _public-assets-frontend: (_ensure_dir_created "app/public/assets/frontend")
 
@@ -165,6 +165,11 @@ _public-assets-frontend-completed: _public-assets-frontend
 		{{ just_executable() }} --justfile {{ justfile() }} js-build
 		touch app/public/assets/frontend/completed
 	fi
+
+# Drop-in directory for custom check plugins, mounted read-only into the nagios
+# container at /opt/nagios/libexec/custom ($USER1$/custom). Left owned by the
+# invoking user (the container only reads it).
+_var-nagios-custom-plugins: (_ensure_dir_created "var/nagios-custom-plugins")
 
 # The exim-relay mail spool (persistent store-and-forward queue); written by the
 # mailer container (runs as {{ container_user }}). Only mounted in production, but

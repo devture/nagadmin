@@ -56,6 +56,9 @@ services:
     - ./var/container-data/nagios/etc:/opt/nagios/etc:rw,cached
     - ./var/container-data/nagios/var:/opt/nagios/var:rw,cached
     - ./var/container-data/nagadmin-generated-config:/nagadmin-generated-config:ro,cached
+    # Drop-in directory for custom check plugins, available to commands as
+    # $USER1$/custom/<plugin>. See the README FAQ.
+    - ./var/nagios-custom-plugins:/opt/nagios/libexec/custom:ro,cached
     environment:
       NAGIOSADMIN_USER: ${NAGIOSADMIN_USER}
       NAGIOSADMIN_PASS: ${NAGIOSADMIN_PASS}
