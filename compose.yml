@@ -13,6 +13,7 @@ services:
     restart: unless-stopped
     ports:
     - "${NGINX_HTTP_BIND_ADDRESS}:8080"
+    label_file: ./var/nginx-labels
     # Any random non-root user will do
     user: 4000:4000
     entrypoint: /bin/sh
@@ -47,6 +48,7 @@ services:
     restart: unless-stopped
     ports:
     - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
+    label_file: ./var/nagios-labels
     volumes:
     # The live Nagios base config (nagios.cfg, cgi.cfg, htpasswd.users) is seeded from the
     # `.dist` templates in etc/services/nagios/etc/ into this untracked directory on first run

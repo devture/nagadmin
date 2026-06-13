@@ -136,8 +136,32 @@ either (or both).
 
 ### Set up a reverse proxy
 
-See [`resources/webserver`](resources/webserver). You may also want to configure Symfony's trusted proxies via the
-`SYMFONY_TRUSTED_PROXIES` environment variable (e.g. in `app/.env`).
+The stack publishes the Nagadmin UI (the `nginx` service) and the Nagios UI (the `nagios` service) on the host
+addresses set by `NGINX_HTTP_BIND_ADDRESS` / `NAGIOS_HTTP_BIND_ADDRESS`. Put a reverse proxy in front of them to add
+TLS and route your domains. Two approaches:
+
+- **Host-level proxy** (nginx, Apache, …) — proxy your domains to those published ports. See
+  [`resources/webserver`](resources/webserver) for an nginx example.
+
+- **Container-native proxy** (e.g. [Traefik](https://traefik.io)) — the `nginx` and `nagios` services each read an
+  optional `label_file` (`var/nginx-labels`, `var/nagios-labels`), empty by default. Drop your proxy's container
+  labels into these files and connect the proxy to the stack's Docker network (`devture-nagadmin_default`). A Traefik
+  example for `var/nginx-labels`:
+
+  ```
+  traefik.enable=true
+  traefik.docker.network=devture-nagadmin_default
+  traefik.http.routers.nagadmin.rule=Host(`nagadmin.example.com`)
+  traefik.http.routers.nagadmin.entrypoints=web-secure
+  traefik.http.routers.nagadmin.tls.certResolver=default
+  traefik.http.services.nagadmin.loadbalancer.server.port=8080
+  ```
+
+  The corresponding `var/nagios-labels` would route the Nagios UI on its own host, with
+  `loadbalancer.server.port=80`.
+
+You may also want to configure Symfony's trusted proxies via the `SYMFONY_TRUSTED_PROXIES` environment variable
+(e.g. in `app/.env`), so that the proxy's `X-Forwarded-Proto` is honored and generated URLs come out `https`.
 
 
 ## ⚙️ Running in production

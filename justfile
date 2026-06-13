@@ -154,7 +154,7 @@ _prepare_deps:
 	fi
 
 # Internal - makes sure the runtime directories exist and have the correct ownership
-_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _var-nagios-custom-plugins _public-assets-frontend-completed
+_prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadmin-generated-config _var-nagios-var _var-container-data-nagios-etc _var-exim-spool _var-nagios-custom-plugins _var-nginx-labels _var-nagios-labels _public-assets-frontend-completed
 
 _public-assets-frontend: (_ensure_dir_created "app/public/assets/frontend")
 
@@ -170,6 +170,24 @@ _public-assets-frontend-completed: _public-assets-frontend
 # container at /opt/nagios/libexec/custom ($USER1$/custom). Left owned by the
 # invoking user (the container only reads it).
 _var-nagios-custom-plugins: (_ensure_dir_created "var/nagios-custom-plugins")
+
+# Internal - the nginx (Nagadmin UI) container's reverse-proxy labels. Empty by
+# default; populate var/nginx-labels in production to attach a container-native
+# reverse proxy such as Traefik (see the README). The empty file is required for
+# the compose `label_file` reference to resolve.
+_var-nginx-labels:
+	#!/bin/sh
+	if [ ! -f var/nginx-labels ]; then
+		touch var/nginx-labels
+	fi
+
+# Internal - the nagios (Nagios UI) container's reverse-proxy labels. Empty by
+# default; populate var/nagios-labels in production (see _var-nginx-labels).
+_var-nagios-labels:
+	#!/bin/sh
+	if [ ! -f var/nagios-labels ]; then
+		touch var/nagios-labels
+	fi
 
 # The exim-relay mail spool (persistent store-and-forward queue); written by the
 # mailer container (runs as {{ container_user }}). Only mounted in production, but
