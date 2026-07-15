@@ -8,7 +8,7 @@
 		"eslint-plugin-react": "7.37.*",
 		"eslint-plugin-react-hooks": "5.1.*",
 		"typescript": "5.9.*",
-		"globals": "16.5.*"
+		"globals": "17.7.*"
 	},
 	"devDependencies": {
 		"@types/react": "19.2.*"
