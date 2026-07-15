@@ -50,7 +50,7 @@ mongodb_data_user="0:0"
 
 # A small throwaway image, used to run privileged filesystem ops (mkdir/chown of the
 # root-owned MongoDB data directory) without requiring the invoking user to be root.
-alpine_container_image="docker.io/alpine:3.23.4"
+alpine_container_image="docker.io/alpine:3.23.5"
 
 if [ ! -f "${justfile_path}" ]; then
 	echo "Error: Justfile not found at '${justfile_path}'" >&2

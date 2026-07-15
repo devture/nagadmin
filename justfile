@@ -1,7 +1,7 @@
 project_name := "devture-nagadmin"
 
 # A small throwaway image used for preparing `var/` directory ownership.
-alpine_container_image := "docker.io/alpine:3.23.4"
+alpine_container_image := "docker.io/alpine:3.23.5"
 
 # mise data directory - can be overridden via environment variable for CI
 mise_data_dir := env("MISE_DATA_DIR", justfile_directory() / "var/mise")
