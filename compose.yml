@@ -39,12 +39,12 @@ services:
     - ./:/code:rw,cached
 
   nagios:
-    # This is Nagios v4.5.12 (Alpine 3.23).
+    # This is Nagios v4.5.13 (Alpine 3.23).
     # See https://github.com/manios/docker-nagios/blob/master/CHANGELOG.md
     # Our nagios.cfg/cgi.cfg + generated config validate cleanly on this version
     # (verified via `nagios -v`). Note: build-8 was intentionally avoided — it is
     # the one build in this series missing `bind-tools`, which breaks check_dns.
-    image: docker.io/manios/nagios:build-35
+    image: docker.io/manios/nagios:build-36
     restart: unless-stopped
     ports:
     - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
