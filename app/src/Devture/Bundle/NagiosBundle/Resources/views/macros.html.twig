@@ -1,8 +1,6 @@
 {% macro service_label_class_from_state(state) %}
-{% apply spaceless %}
-	{% set map = {'ok': 'text-bg-success', 'warning': 'text-bg-warning', 'critical': 'text-bg-danger', 'unknown': 'text-bg-secondary'} %}
-	{{ map[state] }}
-{% endapply %}
+	{%- set map = {'ok': 'text-bg-success', 'warning': 'text-bg-warning', 'critical': 'text-bg-danger', 'unknown': 'text-bg-secondary'} -%}
+	{{- map[state] -}}
 {% endmacro %}
 
 {% macro service_status(status) %}
@@ -24,10 +22,8 @@
 	{% endif %}
 {% endmacro %}
 
-{% macro relative_time(timestamp) %}
-{% apply spaceless %}
+{% macro relative_time(timestamp) -%}
 	<time class="js-relative-time" data-time="{{ timestamp * 1000 }}">
 		{{ timestamp|date('d F, Y') }}
 	</time>
-{% endapply %}
-{% endmacro %}
+{%- endmacro %}

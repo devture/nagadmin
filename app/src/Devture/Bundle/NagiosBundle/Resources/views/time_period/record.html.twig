@@ -2,8 +2,7 @@
 
 {% block title %}{{ isAdded ? 'Edit time period: ' ~ entity.title : 'Add time period' }} / {{ parent() }}{% endblock %}
 
-{% macro render_rules_example() %}
-{% apply spaceless %}
+{% macro render_rules_example() -%}
 monday     08:00-24:00
 tuesday    09:00-17:00
 wednesday  08:00-12:00,15:00-19:00
@@ -12,8 +11,7 @@ sunday     14:00-19:00
 monday 3   00:00-09:00,17:00-24:00
 day 2      00:00-24:00
 february 4 00:00-24:00
-{% endapply %}
-{% endmacro %}
+{%- endmacro %}
 
 {% block devture_nagios_content %}
 	{{ render_form_violations(form, '__other__') }}

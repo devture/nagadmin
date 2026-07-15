@@ -1,6 +1,5 @@
 <div class="js-rule-editor" data-number="{{ number }}">
 	<div class="row">
-	{% apply spaceless %}
 		<div class="col-lg-3">
 			<input type="text" name="rules[{{ number }}][dateRange]"
 				value="{{ entity is not none ? entity.dateRange : '' }}"
@@ -16,7 +15,6 @@
 		<div class="col-lg-3">
 			<a href="javascript://" class="btn btn-outline-danger btn-sm js-button-remove-rule"><i class="fa-solid fa-xmark"></i> Remove rule</a>
 		</div>
-	{% endapply %}
 	</div>
 
 	<div class="top-spaced-minor"></div>
