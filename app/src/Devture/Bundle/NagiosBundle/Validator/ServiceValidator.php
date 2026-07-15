@@ -26,7 +26,8 @@ class ServiceValidator extends BaseValidator {
 		$violations = parent::validate($entity, $options);
 
 		$name = $entity->getName();
-		if (strlen($name) < 3 || !preg_match("/^[a-zA-Z0-9\s\-_\.]+$/", $name)) {
+		//Mirrors Nagios's `illegal_object_name_chars`, plus `;` (config-file comment starter, external-command separator) and newlines.
+		if (strlen($name) < 3 || preg_match("/[`~!\$%^&*|'\"<>?,()=;\\r\\n]/", $name)) {
 			$violations->add('name', 'Invalid name.');
 		} else {
 			try {
