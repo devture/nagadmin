@@ -9,7 +9,7 @@ services:
   # so the development environment never sends real mail. The application points
   # MAILER_DSN at this service (see app/.env.dist); the web UI is published below.
   mailcrab:
-    image: docker.io/marlonb/mailcrab:v1.6.5
+    image: docker.io/marlonb/mailcrab:v1.8.0
     restart: unless-stopped
     # Any random non-root user will do (mailcrab keeps everything in memory).
     user: 4000:4000
