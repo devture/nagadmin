@@ -4,7 +4,7 @@
 		"module": "ESNext",
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"jsx": "react",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
@@ -12,11 +12,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"noEmit": true,
-		"baseUrl": ".",
-		"paths": {
-			"*": ["node_modules/@types/*"]
-		}
+		"noEmit": true
 	},
 	"include": [
 		"**/*.ts",
