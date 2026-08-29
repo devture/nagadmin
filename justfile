@@ -1,5 +1,3 @@
-project_name := "devture-nagadmin"
-
 # A small throwaway image used for preparing `var/` directory ownership.
 alpine_container_image := "docker.io/alpine:3.23.5"
 
@@ -39,23 +37,23 @@ composer-update: _var-composer-cache
 
 # Runs static analysis (PHPStan) against the app's PHP code
 php-analyze: _prepare_deps
-	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
+	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
 
 # Checks PHP code formatting and style (PHP CS Fixer)
 php-format-check: _prepare_deps
-	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
 
 # Fixes PHP code formatting and style (PHP CS Fixer)
 php-format: _prepare_deps
-	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
 
 # Checks Twig template formatting and style (Twig CS Fixer)
 twig-format-check: _prepare_deps
-	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
 
 # Fixes Twig template formatting and style (Twig CS Fixer)
 twig-format: _prepare_deps
-	docker compose -f compose.yml -p {{ project_name }} run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
 
 # Populates app/frontend/node_modules, so that IDE autocompletion works
 js-pull-dependencies: _public-assets-frontend
@@ -95,10 +93,10 @@ cache-clear:
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
-	docker compose -f compose.yml -p {{ project_name }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
+	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
+	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
+	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
+	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
 	./bin/container-console init-database
 
 # Performs initial installation and Nagios configuration deployment
@@ -123,7 +121,7 @@ mongodb-upgrade: _var-mongodb-io
 # Internal - runs a `docker compose` command for the given environment (dev|prod),
 # combining the shared compose.yml with the matching compose.<env>.yml override.
 docker-compose env *extra_args: _require_root_env_file_or_fail
-	docker compose -f compose.yml -f compose.{{ env }}.yml -p {{ project_name }} {{ extra_args }}
+	docker compose -f compose.yml -f compose.{{ env }}.yml {{ extra_args }}
 
 # Internal - fails early (with guidance) if the repository-root `.env` is missing.
 _require_root_env_file_or_fail:

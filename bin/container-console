@@ -16,6 +16,6 @@ if [ -t 0 ] && [ -t 1 ]; then
 	docker_compose_run_flags=''
 fi
 
-docker compose -f compose.yml -p devture-nagadmin \
+docker compose -f compose.yml \
 run $docker_compose_run_flags --rm --user='100:101' php sh -c \
 "cd /code/app && NAGADMIN_RUNTIME_DIR=/tmp/nagadmin-console php bin/console $C"
