@@ -1,13 +1,14 @@
 FROM docker.io/alpine:3.23.5
 
 ARG PHP_VERSION=85
+# renovate: datasource=github-releases depName=mongodb/mongo-php-driver
+ARG MONGODB_VERSION=2.5.5
 
 WORKDIR /code
 
-# Prebuilt PHP + extensions from Alpine's repositories — no compiling ext-mongodb
-# from source (unlike the php:*-fpm base, which lacks it). Beyond PHP's always-on
-# core, the application needs:
-#   pecl-mongodb                    — the database driver (mongodb/mongodb library)
+# PHP and extensions from Alpine's repositories. The MongoDB driver is built below
+# because Alpine's packaged version is too old for the patched mongodb/mongodb library.
+# Beyond PHP's always-on core, the application needs:
 #   ctype, iconv                    — required by composer.json
 #   mbstring                        — Twig and Symfony String
 #   session                         — the security firewall's form-login sessions
@@ -19,13 +20,13 @@ WORKDIR /code
 RUN apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
-    php${PHP_VERSION}-pecl-mongodb \
     php${PHP_VERSION}-ctype \
     php${PHP_VERSION}-iconv \
     php${PHP_VERSION}-mbstring \
     php${PHP_VERSION}-session \
     php${PHP_VERSION}-curl \
     php${PHP_VERSION}-openssl \
+    php${PHP_VERSION}-sodium \
     php${PHP_VERSION}-dom \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-simplexml \
@@ -34,6 +35,23 @@ RUN apk add --no-cache \
     php${PHP_VERSION}-intl \
     php${PHP_VERSION}-phar \
     php${PHP_VERSION}-tokenizer
+
+RUN apk add --no-cache libstdc++ \
+    && apk add --no-cache --virtual .mongodb-build-deps \
+        autoconf build-base linux-headers php${PHP_VERSION}-dev curl openssl-dev \
+    && curl -fsSL --retry 3 \
+        "https://github.com/mongodb/mongo-php-driver/releases/download/${MONGODB_VERSION}/mongodb-${MONGODB_VERSION}.tgz" \
+        -o /tmp/mongodb.tgz \
+    && tar -xzf /tmp/mongodb.tgz -C /tmp \
+    && cd /tmp/mongodb-${MONGODB_VERSION} \
+    && phpize${PHP_VERSION} \
+    && ./configure --with-php-config=/usr/bin/php-config${PHP_VERSION} \
+    && make -j2 \
+    && make install \
+    && echo 'extension=mongodb.so' > /etc/php${PHP_VERSION}/conf.d/50_mongodb.ini \
+    && cd / \
+    && rm -rf /tmp/mongodb* \
+    && apk del .mongodb-build-deps
 
 # Provide version-independent `php` / `php-fpm` names, so the rest of the tooling
 # (bin/container-console, the compose CMD) does not hardcode the PHP version.

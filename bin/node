@@ -14,6 +14,8 @@ if [ -t 0 ] && [ -t 1 ]; then
 	docker_run_flags='-it'
 fi
 
+set -e
+
 docker build -t localhost/devture-nagadmin/node:latest -f etc/docker/node/Dockerfile app/frontend/
 
 # /app/src is also writable, because we have a justfile target which downloads TypeScript-related `node_modules` there.
@@ -21,6 +23,8 @@ docker run \
 	$docker_run_flags \
 	--rm \
 	--user=`id -u`:`id -g` \
+	-e FRONTEND_OUTPUT_DIR=/app/build \
+	-e FRONTEND_NODE_MODULES=/app/node_modules \
 	--mount type=bind,src=`pwd`/app/frontend,dst=/app/src \
 	--mount type=bind,src=`pwd`/app/public/assets/frontend,dst=/app/build \
 	--entrypoint=/bin/sh \

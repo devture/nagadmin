@@ -1,16 +1,16 @@
 {
+    "name": "devture/nagadmin",
+    "description": "Nagios configuration and monitoring web interface",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "provide": {
-        "ext-mongodb": "2.3.*"
-    },
     "require": {
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "mongodb/mongodb": "2.3.*",
+        "ext-mongodb": "^2.4",
+        "mongodb/mongodb": "2.4.*",
         "symfony/console": "8.1.*",
         "symfony/dotenv": "8.1.*",
         "symfony/finder": "8.1.*",
@@ -32,6 +32,10 @@
         "vincentlanglet/twig-cs-fixer": "3.14.*"
     },
     "config": {
+        "platform-check": true,
+        "platform": {
+            "ext-mongodb": "2.4.0"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "symfony/flex": true,
@@ -80,8 +84,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
-            "require": "8.1.*"
+            "allow-contrib": false
         }
     }
 }

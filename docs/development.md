@@ -69,11 +69,10 @@ in an ephemeral Node.js container (`bin/node`), so there are no host dependencie
 just js-build
 ```
 
-The first `just run` builds the bundles automatically; a
-`app/public/assets/frontend/completed` marker file then prevents rebuilds on
-subsequent runs. This means that after pulling changes to `app/frontend/`
-(including when upgrading a deployment), you need to run `just js-build`
-yourself.
+`just run` builds the assets automatically on first use and when files under
+`app/frontend/` or the Node Dockerfile are newer than the last successful build.
+The `app/public/assets/frontend/completed` marker prevents unnecessary rebuilds.
+Use `just js-build` to rebuild immediately without starting the stack.
 
 While developing, rebuild on every change:
 
@@ -81,7 +80,7 @@ While developing, rebuild on every change:
 just js-build-continuously
 ```
 
-Linting (ESLint 9) and type-checking (strict TypeScript) together:
+Linting (ESLint) and type-checking (strict TypeScript) together:
 
 ```sh
 just js-analyze
@@ -90,6 +89,47 @@ just js-analyze
 `just js-autofix` applies the auto-fixable ESLint fixes, and
 `just js-pull-dependencies` populates `app/frontend/node_modules` on the host
 so IDE autocompletion works.
+
+## Dependency maintenance
+
+Renovate tracks Composer, npm, Dockerfiles, Compose images and mise. Custom
+extractors also track the Composer helper image, the Alpine image in `justfile`,
+and the MongoDB PHP extension built in the PHP Dockerfile. The PHP image name in
+Compose is a local build tag, so it is excluded from registry lookups.
+The mail relay uses the maintained `ghcr.io/devture/exim-relay` registry;
+explicit version rules track its release/build suffixes and Nagios's `build-N` tags.
+ArtiDezi owns automatic merging after review and successful GitHub checks;
+Renovate itself does not merge updates. Weekly lockfile maintenance refreshes
+transitive dependencies within the declared ranges.
+
+Commit both `app/composer.lock` and `app/frontend/package-lock.json` after
+updates. Symfony components are grouped in Renovate; their `composer.json`
+constraints define the release line without a second Flex `extra.symfony.require`
+constraint blocking upgrades. Composer's `platform.ext-mongodb` declares the
+minimum driver version for resolution in the Composer container. It does not
+install the driver: the PHP image builds the pinned official extension, and
+`platform-check` verifies required extensions when the application loads.
+
+React/React DOM, Bootstrap, jQuery, Chosen and Font Awesome are npm dependencies.
+`just js-build` copies their browser assets to the ignored
+`app/public/assets/frontend/vendor/` directory and bundles the official React
+packages into one shared runtime for comploader. No manually downloaded copies
+of these libraries need updating. `just run` rebuilds changed assets; use
+`just js-build` to rebuild them explicitly. Recreate the PHP container after rebuilding its image with
+`docker compose -f compose.yml build php` when its driver or base image changes.
+
+The GitHub `Check` workflow installs and audits both lockfiles, builds both
+development images, and runs PHPStan, PHP/Twig style checks, ESLint, TypeScript
+and the asset build. It does not start the monitoring stack or send notifications.
+For equivalent local checks, run:
+
+```sh
+just composer-install
+./bin/composer validate --strict
+./bin/composer audit --locked
+docker compose -f compose.yml build php
+just php-analyze php-format-check twig-format-check js-analyze js-build
+```
 
 ## Pre-commit hooks (prek)
 

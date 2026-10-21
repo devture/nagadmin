@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>mother-of-all-self-hosting/renovate-config#v1.1.0"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on monday"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^etc/docker/php/Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>github-releases) depName=(?<depName>[^\\s]+)\\s+ARG MONGODB_VERSION=(?<currentValue>[^\\s]+)"
+      ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^bin/composer$/", "/^justfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+)\\s+[a-z_]+\\s*:?=\\s*[\"']?(?:[^\\s\"']+):(?<currentValue>[^\\s\"']+)"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Nagios uses numbered build tags",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/manios/nagios"],
+      "versioning": "regex:^build-(?<major>\\d+)$"
+    },
+    {
+      "description": "Track Exim, Alpine package revision and image build number",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/devture/exim-relay"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?-r(?<build>\\d+)-(?<revision>\\d+)$"
+    },
+    {
+      "description": "Keep Symfony framework components on the same release line",
+      "matchManagers": ["composer"],
+      "matchPackageNames": ["/^symfony//", "!symfony/flex", "!symfony/monolog-bundle", "!/^symfony/polyfill-/"],
+      "groupName": "Symfony components"
+    },
+    {
+      "description": "Keep React runtime and type definitions together",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "React"
+    },
+    {
+      "description": "Built locally by Compose; this image is not published to a registry",
+      "matchManagers": ["docker-compose"],
+      "matchPackageNames": ["devture/nagadmin-php", "docker.io/devture/nagadmin-php"],
+      "enabled": false
+    },
+    {
+      "description": "ArtiDezi reviews and merges PRs after successful checks",
+      "matchPackageNames": ["*"],
+      "automerge": false,
+      "schedule": ["at any time"]
+    }
+  ]
+}

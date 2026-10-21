@@ -14,6 +14,9 @@ if [ -t 1 ]; then
 	docker_run_flags='-it'
 fi
 
+# renovate: datasource=docker depName=docker.io/composer
+composer_image=docker.io/composer:2.10.2
+
 docker run \
 	$docker_run_flags \
 	--rm \
@@ -23,5 +26,5 @@ docker run \
 	--mount type=bind,src=`pwd`,dst=/app \
 	--tmpfs=/home/user \
 	--entrypoint=/bin/sh \
-	docker.io/composer:2.10.2 -c \
+	"$composer_image" -c \
 	"/bin/sh /app/etc/services/composer/init.sh && su -l user -c 'cd /app/app; COMPOSER_CACHE_DIR=/cache/composer composer $C'"

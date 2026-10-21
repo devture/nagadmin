@@ -1,16 +1,15 @@
 comploader.register("react", {
 	"scripts": [
-		"{{ static_url('/assets/react/react.production.min.js') }}",
-		"{{ static_url('/assets/react/react-dom.production.min.js') }}"
+		"{{ static_url('/assets/frontend/vendor/react.js') }}"
 	]
 });
 
 comploader.register("chosen", {
 	"stylesheets": [
-		"{{ static_url('/js/chosen/chosen.css') }}"
+		"{{ static_url('/assets/frontend/vendor/chosen/chosen.css') }}"
 	],
 	"scripts": [
-		"{{ static_url('/js/chosen/chosen.jquery.min.js') }}"
+		"{{ static_url('/assets/frontend/vendor/chosen/chosen.jquery.min.js') }}"
 	]
 });
 

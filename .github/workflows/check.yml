@@ -1,0 +1,55 @@
+name: Check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Install and audit locked dependencies
+        run: |
+          mkdir -p var/composer-cache
+          ./bin/composer validate --strict
+          ./bin/composer install --no-interaction --prefer-dist
+          ./bin/composer audit --locked
+      - name: Build PHP runtime and check the application
+        run: |
+          docker build -t nagadmin-php-check etc/docker/php
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$PWD:/code" -w /code/app nagadmin-php-check sh -ec '
+              php -r '\''require "vendor/autoload.php";'\''
+              vendor/bin/phpstan analyse -c phpstan.neon --no-progress
+              vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php
+              vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php
+            '
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/frontend
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24.18.0
+          cache: npm
+          cache-dependency-path: app/frontend/package-lock.json
+      - run: npm ci --no-fund
+      - run: npm audit
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Verify container build
+        run: docker build -f ../../etc/docker/node/Dockerfile .

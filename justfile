@@ -1,4 +1,5 @@
 # A small throwaway image used for preparing `var/` directory ownership.
+# renovate: datasource=docker depName=docker.io/alpine
 alpine_container_image := "docker.io/alpine:3.23.5"
 
 # mise data directory - can be overridden via environment variable for CI
@@ -37,11 +38,11 @@ composer-update: _var-composer-cache
 
 # Runs static analysis (PHPStan) against the app's PHP code
 php-analyze: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
+	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
 
 # Checks PHP code formatting and style (PHP CS Fixer)
 php-format-check: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
 
 # Fixes PHP code formatting and style (PHP CS Fixer)
 php-format: _prepare_deps
@@ -49,7 +50,7 @@ php-format: _prepare_deps
 
 # Checks Twig template formatting and style (Twig CS Fixer)
 twig-format-check: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user='{{ container_user }}' php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
+	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
 
 # Fixes Twig template formatting and style (Twig CS Fixer)
 twig-format: _prepare_deps
@@ -61,11 +62,11 @@ js-pull-dependencies: _public-assets-frontend
 
 # Transpiles React files from the jsx/tsx classes to regular js
 js-build: _public-assets-frontend
-	./bin/node /bin/sh -c 'esbuild /app/src/*.*sx --bundle --minify --sourcemap --external:'react' --outdir=/app/build/'
+	./bin/node /bin/sh -c 'cd /app/src && npm run build'
 
 # Watches and transpiles React files from the jsx/tsx classes to regular js
 js-build-continuously: _public-assets-frontend
-	./bin/node /bin/sh -c 'esbuild /app/src/*.*sx --bundle --minify --sourcemap --external:'react' --outdir=/app/build/ --watch'
+	./bin/node /bin/sh -c 'cd /app/src && npm run watch'
 
 # Runs comprehensive analysis on React/TypeScript code (lint + type check)
 js-analyze: js-analyze-lint js-analyze-type-check
@@ -156,10 +157,14 @@ _prepare_run: _var-cache _var-mongodb-io _var-container-data-mongodb _var-nagadm
 
 _public-assets-frontend: (_ensure_dir_created "app/public/assets/frontend")
 
-# Internal - builds the JS bundles once (the `completed` marker prevents rebuilds on every run)
+# Internal - rebuilds browser assets when sources, dependencies or the Node image change
 _public-assets-frontend-completed: _public-assets-frontend
 	#!/bin/sh
-	if [ ! -f app/public/assets/frontend/completed ]; then
+	set -e
+	if [ ! -f app/public/assets/frontend/completed ] \
+		|| [ ! -f app/public/assets/frontend/vendor/react.js ] \
+		|| [ etc/docker/node/Dockerfile -nt app/public/assets/frontend/completed ] \
+		|| [ -n "$(find app/frontend -path app/frontend/node_modules -prune -o -type f -newer app/public/assets/frontend/completed -print -quit)" ]; then
 		{{ just_executable() }} --justfile {{ justfile() }} js-build
 		touch app/public/assets/frontend/completed
 	fi

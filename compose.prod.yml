@@ -16,7 +16,7 @@ services:
   #                        are never silently dropped.
   #   * SMARTHOST empty -> deliver directly to the recipients' MX servers.
   mailer:
-    image: docker.io/devture/exim-relay:4.98-r0-4
+    image: ghcr.io/devture/exim-relay:4.99.5-r0-1
     restart: unless-stopped
     # Same uid:gid as the other containers (the `exim` user inside the image),
     # so it can own its persistent spool directory below.
@@ -26,7 +26,7 @@ services:
       DISABLE_SENDER_VERIFICATION: 1
       # Upstream smarthost as `host::port` (e.g. smtp.example.com::587) plus the
       # authentication credentials. The relay uses opportunistic STARTTLS, so use a
-      # STARTTLS port like 587 (implicit TLS on 465 is not supported by this image).
+      # STARTTLS port like 587.
       # Leave SMARTHOST empty for direct-to-MX.
       SMARTHOST: ${SMARTHOST}
       SMTP_USERNAME: ${SMTP_USERNAME}
