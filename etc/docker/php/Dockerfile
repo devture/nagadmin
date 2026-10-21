@@ -1,4 +1,4 @@
-FROM docker.io/alpine:3.23.5
+FROM docker.io/alpine:3.24.2
 
 ARG PHP_VERSION=85
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
@@ -17,8 +17,9 @@ WORKDIR /code
 #   fileinfo, intl                  — HttpFoundation MIME detection / Symfony i18n helpers
 #   phar, tokenizer                 — used by Symfony console tooling
 # OPcache ships with the main php85 package (no separate extension to install).
+# Keep the main package pin literal so Renovate can track PHP security releases.
 RUN apk add --no-cache \
-    php${PHP_VERSION} \
+    php85=8.5.11-r0 \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-ctype \
     php${PHP_VERSION}-iconv \
@@ -55,8 +56,8 @@ RUN apk add --no-cache libstdc++ \
 
 # Provide version-independent `php` / `php-fpm` names, so the rest of the tooling
 # (bin/container-console, the compose CMD) does not hardcode the PHP version.
-RUN ln -s /usr/bin/php${PHP_VERSION} /usr/bin/php && \
-    ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
+RUN ln -sf /usr/bin/php${PHP_VERSION} /usr/bin/php && \
+    ln -sf /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
 
 COPY override.ini /etc/php${PHP_VERSION}/conf.d/zz-override.ini
 

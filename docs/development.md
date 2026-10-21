@@ -98,6 +98,15 @@ and the MongoDB PHP extension built in the PHP Dockerfile. The PHP image name in
 Compose is a local build tag, so it is excluded from registry lookups.
 The mail relay uses the maintained `ghcr.io/devture/exim-relay` registry;
 explicit version rules track its release/build suffixes and Nagios's `build-N` tags.
+The main `php85` APK package is pinned so Renovate detects PHP patch and package
+revision updates even when the Alpine image tag stays unchanged. Keep its APK
+registry branch in `renovate.json` aligned with the PHP Dockerfile's Alpine base.
+The `PHP_VERSION` argument selects the extension package names and must match the
+pinned PHP package's major/minor series. Node's version rule also tracks its
+Alpine suffix, which Docker's default compatibility rules would otherwise retain.
+Runtime image and PHP package updates take priority in Renovate's PR queue.
+PR branches are refreshed after base-branch changes so new CI workflows and
+compatibility fixes become available for ArtiDezi assessments.
 ArtiDezi owns automatic merging after review and successful GitHub checks;
 Renovate itself does not merge updates. Weekly lockfile maintenance refreshes
 transitive dependencies within the declared ranges.

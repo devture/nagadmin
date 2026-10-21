@@ -1,6 +1,6 @@
 # A small throwaway image used for preparing `var/` directory ownership.
 # renovate: datasource=docker depName=docker.io/alpine
-alpine_container_image := "docker.io/alpine:3.23.5"
+alpine_container_image := "docker.io/alpine:3.24.2"
 
 # mise data directory - can be overridden via environment variable for CI
 mise_data_dir := env("MISE_DATA_DIR", justfile_directory() / "var/mise")
