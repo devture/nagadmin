@@ -9,8 +9,8 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ext-mongodb": "^2.4",
-        "mongodb/mongodb": "2.4.*",
+        "ext-mongodb": "^2.5",
+        "mongodb/mongodb": "2.5.*",
         "symfony/console": "8.1.*",
         "symfony/dotenv": "8.1.*",
         "symfony/finder": "8.1.*",
@@ -34,7 +34,7 @@
     "config": {
         "platform-check": true,
         "platform": {
-            "ext-mongodb": "2.4.0"
+            "ext-mongodb": "2.5.0"
         },
         "allow-plugins": {
             "php-http/discovery": true,
