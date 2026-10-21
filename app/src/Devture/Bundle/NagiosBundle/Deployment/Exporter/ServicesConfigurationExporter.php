@@ -7,6 +7,7 @@ use Devture\Bundle\NagiosBundle\Deployment\ObjectDefinition;
 use Devture\Bundle\NagiosBundle\Model\Service;
 use Devture\Bundle\NagiosBundle\Model\ServiceCommandArgument;
 use Devture\Bundle\NagiosBundle\Model\Contact;
+use Devture\Bundle\NagiosBundle\Model\Resource;
 
 class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 
@@ -55,9 +56,19 @@ class ServicesConfigurationExporter implements ConfigurationExporterInterface {
 
 	private function escapeShellArg(Service $service, string $argumentValue): string {
 		//Macros won't work in command arguments (because we escape $ bellow).
-		//Let's handle this single macro here (at generation time), for convenience.
+		//Let's handle $HOSTADDRESS$ here (at generation time), for convenience.
 		if ($argumentValue === '$HOSTADDRESS$') {
 			return escapeshellarg($service->getHost()->getAddress());
+		}
+
+		//Resource macros (`$USER1$` .. `$USER32$`, from the Resource Variables page) are left for Nagios to expand,
+		//so that secrets (tokens, passwords) can live there and services can refer to them.
+		//Only a value that is exactly such a macro is passed through; anything else is escaped below.
+		if (preg_match('/^\$USER([0-9]+)\$$/', $argumentValue, $matches) === 1) {
+			$slotNumber = (int) $matches[1];
+			if ($slotNumber >= 1 && $slotNumber <= Resource::USER_VARIABLES_COUNT) {
+				return "'" . $argumentValue . "'";
+			}
 		}
 
 		//This argument should be turned into safe text.
