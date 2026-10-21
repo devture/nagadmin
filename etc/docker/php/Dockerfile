@@ -19,7 +19,7 @@ WORKDIR /code
 # OPcache ships with the main php85 package (no separate extension to install).
 # Keep the main package pin literal so Renovate can track PHP security releases.
 RUN apk add --no-cache \
-    php85=8.5.11-r0 \
+    php85=8.5.12-r0 \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-ctype \
     php${PHP_VERSION}-iconv \
