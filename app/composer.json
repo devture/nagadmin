@@ -10,7 +10,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mongodb": "^2.4",
-        "mongodb/mongodb": "2.4.*",
+        "mongodb/mongodb": "2.5.*",
         "symfony/console": "8.1.*",
         "symfony/dotenv": "8.1.*",
         "symfony/finder": "8.1.*",
