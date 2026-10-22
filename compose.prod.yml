@@ -16,7 +16,7 @@ services:
   #                        are never silently dropped.
   #   * SMARTHOST empty -> deliver directly to the recipients' MX servers.
   mailer:
-    image: ghcr.io/devture/exim-relay:4.99.5-r0-1
+    image: ghcr.io/devture/exim-relay:4.99.5-r0-2
     restart: unless-stopped
     # Same uid:gid as the other containers (the `exim` user inside the image),
     # so it can own its persistent spool directory below.
