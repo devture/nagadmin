@@ -22,7 +22,7 @@
 		"typescript-eslint": "8.72.0",
 		"eslint-plugin-react": "7.37.5",
 		"eslint-plugin-react-hooks": "7.1.1",
-		"typescript": "6.0.3",
+		"typescript": "7.0.2",
 		"globals": "17.13.0",
 		"@types/react": "19.3.0"
 	}
