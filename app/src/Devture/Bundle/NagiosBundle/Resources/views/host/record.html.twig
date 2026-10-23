@@ -41,8 +41,7 @@
 			<div class="row mb-3">
 				<label class="col-lg-2 col-form-label">Groups</label>
 				<div class="col-lg-10">
-					<select name="groups[]" id="groups" multiple="multiple" class="js-chosen-select"
-						style="width: 100%;"
+					<select name="groups[]" id="groups" multiple="multiple" class="js-select2"
 						data-placeholder="Choose some existing groups..">
 					{% for groupName in groups %}
 						<option value="{{ groupName }}"
@@ -125,11 +124,11 @@
 			var $option = $('<option></option>').text(name).attr('value', name).attr('selected', true)
 			var $existing = $select.find('option[value=' + name + ']');
 			if ($existing.length > 0) {
-				$existing.attr('selected', true);
+				$existing.prop('selected', true);
 			} else {
 				$option.appendTo($select);
 			}
-			$select.trigger('chosen:updated');
+			$select.trigger('change');
 		}
 	});
 {% endblock %}

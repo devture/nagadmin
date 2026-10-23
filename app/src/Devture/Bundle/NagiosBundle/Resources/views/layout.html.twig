@@ -67,10 +67,10 @@
 	});
 
 	$(function () {
-		var $chosenSelects = $('.js-chosen-select');
-		if ($chosenSelects.length > 0) {
-			comploader.load("chosen", function () {
-				$chosenSelects.chosen();
+		var $select2Selects = $('.js-select2');
+		if ($select2Selects.length > 0) {
+			comploader.load("select2", function () {
+				$select2Selects.select2({"width": "100%"});
 			});
 		}
 

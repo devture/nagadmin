@@ -119,7 +119,7 @@ minimum driver version for resolution in the Composer container. It does not
 install the driver: the PHP image builds the pinned official extension, and
 `platform-check` verifies required extensions when the application loads.
 
-React/React DOM, Bootstrap, jQuery, Chosen and Font Awesome are npm dependencies.
+React/React DOM, Bootstrap, jQuery, Select2 and Font Awesome are npm dependencies.
 `just js-build` copies their browser assets to the ignored
 `app/public/assets/frontend/vendor/` directory and bundles the official React
 packages into one shared runtime for comploader. No manually downloaded copies

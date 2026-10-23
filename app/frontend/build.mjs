@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import process from 'node:process';
@@ -14,29 +14,14 @@ for (const [from, to] of [
 	['jquery/dist/jquery.min.js', 'vendor/jquery.min.js'],
 	['bootstrap/dist/css/bootstrap.min.css', 'vendor/bootstrap/bootstrap.min.css'],
 	['bootstrap/dist/js/bootstrap.bundle.min.js', 'vendor/bootstrap/bootstrap.bundle.min.js'],
-	['chosen-js', 'vendor/chosen'],
+	['select2/dist/css/select2.min.css', 'vendor/select2/select2.min.css'],
+	['select2/dist/js/select2.min.js', 'vendor/select2/select2.min.js'],
 	['@fortawesome/fontawesome-free/css', 'vendor/fontawesome/css'],
 	['@fortawesome/fontawesome-free/webfonts', 'vendor/fontawesome/webfonts'],
 ]) {
 	await mkdir(dirname(join(output, to)), { recursive: true });
 	await cp(join(modules, from), join(output, to), { recursive: true });
 }
-
-// Chosen 1.8.7 uses $.trim, which jQuery 4 removed. Patch only its string-valued
-// search field and regenerate the minified entry point loaded by comploader.
-const chosenPath = join(output, 'vendor/chosen/chosen.jquery.js');
-const chosenSource = await readFile(chosenPath, 'utf8');
-const chosenSearch = '$.trim(this.get_search_field_value())';
-if (chosenSource.split(chosenSearch).length !== 2) {
-	throw new Error('Review the Chosen jQuery 4 compatibility patch for this version');
-}
-const chosenPatched = chosenSource.replace(chosenSearch, 'this.get_search_field_value().trim()');
-await writeFile(chosenPath, chosenPatched);
-await build({
-	stdin: { contents: chosenPatched },
-	minify: true,
-	outfile: join(output, 'vendor/chosen/chosen.jquery.min.js'),
-});
 
 // Build the official packages into one shared runtime for comploader and all components.
 await build({

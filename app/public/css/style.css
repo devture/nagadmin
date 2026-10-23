@@ -37,8 +37,6 @@ pre { white-space: pre-wrap; }
 .label-nagadmin-success-unobtrusive { background-color: white !important; border: 1px solid #468847; text-shadow: 0; color: #468847 !important; }
 .label-nagadmin-default-unobtrusive { background-color: white !important; border: 1px solid gray; text-shadow: 0; color: gray !important; }
 
-.chosen-container-multi .chosen-choices .search-field input { height: auto !important; }
-
 .spin-animate {
 	-webkit-animation-name: spin-animate;
 	-webkit-animation-duration: 2500ms;

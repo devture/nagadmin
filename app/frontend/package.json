@@ -10,10 +10,10 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "7.3.*",
 		"bootstrap": "5.3.*",
-		"chosen-js": "1.8.7",
 		"jquery": "4.0.*",
 		"react": "19.3.*",
-		"react-dom": "19.3.*"
+		"react-dom": "19.3.*",
+		"select2": "4.1.*"
 	},
 	"devDependencies": {
 		"esbuild": "0.28.2",

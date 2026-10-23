@@ -167,9 +167,8 @@
 							<label class="col-lg-2 col-form-label"><i class="fa-solid fa-user"></i> People to Notify</label>
 							<div class="col-lg-10">
 								<select name="contactsIds[]" id="contactsIds"
-									multiple="multiple" class="js-chosen-select"
-									data-placeholder="Choose some contacts.."
-									style="width: 100%;">
+									multiple="multiple" class="js-select2"
+									data-placeholder="Choose some contacts..">
 								{% for contact in contacts %}
 									<option value="{{ contact.id }}"
 										{{ contact in entity.contacts ? 'selected="selected"' : '' }}>{{ contact.name }}</option>
