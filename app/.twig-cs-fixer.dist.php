@@ -9,6 +9,8 @@ use TwigCsFixer\Rules\Function\NamedArgumentSeparatorRule;
 use TwigCsFixer\Rules\Function\NamedArgumentSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorNameSpacingRule;
 use TwigCsFixer\Rules\Operator\OperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\TernaryOperatorSpacingRule;
+use TwigCsFixer\Rules\Operator\UnaryOperatorSpacingRule;
 use TwigCsFixer\Rules\Punctuation\PunctuationSpacingRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Rules\Whitespace\BlankEOFRule;
@@ -24,6 +26,8 @@ $ruleset
 	->addRule(new NamedArgumentSpacingRule())
 	->addRule(new OperatorNameSpacingRule())
 	->addRule(new OperatorSpacingRule())
+	->addRule(new TernaryOperatorSpacingRule())
+	->addRule(new UnaryOperatorSpacingRule())
 	->addRule(new PunctuationSpacingRule())
 	->addRule(new TrailingSpaceRule())
 ;

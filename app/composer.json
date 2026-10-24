@@ -29,7 +29,7 @@
         "friendsofphp/php-cs-fixer": "3.95.*",
         "phpstan/phpstan": "2.3.*",
         "symfony/web-profiler-bundle": "8.1.*",
-        "vincentlanglet/twig-cs-fixer": "3.14.*"
+        "vincentlanglet/twig-cs-fixer": "4.1.*"
     },
     "config": {
         "platform-check": true,
