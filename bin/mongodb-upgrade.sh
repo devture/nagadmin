@@ -8,18 +8,19 @@ set -euo pipefail
 
 print_usage() {
 	cat <<EOF
-Usage: $0 <base_directory> <justfile_binary_path>
+Usage: $0 <base_directory> <justfile_binary_path> <env>
 
 Arguments:
   base_directory         The project root directory (where the justfile lives)
   justfile_binary_path   The path to the just executable
+  env                    The environment whose compose overrides to use (dev or prod)
 
 Example:
-  $0 /srv/http/nagadmin /usr/local/bin/just
+  $0 /srv/http/nagadmin /usr/local/bin/just prod
 EOF
 }
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 3 ]; then
 	echo "Error: Missing required arguments" >&2
 	echo "" >&2
 	print_usage >&2
@@ -28,6 +29,7 @@ fi
 
 base_directory="$1"
 justfile_binary_path="$2"
+env="$3"
 
 if [ ! -d "${base_directory}" ]; then
 	echo "Error: Base directory '${base_directory}' does not exist" >&2
@@ -71,10 +73,10 @@ echo "🔎 Abort if the MongoDB container is not running"
 # `ps -q <service>` prints the running container's id (and nothing if it's not running).
 # This is robust across docker-compose versions, unlike grepping the STATUS column text
 # (which differs between versions: "Up ..." vs "running").
-test -n "$(run_just docker-compose "ps -q mongodb")" || exit 1
+test -n "$(run_just docker-compose "${env}" "ps -q mongodb")" || exit 1
 
 echo "🔃 Ensure the (new) MongoDB container image is pulled..."
-run_just docker-compose "pull mongodb"
+run_just docker-compose "${env}" "pull mongodb"
 
 if [ -d "${var_mongodb_io_path}/import" ]; then
 	echo "🧹 Removing old ${var_mongodb_io_path}/import directory..."
@@ -82,10 +84,10 @@ if [ -d "${var_mongodb_io_path}/import" ]; then
 fi
 
 echo "🛑 Stopping PHP container (so nothing writes to MongoDB during the upgrade)..."
-run_just docker-compose "stop php"
+run_just docker-compose "${env}" "stop php"
 
 echo "⬇️ Dumping MongoDB (from the OLD version, still running) and relocating to ${var_mongodb_io_path}/import..."
-run_just mongodb-dump
+run_just mongodb-dump "${env}"
 mv "${var_mongodb_io_path}/latest-dump" "${var_mongodb_io_path}/import"
 
 # The MongoDB data directory is owned by root (mongo runs as root in the container), so the
@@ -100,13 +102,17 @@ docker run --rm --mount "type=bind,src=${base_directory},dst=/base" "${alpine_co
 	sh -c "mkdir -p /base/var/container-data/mongodb && chown ${mongodb_data_user} /base/var/container-data/mongodb"
 
 echo "▶️ Starting the (new) MongoDB container against the empty data directory..."
-run_just docker-compose "up --force-recreate --detach --wait mongodb"
+run_just docker-compose "${env}" "up --force-recreate --detach --wait mongodb"
 
 echo "⬆️ Importing the dump into the new MongoDB version..."
-run_just mongodb-import
+run_just mongodb-import "${env}"
 
 echo "▶️ Starting the PHP container again..."
-run_just docker-compose "up --detach --wait php"
+run_just docker-compose "${env}" "up --detach --wait php"
+
+# nginx resolves `php` only at startup, so it would keep proxying to the old container's address.
+echo "🔃 Restarting nginx..."
+run_just docker-compose "${env}" "restart nginx"
 
 echo "✅ Upgrade finished. Once you've verified everything works, clean up with:"
 echo "   rm -rf ${var_mongodb_io_path}/import ${mongodb_data_backup_path}"

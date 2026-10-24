@@ -114,8 +114,8 @@ mongodb-dump env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh 
 mongodb-import env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'mongorestore --gzip --dir=/mongodb-io/import'")
 
 # Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
-mongodb-upgrade: _var-mongodb-io
-	{{ justfile_directory() }}/bin/mongodb-upgrade.sh {{ justfile_directory() }} {{ just_executable() }}
+mongodb-upgrade env='dev': _var-mongodb-io
+	{{ justfile_directory() }}/bin/mongodb-upgrade.sh {{ justfile_directory() }} {{ just_executable() }} {{ env }}
 
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
 
