@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: docker.io/mongo:9.0.2-noble
+    image: docker.io/mongo:9.0.4
     restart: unless-stopped
     volumes:
     - ./var/container-data/mongodb:/data/db:rw,cached
