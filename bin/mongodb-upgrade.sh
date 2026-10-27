@@ -75,8 +75,13 @@ echo "🔎 Abort if the MongoDB container is not running"
 # (which differs between versions: "Up ..." vs "running").
 test -n "$(run_just docker-compose "${env}" "ps -q mongodb")" || exit 1
 
-echo "🔃 Ensure the (new) MongoDB container image is pulled..."
-run_just docker-compose "${env}" "pull mongodb"
+# The MongoDB image may also be built locally (e.g. via a `build:` section in compose.override.yml).
+# Doing both keeps this script working either way:
+# - `pull --ignore-buildable` skips images that are built locally (a plain `pull` would fail for them)
+# - `build` does nothing for services that don't have a `build:` section
+echo "🔃 Ensure the (new) MongoDB container image is pulled (or built)..."
+run_just docker-compose "${env}" "pull --ignore-buildable mongodb"
+run_just docker-compose "${env}" "build mongodb"
 
 if [ -d "${var_mongodb_io_path}/import" ]; then
 	echo "🧹 Removing old ${var_mongodb_io_path}/import directory..."
