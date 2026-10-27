@@ -14,6 +14,10 @@ mise_trusted_config_paths := justfile_directory() / "mise.toml"
 # to (the Twig cache and the generated Nagios configuration).
 container_user := "100:101"
 
+# Optional Compose overrides of your own (gitignored), applied on top of the other Compose files when present.
+# See "Can I customize the Compose services?" in README.md.
+compose_override_args := if path_exists(justfile_directory() / "compose.override.yml") == "true" { "-f compose.override.yml" } else { "" }
+
 # show help by default
 default:
 	@{{ just_executable() }} --list --justfile {{ justfile() }}
@@ -94,10 +98,10 @@ cache-clear:
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
-	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
-	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
-	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
-	docker compose -f compose.yml run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
+	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
+	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
+	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
+	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
 	./bin/container-console init-database
 
 # Performs initial installation and Nagios configuration deployment
@@ -120,9 +124,10 @@ mongodb-upgrade env='dev': _var-mongodb-io
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
 
 # Internal - runs a `docker compose` command for the given environment (dev|prod),
-# combining the shared compose.yml with the matching compose.<env>.yml override.
+# combining the shared compose.yml with the matching compose.<env>.yml override
+# (and compose.override.yml, if present).
 docker-compose env *extra_args: _require_root_env_file_or_fail
-	docker compose -f compose.yml -f compose.{{ env }}.yml {{ extra_args }}
+	docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} {{ extra_args }}
 
 # Internal - fails early (with guidance) if the repository-root `.env` is missing.
 _require_root_env_file_or_fail:

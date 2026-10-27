@@ -2,6 +2,7 @@
 /var
 /config/parameters.json
 /.env
+/compose.override.yml
 
 /app/frontend/node_modules
 /app/public/assets/frontend/*

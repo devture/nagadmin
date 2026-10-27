@@ -207,6 +207,12 @@ Yes. Drop them into `var/nagios-custom-plugins/` (executable, with the right she
 `$USER1$/custom/<plugin>`. The directory is mounted read-only into the Nagios container, which provides `sh`,
 `bash`, `python3`, `curl` and the standard monitoring plugins for them to build on.
 
+**Can I customize the Compose services?**
+Yes, without changing tracked files: create a `compose.override.yml` in the repository root (it's gitignored). When it
+exists, the `just` recipes pass it to Docker Compose after `compose.yml` and `compose.<env>.yml`, so it can change any
+service (e.g. a different image for `mongodb`, extra environment variables or volumes). See Docker's documentation on
+[merging Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/).
+
 **Can I import my existing Nagios configuration files?**
 No. You'd need to start from scratch via the UI.
 
