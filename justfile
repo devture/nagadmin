@@ -115,7 +115,7 @@ mongodb-shell env='dev': (docker-compose env "exec mongodb sh -c 'mongosh nagadm
 mongodb-dump env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump'") (docker-compose env "exec -T mongodb sh -c 'mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump'")
 
 # Imports a gzipped MongoDB database dump (found in `var/mongodb-io/import`)
-mongodb-import env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'mongorestore --gzip --dir=/mongodb-io/import'")
+mongodb-import env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'mongorestore --gzip --stopOnError --dir=/mongodb-io/import'")
 
 # Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
 mongodb-upgrade env='dev': _var-mongodb-io
