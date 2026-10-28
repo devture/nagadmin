@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "898d8b26110a09685b9e84ab525666e5",
+    "content-hash": "0d3022bf962de552c0f916a1b9d41b40",
     "packages": [
         {
             "name": "brick/math",
@@ -5446,20 +5446,20 @@
         },
         {
             "name": "vonage/client",
-            "version": "4.3.0",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Vonage/vonage-php-sdk.git",
-                "reference": "2316a1a1dfe30873a59c24485115cab45990d96f"
+                "reference": "c4c95095e0db4dc1d2cb6e931eb2ac43f4348ef2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Vonage/vonage-php-sdk/zipball/2316a1a1dfe30873a59c24485115cab45990d96f",
-                "reference": "2316a1a1dfe30873a59c24485115cab45990d96f",
+                "url": "https://api.github.com/repos/Vonage/vonage-php-sdk/zipball/c4c95095e0db4dc1d2cb6e931eb2ac43f4348ef2",
+                "reference": "c4c95095e0db4dc1d2cb6e931eb2ac43f4348ef2",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.0",
+                "guzzlehttp/guzzle": "^7.15.1",
                 "php": "~8.1 || ~8.2 || ~8.3 || ~8.4 || ~8.5",
                 "vonage/client-core": "^4.0"
             },
@@ -5499,9 +5499,9 @@
             "support": {
                 "email": "devrel@vonage.com",
                 "issues": "https://github.com/Vonage/vonage-php-sdk/issues",
-                "source": "https://github.com/Vonage/vonage-php-sdk/tree/4.3.0"
+                "source": "https://github.com/Vonage/vonage-php-sdk/tree/v4.4.0"
             },
-            "time": "2026-01-06T14:49:37+00:00"
+            "time": "2026-10-28T13:06:23+00:00"
         },
         {
             "name": "vonage/client-core",
