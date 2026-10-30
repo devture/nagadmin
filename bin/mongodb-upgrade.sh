@@ -44,7 +44,10 @@ fi
 justfile_path="${base_directory}/justfile"
 var_mongodb_io_path="${base_directory}/var/mongodb-io"
 mongodb_data_path="${base_directory}/var/container-data/mongodb"
-mongodb_data_backup_path="${base_directory}/var/container-data/mongodb-backup"
+# Timestamped, so that a backup kept from an earlier upgrade does not block this one.
+mongodb_data_backup_path="${base_directory}/var/container-data/mongodb-backup-$(date -u +%Y%m%dT%H%M%SZ)"
+# Removed only once the upgrade has finished; until then, deploys refuse to run (see bin/deploy/run.sh).
+upgrade_marker="${base_directory}/var/container-data/mongodb-upgrade-in-progress"
 
 # The uid:gid the mongodb container's data directory should be owned by.
 # MongoDB runs as root inside the container, so root-owned data is correct.
@@ -66,9 +69,6 @@ run_just() {
 echo "🔎 Abort if MongoDB data path (${mongodb_data_path}) not found"
 test -d "${mongodb_data_path}" || exit 1
 
-echo "🔎 Abort if old MongoDB backup directory (${mongodb_data_backup_path}) already exists"
-test ! -d "${mongodb_data_backup_path}" || exit 1
-
 echo "🔎 Abort if the MongoDB container is not running"
 # `ps -q <service>` prints the running container's id (and nothing if it's not running).
 # This is robust across docker-compose versions, unlike grepping the STATUS column text
@@ -88,6 +88,8 @@ if [ -d "${var_mongodb_io_path}/import" ]; then
 	rm -rf "${var_mongodb_io_path}/import"
 fi
 
+touch "${upgrade_marker}"
+
 echo "🛑 Stopping PHP container (so nothing writes to MongoDB during the upgrade)..."
 run_just docker-compose "${env}" "stop php"
 
@@ -99,7 +101,7 @@ mv "${var_mongodb_io_path}/latest-dump" "${var_mongodb_io_path}/import"
 # backup move and the fresh-directory creation/chown are done inside a throwaway root container.
 echo "🛟 Backing up old MongoDB data directory (${mongodb_data_path} -> ${mongodb_data_backup_path})..."
 docker run --rm --mount "type=bind,src=${base_directory},dst=/base" "${alpine_container_image}" \
-	mv "/base/var/container-data/mongodb" "/base/var/container-data/mongodb-backup"
+	mv "/base/var/container-data/mongodb" "/base/var/container-data/$(basename "${mongodb_data_backup_path}")"
 echo "🛟 In case of failure, restore it by moving ${mongodb_data_backup_path} back to ${mongodb_data_path}."
 
 echo "🔨 Preparing a fresh, empty MongoDB data directory (${mongodb_data_path})..."
@@ -118,6 +120,8 @@ run_just docker-compose "${env}" "up --detach --wait php"
 # nginx resolves `php` only at startup, so it would keep proxying to the old container's address.
 echo "🔃 Restarting nginx..."
 run_just docker-compose "${env}" "restart nginx"
+
+rm -f "${upgrade_marker}"
 
 echo "✅ Upgrade finished. Once you've verified everything works, clean up with:"
 echo "   rm -rf ${var_mongodb_io_path}/import ${mongodb_data_backup_path}"

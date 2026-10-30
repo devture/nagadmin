@@ -180,6 +180,18 @@ Configure outgoing delivery via the repository-root `.env`:
 The relay keeps a persistent on-disk spool (`var/container-data/exim-spool`), so a transient SMTP outage does not
 lose notifications: queued mail is retried until it is delivered.
 
+### Deploying updates
+
+With the stack running (`just run prod`, e.g. in a systemd unit), check out the new commit and run `just deploy`.
+It installs PHP dependencies, builds and pulls images, upgrades MongoDB with a dump and restore when its minor or major
+version changes, updates the containers, clears the cache and deploys the Nagios configuration.
+
+A failed MongoDB upgrade leaves `var/container-data/mongodb-upgrade-in-progress` behind, and deploys refuse to run until
+you've checked the data (the old one is kept in `var/container-data/mongodb-backup-*`) and removed it.
+
+Before checking out a commit, `just deploy-pre-flight <commit>` checks that the host's `.env` files define every
+variable it needs.
+
 
 ## ❓ FAQ
 

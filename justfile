@@ -32,6 +32,14 @@ run-bg env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (dock
 # Stops all components
 stop env='dev': (docker-compose env "down")
 
+# Checks, before checking out a commit to deploy, that the host's .env files define everything it needs (see bin/deploy/pre-flight.sh)
+deploy-pre-flight commit:
+	{{ justfile_directory() }}/bin/deploy/pre-flight.sh {{ quote(commit) }}
+
+# Applies the checked-out code to the running stack (`just run`): dependencies, images, MongoDB upgrades, containers, Nagios configuration
+deploy env='prod': _require_app_env_file_or_fail _prepare_deps _prepare_run
+	{{ justfile_directory() }}/bin/deploy/run.sh {{ just_executable() }} {{ env }}
+
 # Installs PHP dependencies via composer
 composer-install: _var-composer-cache
 	./bin/composer install --optimize-autoloader --ignore-platform-req=php
