@@ -15,7 +15,7 @@ if [ -t 1 ]; then
 fi
 
 # renovate: datasource=docker depName=docker.io/composer
-composer_image=docker.io/composer:2.11.0
+composer_image=docker.io/composer:2.11.1
 
 docker run \
 	$docker_run_flags \
