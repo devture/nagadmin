@@ -172,8 +172,8 @@ publishes nothing by default. Put a reverse proxy in front of the UIs to add TLS
   The corresponding `var/nagios-labels` would route the Nagios UI on its own host, with
   `loadbalancer.server.port=80`.
 
-You may also want to configure Symfony's trusted proxies via the `SYMFONY_TRUSTED_PROXIES` environment variable
-(e.g. in `app/.env`), so that the proxy's `X-Forwarded-Proto` is honored and generated URLs come out `https`.
+Behind a reverse proxy, also set Symfony's trusted proxies (`SYMFONY_TRUSTED_PROXIES` in `app/.env`, e.g. `REMOTE_ADDR`),
+so that the proxy's `X-Forwarded-Proto` is honored and generated URLs come out `https`.
 
 
 ## ⚙️ Running in production
