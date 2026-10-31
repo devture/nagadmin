@@ -9,4 +9,4 @@ JSON_FILES=()
 
 # Names (variables or JSON key paths like System/Timezone) the templates have but the host's files may lack,
 # e.g. development-only settings.
-OPTIONAL_NAMES=()
+OPTIONAL_NAMES=(NGINX_HTTP_BIND_ADDRESS NAGIOS_HTTP_BIND_ADDRESS MAILCRAB_HTTP_BIND_ADDRESS)

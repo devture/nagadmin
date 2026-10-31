@@ -20,3 +20,13 @@ services:
     # The mailcrab web UI. Its SMTP listener (port 1025) is reachable by the
     # php container over the compose network as `mailcrab:1025`.
     - "${MAILCRAB_HTTP_BIND_ADDRESS}:1080"
+
+  # Production publishes these only from a compose.override.yml of its own
+  # (see "Set up a reverse proxy" in README.md): a container-native proxy needs none.
+  nginx:
+    ports:
+    - "${NGINX_HTTP_BIND_ADDRESS}:8080"
+
+  nagios:
+    ports:
+    - "${NAGIOS_HTTP_BIND_ADDRESS}:80"

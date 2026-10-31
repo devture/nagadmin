@@ -136,15 +136,27 @@ either (or both).
 
 ### Set up a reverse proxy
 
-The stack publishes the Nagadmin UI (the `nginx` service) and the Nagios UI (the `nagios` service) on the host
-addresses set by `NGINX_HTTP_BIND_ADDRESS` / `NAGIOS_HTTP_BIND_ADDRESS`. Put a reverse proxy in front of them to add
-TLS and route your domains. Two approaches:
+In development, the stack publishes the Nagadmin UI (the `nginx` service) and the Nagios UI (the `nagios` service) on
+the host addresses set by `NGINX_HTTP_BIND_ADDRESS` / `NAGIOS_HTTP_BIND_ADDRESS`. In production (`just run prod`) it
+publishes nothing by default. Put a reverse proxy in front of the UIs to add TLS and route your domains. Two approaches:
 
-- **Host-level proxy** (nginx, Apache, …) — proxy your domains to those published ports. See
-  [`resources/webserver`](resources/webserver) for an nginx example.
+- **Host-level proxy** (nginx, Apache, …) — publish the UIs with a `compose.override.yml` (see
+  [Can I customize the Compose services?](#-faq)), then proxy your domains to those addresses. See
+  [`resources/webserver`](resources/webserver) for an nginx example. The same file serves the UIs directly, without a
+  proxy (e.g. `0.0.0.0:80` on a private network):
 
-- **Container-native proxy** (e.g. [Traefik](https://traefik.io)) — the `nginx` and `nagios` services each read an
-  optional `label_file` (`var/nginx-labels`, `var/nagios-labels`), empty by default. Drop your proxy's container
+  ```yaml
+  services:
+    nginx:
+      ports:
+      - "${NGINX_HTTP_BIND_ADDRESS}:8080"
+    nagios:
+      ports:
+      - "${NAGIOS_HTTP_BIND_ADDRESS}:80"
+  ```
+
+- **Container-native proxy** (e.g. [Traefik](https://traefik.io)) — nothing needs publishing. The `nginx` and
+  `nagios` services each read an optional `label_file` (`var/nginx-labels`, `var/nagios-labels`), empty by default. Drop your proxy's container
   labels into these files and connect the proxy to the stack's Docker network (`devture-nagadmin_default`). A Traefik
   example for `var/nginx-labels`:
 
@@ -191,6 +203,10 @@ you've checked the data (the old one is kept in `var/container-data/mongodb-back
 
 Before checking out a commit, `just deploy-pre-flight <commit>` checks that the host's `.env` files define every
 variable it needs.
+
+Production no longer publishes the UIs from `compose.yml`. A deployment behind a host-level proxy, or serving the UIs
+directly, needs the `compose.override.yml` from [Set up a reverse proxy](#set-up-a-reverse-proxy) before updating past
+that change.
 
 
 ## ❓ FAQ
