@@ -60,6 +60,7 @@ you. No hand-editing `.cfg` files, no separate Nagios install to wire up.
 - [Docker](https://www.docker.com/)
 - Docker Compose (v1 or v2)
 - [just](https://github.com/casey/just) (command runner)
+- [zstd](https://facebook.github.io/zstd/), for MongoDB dumps (`just mongodb-dump`, `just mongodb-import`, MongoDB upgrades); the MongoDB container doesn't have it, so it runs on the host
 
 ### 1. Get the code
 
@@ -240,6 +241,12 @@ Yes, without changing tracked files: create a `compose.override.yml` in the repo
 exists, the `just` recipes pass it to Docker Compose after `compose.yml` and `compose.<env>.yml`, so it can change any
 service (e.g. a different image for `mongodb`, extra environment variables or volumes). See Docker's documentation on
 [merging Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/).
+
+**How do I back up and restore the database?**
+`just mongodb-dump prod` writes `var/mongodb-io/latest-dump.archive.zst` (a zstd-compressed `mongodump --archive`
+file). To restore one, move it to `var/mongodb-io/import.archive.zst` and run `just mongodb-import prod`. Dumps made
+before 2026-11-01 are a `var/mongodb-io/latest-dump` directory of gzipped files instead: move it to
+`var/mongodb-io/import` and run `just docker-compose prod "exec -T mongodb mongorestore --gzip --stopOnError --dir=/mongodb-io/import"`.
 
 **Can I import my existing Nagios configuration files?**
 No. You'd need to start from scratch via the UI.

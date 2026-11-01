@@ -119,11 +119,22 @@ install:
 # Starts a MongoDB shell
 mongodb-shell env='dev': (docker-compose env "exec mongodb sh -c 'mongosh nagadmin'")
 
-# Creates a new gzipped MongoDB database dump (stored in `var/mongodb-io/latest-dump`)
-mongodb-dump env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'rm -rf /mongodb-io/latest-dump > /dev/null 2>&1 && mkdir /mongodb-io/latest-dump'") (docker-compose env "exec -T mongodb sh -c 'mongodump --quiet -d nagadmin --gzip -o /mongodb-io/latest-dump'")
+# The MongoDB image has no zstd, so this compresses on the host, which needs `zstd` installed.
+# Creates a new zstd-compressed MongoDB archive dump (stored in `var/mongodb-io/latest-dump.archive.zst`)
+mongodb-dump env='dev': _var-mongodb-io _require_root_env_file_or_fail
+	#!/usr/bin/env bash
+	set -euo pipefail
+	docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} exec -T mongodb mongodump --quiet -d nagadmin --archive \
+		| zstd -q -T0 -10 -f -o var/mongodb-io/latest-dump.archive.zst.partial
+	mv var/mongodb-io/latest-dump.archive.zst.partial var/mongodb-io/latest-dump.archive.zst
 
-# Imports a gzipped MongoDB database dump (found in `var/mongodb-io/import`)
-mongodb-import env='dev': _var-mongodb-io (docker-compose env "exec -T mongodb sh -c 'mongorestore --gzip --stopOnError --dir=/mongodb-io/import'")
+# Needs `zstd` installed on the host.
+# Imports a zstd-compressed MongoDB archive dump (found in `var/mongodb-io/import.archive.zst`)
+mongodb-import env='dev': _var-mongodb-io _require_root_env_file_or_fail
+	#!/usr/bin/env bash
+	set -euo pipefail
+	zstd -q -dc var/mongodb-io/import.archive.zst \
+		| docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} exec -T mongodb mongorestore --stopOnError --archive
 
 # Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
 mongodb-upgrade env='dev': _var-mongodb-io

@@ -83,9 +83,9 @@ echo "🔃 Ensure the (new) MongoDB container image is pulled (or built)..."
 run_just docker-compose "${env}" "pull --ignore-buildable mongodb"
 run_just docker-compose "${env}" "build mongodb"
 
-if [ -d "${var_mongodb_io_path}/import" ]; then
-	echo "🧹 Removing old ${var_mongodb_io_path}/import directory..."
-	rm -rf "${var_mongodb_io_path}/import"
+if [ -e "${var_mongodb_io_path}/import.archive.zst" ]; then
+	echo "🧹 Removing old ${var_mongodb_io_path}/import.archive.zst..."
+	rm -f "${var_mongodb_io_path}/import.archive.zst"
 fi
 
 touch "${upgrade_marker}"
@@ -93,9 +93,9 @@ touch "${upgrade_marker}"
 echo "🛑 Stopping PHP container (so nothing writes to MongoDB during the upgrade)..."
 run_just docker-compose "${env}" "stop php"
 
-echo "⬇️ Dumping MongoDB (from the OLD version, still running) and relocating to ${var_mongodb_io_path}/import..."
+echo "⬇️ Dumping MongoDB (from the OLD version, still running) and relocating to ${var_mongodb_io_path}/import.archive.zst..."
 run_just mongodb-dump "${env}"
-mv "${var_mongodb_io_path}/latest-dump" "${var_mongodb_io_path}/import"
+mv "${var_mongodb_io_path}/latest-dump.archive.zst" "${var_mongodb_io_path}/import.archive.zst"
 
 # The MongoDB data directory is owned by root (mongo runs as root in the container), so the
 # backup move and the fresh-directory creation/chown are done inside a throwaway root container.
@@ -124,4 +124,4 @@ run_just docker-compose "${env}" "restart nginx"
 rm -f "${upgrade_marker}"
 
 echo "✅ Upgrade finished. Once you've verified everything works, clean up with:"
-echo "   rm -rf ${var_mongodb_io_path}/import ${mongodb_data_backup_path}"
+echo "   rm -rf ${var_mongodb_io_path}/import.archive.zst ${mongodb_data_backup_path}"
