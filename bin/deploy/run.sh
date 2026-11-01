@@ -74,7 +74,7 @@ nginx_config_changed() {
 	return 1
 }
 
-# nginx also resolves `php` only when it starts, so it would keep proxying to a recreated php container's old address.
+# nginx caches `php`'s address for a few seconds (see vhost.conf's resolver), so a recreated php container gets nginx recreated too.
 if [ "$(compose ps --all --quiet php)" != "${php_before}" ] || nginx_config_changed; then
 	echo "🔄 Recreating nginx..."
 	compose up --detach --force-recreate nginx
