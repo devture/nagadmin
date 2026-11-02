@@ -5,7 +5,8 @@ set -euo pipefail
 # The stack itself keeps running attached (`just run prod`, e.g. in a systemd unit); this reconciles it underneath.
 
 just="${1:?Usage: $0 <just executable> <compose env>}"
-env="${2:?Usage: $0 <just executable> <compose env>}"
+# An empty env uses the Compose files from COMPOSE_FILE in .env.
+env="${2?Usage: $0 <just executable> <compose env>}"
 cd "$(dirname "$0")/../.."
 
 compose() { "${just}" docker-compose "${env}" "$@"; }

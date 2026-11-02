@@ -18,27 +18,34 @@ container_user := "100:101"
 # See "Can I customize the Compose services?" in README.md.
 compose_override_args := if path_exists(justfile_directory() / "compose.override.yml") == "true" { "-f compose.override.yml" } else { "" }
 
+# Docker Compose takes its files from COMPOSE_FILE in .env (see .env.dist). Until every deployment's .env has it,
+# recipes without an explicit environment fall back to the files they used before.
+compose_file_configured := if path_exists(justfile_directory() / ".env") == "true" { if read(justfile_directory() / ".env") =~ '(?m)^\s*(export\s+)?COMPOSE_FILE\s*=' { "true" } else { "false" } } else { "false" }
+compose_env_dev := if compose_file_configured == "true" { "" } else { "dev" }
+compose_env_prod := if compose_file_configured == "true" { "" } else { "prod" }
+compose_base_args := if compose_file_configured == "true" { "" } else { "-f compose.yml " + compose_override_args }
+
 # show help by default
 default:
 	@{{ just_executable() }} --list --justfile {{ justfile() }}
 
 # Runs all components (in the foreground). Defaults to the dev environment;
 # pass `prod` (e.g. `just run prod`) to run the production configuration.
-run env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up")
+run env=compose_env_dev: _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up")
 
 # Runs all components (in the background)
-run-bg env='dev': _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up -d")
+run-bg env=compose_env_dev: _require_app_env_file_or_fail _prepare_deps _prepare_run (docker-compose env "up -d")
 
 # Stops all components
-stop env='dev': (docker-compose env "down")
+stop env=compose_env_dev: (docker-compose env "down")
 
 # Checks, before checking out a commit to deploy, that the host's .env files define everything it needs (see bin/deploy/pre-flight.sh)
 deploy-pre-flight commit:
 	{{ justfile_directory() }}/bin/deploy/pre-flight.sh {{ quote(commit) }}
 
 # Applies the checked-out code to the running stack (`just run`): dependencies, images, MongoDB upgrades, containers, Nagios configuration
-deploy env='prod': _require_app_env_file_or_fail _prepare_deps _prepare_run
-	{{ justfile_directory() }}/bin/deploy/run.sh {{ just_executable() }} {{ env }}
+deploy env=compose_env_prod: _require_app_env_file_or_fail _prepare_deps _prepare_run
+	{{ justfile_directory() }}/bin/deploy/run.sh {{ just_executable() }} {{ quote(env) }}
 
 # Installs PHP dependencies via composer
 composer-install: _var-composer-cache
@@ -50,23 +57,23 @@ composer-update: _var-composer-cache
 
 # Runs static analysis (PHPStan) against the app's PHP code
 php-analyze: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
+	COMPOSE_IGNORE_ORPHANS=1 docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/phpstan analyse -c phpstan.neon"
 
 # Checks PHP code formatting and style (PHP CS Fixer)
 php-format-check: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
+	COMPOSE_IGNORE_ORPHANS=1 docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer check --config=.php-cs-fixer.dist.php"
 
 # Fixes PHP code formatting and style (PHP CS Fixer)
 php-format: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
+	COMPOSE_IGNORE_ORPHANS=1 docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php"
 
 # Checks Twig template formatting and style (Twig CS Fixer)
 twig-format-check: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
+	COMPOSE_IGNORE_ORPHANS=1 docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer lint --config=.twig-cs-fixer.dist.php"
 
 # Fixes Twig template formatting and style (Twig CS Fixer)
 twig-format: _prepare_deps
-	docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
+	COMPOSE_IGNORE_ORPHANS=1 docker compose -f compose.yml run -T --rm --no-deps --user="$(id -u):$(id -g)" php sh -c "cd /code/app && vendor/bin/twig-cs-fixer fix --config=.twig-cs-fixer.dist.php"
 
 # Populates app/frontend/node_modules, so that IDE autocompletion works
 js-pull-dependencies: _public-assets-frontend
@@ -106,10 +113,10 @@ cache-clear:
 
 # Initializes the MongoDB database (initial data-set import and indexes creation)
 init-database: _var-mongodb-io
-	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
-	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
-	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
-	docker compose -f compose.yml {{ compose_override_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
+	docker compose {{ compose_base_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c time_period --jsonArray --file=/db-import/time_period.json
+	docker compose {{ compose_base_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c command --jsonArray --file=/db-import/command.json
+	docker compose {{ compose_base_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c host --jsonArray --file=/db-import/host.json
+	docker compose {{ compose_base_args }} run --rm --no-TTY -v $(pwd)/app/src/Devture/Bundle/NagiosBundle/Resources/database:/db-import mongodb /usr/bin/mongoimport -h mongodb -d nagadmin -c service --jsonArray --file=/db-import/service.json
 	./bin/container-console init-database
 
 # Performs initial installation and Nagios configuration deployment
@@ -117,36 +124,35 @@ install:
 	./bin/container-console install
 
 # Starts a MongoDB shell
-mongodb-shell env='dev': (docker-compose env "exec mongodb sh -c 'mongosh nagadmin'")
+mongodb-shell env=compose_env_dev: (docker-compose env "exec mongodb sh -c 'mongosh nagadmin'")
 
 # The MongoDB image has no zstd, so this compresses on the host, which needs `zstd` installed.
 # Creates a new zstd-compressed MongoDB archive dump (stored in `var/mongodb-io/latest-dump.archive.zst`)
-mongodb-dump env='dev': _var-mongodb-io _require_root_env_file_or_fail
+mongodb-dump env=compose_env_dev: _var-mongodb-io _require_root_env_file_or_fail
 	#!/usr/bin/env bash
 	set -euo pipefail
-	docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} exec -T mongodb mongodump --quiet -d nagadmin --archive \
+	docker compose {{ if env == "" { "" } else { "-f compose.yml -f compose." + env + ".yml " + compose_override_args } }} exec -T mongodb mongodump --quiet -d nagadmin --archive \
 		| zstd -q -T0 -10 -f -o var/mongodb-io/latest-dump.archive.zst.partial
 	mv var/mongodb-io/latest-dump.archive.zst.partial var/mongodb-io/latest-dump.archive.zst
 
 # Needs `zstd` installed on the host.
 # Imports a zstd-compressed MongoDB archive dump (found in `var/mongodb-io/import.archive.zst`)
-mongodb-import env='dev': _var-mongodb-io _require_root_env_file_or_fail
+mongodb-import env=compose_env_dev: _var-mongodb-io _require_root_env_file_or_fail
 	#!/usr/bin/env bash
 	set -euo pipefail
 	zstd -q -dc var/mongodb-io/import.archive.zst \
-		| docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} exec -T mongodb mongorestore --stopOnError --archive
+		| docker compose {{ if env == "" { "" } else { "-f compose.yml -f compose." + env + ".yml " + compose_override_args } }} exec -T mongodb mongorestore --stopOnError --archive
 
 # Upgrades MongoDB to the version specified in compose.yml by doing a dump and re-import
-mongodb-upgrade env='dev': _var-mongodb-io
-	{{ justfile_directory() }}/bin/mongodb-upgrade.sh {{ justfile_directory() }} {{ just_executable() }} {{ env }}
+mongodb-upgrade env=compose_env_dev: _var-mongodb-io
+	{{ justfile_directory() }}/bin/mongodb-upgrade.sh {{ justfile_directory() }} {{ just_executable() }} {{ quote(env) }}
 
 # Internal (not meant to be called directly, but are part of the dependency setup chain)
 
-# Internal - runs a `docker compose` command for the given environment (dev|prod),
-# combining the shared compose.yml with the matching compose.<env>.yml override
-# (and compose.override.yml, if present).
+# Internal - runs a `docker compose` command with the files from COMPOSE_FILE in .env (pass an empty env),
+# or for the given environment (dev|prod): compose.yml, compose.<env>.yml and compose.override.yml, if present.
 docker-compose env *extra_args: _require_root_env_file_or_fail
-	docker compose -f compose.yml -f compose.{{ env }}.yml {{ compose_override_args }} {{ extra_args }}
+	docker compose {{ if env == "" { "" } else { "-f compose.yml -f compose." + env + ".yml " + compose_override_args } }} {{ extra_args }}
 
 # Internal - fails early (with guidance) if the repository-root `.env` is missing.
 _require_root_env_file_or_fail:

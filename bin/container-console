@@ -16,6 +16,14 @@ if [ -t 0 ] && [ -t 1 ]; then
 	docker_compose_run_flags=''
 fi
 
-docker compose -f compose.yml \
+cd "$(dirname "$0")/.."
+
+# The files from COMPOSE_FILE in .env (see .env.dist); compose.yml alone where .env lacks it.
+compose_args='-f compose.yml'
+if grep -Eq '^[[:space:]]*(export[[:space:]]+)?COMPOSE_FILE[[:space:]]*=' .env 2>/dev/null; then
+	compose_args=''
+fi
+
+docker compose $compose_args \
 run $docker_compose_run_flags --rm --user='100:101' php sh -c \
 "cd /code/app && NAGADMIN_RUNTIME_DIR=/tmp/nagadmin-console php bin/console $C"

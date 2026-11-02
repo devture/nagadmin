@@ -9,4 +9,4 @@ JSON_FILES=()
 
 # Names (variables or JSON key paths like System/Timezone) the templates have but the host's files may lack,
 # e.g. development-only settings, or ones only some deployments need (trusted proxies, behind a reverse proxy only).
-OPTIONAL_NAMES=(NGINX_HTTP_BIND_ADDRESS NAGIOS_HTTP_BIND_ADDRESS MAILCRAB_HTTP_BIND_ADDRESS SYMFONY_TRUSTED_PROXIES)
+OPTIONAL_NAMES=(COMPOSE_FILE NGINX_HTTP_BIND_ADDRESS NAGIOS_HTTP_BIND_ADDRESS MAILCRAB_HTTP_BIND_ADDRESS SYMFONY_TRUSTED_PROXIES)

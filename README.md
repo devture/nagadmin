@@ -90,8 +90,8 @@ just run
 
 `just run` starts the **development** environment, which includes a
 [mailcrab](https://github.com/tweedegolf/mailcrab) mail-catcher so it never sends real e-mail — captured messages are
-viewable at http://127.0.0.1:20182. To run the **production** environment instead, use `just run prod`
-(see **Running in production** below).
+viewable at http://127.0.0.1:20182. The environment is picked by `COMPOSE_FILE` in `.env`
+(`compose.yml:compose.dev.yml` from `.env.dist`; see **Running in production** below).
 
 > ℹ️ Nagios won't be fully healthy yet — it can't find its configuration until the install step below.
 
@@ -138,7 +138,7 @@ either (or both).
 ### Set up a reverse proxy
 
 In development, the stack publishes the Nagadmin UI (the `nginx` service) and the Nagios UI (the `nagios` service) on
-the host addresses set by `NGINX_HTTP_BIND_ADDRESS` / `NAGIOS_HTTP_BIND_ADDRESS`. In production (`just run prod`) it
+the host addresses set by `NGINX_HTTP_BIND_ADDRESS` / `NAGIOS_HTTP_BIND_ADDRESS`. In production it
 publishes nothing by default. Put a reverse proxy in front of the UIs to add TLS and route your domains. Two approaches:
 
 - **Host-level proxy** (nginx, Apache, …) — publish the UIs with a `compose.override.yml` (see
@@ -179,7 +179,8 @@ so that the proxy's `X-Forwarded-Proto` is honored and generated URLs come out `
 
 ## ⚙️ Running in production
 
-`just run prod` combines `compose.yml` with `compose.prod.yml`, which adds a bundled
+In production, set `COMPOSE_FILE=compose.yml:compose.prod.yml` in `.env` (append `:compose.override.yml` if you have
+one), then `just run`. `compose.prod.yml` adds a bundled
 [exim-relay](https://github.com/devture/exim-relay) `mailer` service for sending Nagios notifications. Point the
 application at it by setting `MAILER_DSN=smtp://mailer:8025` in the production `app/.env`.
 
@@ -195,7 +196,7 @@ lose notifications: queued mail is retried until it is delivered.
 
 ### Deploying updates
 
-With the stack running (`just run prod`, e.g. in a systemd unit), check out the new commit and run `just deploy`.
+With the stack running (`just run`, e.g. in a systemd unit), check out the new commit and run `just deploy`.
 It installs PHP dependencies, builds and pulls images, upgrades MongoDB with a dump and restore when its minor or major
 version changes, updates the containers, clears the cache and deploys the Nagios configuration.
 
@@ -238,15 +239,15 @@ Yes. Drop them into `var/nagios-custom-plugins/` (executable, with the right she
 
 **Can I customize the Compose services?**
 Yes, without changing tracked files: create a `compose.override.yml` in the repository root (it's gitignored). When it
-exists, the `just` recipes pass it to Docker Compose after `compose.yml` and `compose.<env>.yml`, so it can change any
+is listed last in `COMPOSE_FILE` (in `.env`), Docker Compose applies it after the other files, so it can change any
 service (e.g. a different image for `mongodb`, extra environment variables or volumes). See Docker's documentation on
 [merging Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/).
 
 **How do I back up and restore the database?**
-`just mongodb-dump prod` writes `var/mongodb-io/latest-dump.archive.zst` (a zstd-compressed `mongodump --archive`
-file). To restore one, move it to `var/mongodb-io/import.archive.zst` and run `just mongodb-import prod`. Dumps made
+`just mongodb-dump` writes `var/mongodb-io/latest-dump.archive.zst` (a zstd-compressed `mongodump --archive`
+file). To restore one, move it to `var/mongodb-io/import.archive.zst` and run `just mongodb-import`. Dumps made
 before 2026-11-01 are a `var/mongodb-io/latest-dump` directory of gzipped files instead: move it to
-`var/mongodb-io/import` and run `just docker-compose prod "exec -T mongodb mongorestore --gzip --stopOnError --dir=/mongodb-io/import"`.
+`var/mongodb-io/import` and run `docker compose exec -T mongodb mongorestore --gzip --stopOnError --dir=/mongodb-io/import`.
 
 **Can I import my existing Nagios configuration files?**
 No. You'd need to start from scratch via the UI.

@@ -13,7 +13,8 @@ Usage: $0 <base_directory> <justfile_binary_path> <env>
 Arguments:
   base_directory         The project root directory (where the justfile lives)
   justfile_binary_path   The path to the just executable
-  env                    The environment whose compose overrides to use (dev or prod)
+  env                    The environment whose compose overrides to use (dev or prod),
+                         or empty for the files from COMPOSE_FILE in .env
 
 Example:
   $0 /srv/http/nagadmin /usr/local/bin/just prod
