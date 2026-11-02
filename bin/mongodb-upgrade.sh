@@ -8,20 +8,18 @@ set -euo pipefail
 
 print_usage() {
 	cat <<EOF
-Usage: $0 <base_directory> <justfile_binary_path> <env>
+Usage: $0 <base_directory> <justfile_binary_path>
 
 Arguments:
   base_directory         The project root directory (where the justfile lives)
   justfile_binary_path   The path to the just executable
-  env                    The environment whose compose overrides to use (dev or prod),
-                         or empty for the files from COMPOSE_FILE in .env
 
 Example:
-  $0 /srv/http/nagadmin /usr/local/bin/just prod
+  $0 /srv/http/nagadmin /usr/local/bin/just
 EOF
 }
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
 	echo "Error: Missing required arguments" >&2
 	echo "" >&2
 	print_usage >&2
@@ -30,7 +28,6 @@ fi
 
 base_directory="$1"
 justfile_binary_path="$2"
-env="$3"
 
 if [ ! -d "${base_directory}" ]; then
 	echo "Error: Base directory '${base_directory}' does not exist" >&2
@@ -74,15 +71,15 @@ echo "🔎 Abort if the MongoDB container is not running"
 # `ps -q <service>` prints the running container's id (and nothing if it's not running).
 # This is robust across docker-compose versions, unlike grepping the STATUS column text
 # (which differs between versions: "Up ..." vs "running").
-test -n "$(run_just docker-compose "${env}" "ps -q mongodb")" || exit 1
+test -n "$(run_just docker-compose "ps -q mongodb")" || exit 1
 
 # The MongoDB image may also be built locally (e.g. via a `build:` section in compose.override.yml).
 # Doing both keeps this script working either way:
 # - `pull --ignore-buildable` skips images that are built locally (a plain `pull` would fail for them)
 # - `build` does nothing for services that don't have a `build:` section
 echo "🔃 Ensure the (new) MongoDB container image is pulled (or built)..."
-run_just docker-compose "${env}" "pull --ignore-buildable mongodb"
-run_just docker-compose "${env}" "build mongodb"
+run_just docker-compose "pull --ignore-buildable mongodb"
+run_just docker-compose "build mongodb"
 
 if [ -e "${var_mongodb_io_path}/import.archive.zst" ]; then
 	echo "🧹 Removing old ${var_mongodb_io_path}/import.archive.zst..."
@@ -92,10 +89,10 @@ fi
 touch "${upgrade_marker}"
 
 echo "🛑 Stopping PHP container (so nothing writes to MongoDB during the upgrade)..."
-run_just docker-compose "${env}" "stop php"
+run_just docker-compose "stop php"
 
 echo "⬇️ Dumping MongoDB (from the OLD version, still running) and relocating to ${var_mongodb_io_path}/import.archive.zst..."
-run_just mongodb-dump "${env}"
+run_just mongodb-dump
 mv "${var_mongodb_io_path}/latest-dump.archive.zst" "${var_mongodb_io_path}/import.archive.zst"
 
 # The MongoDB data directory is owned by root (mongo runs as root in the container), so the
@@ -110,17 +107,17 @@ docker run --rm --mount "type=bind,src=${base_directory},dst=/base" "${alpine_co
 	sh -c "mkdir -p /base/var/container-data/mongodb && chown ${mongodb_data_user} /base/var/container-data/mongodb"
 
 echo "▶️ Starting the (new) MongoDB container against the empty data directory..."
-run_just docker-compose "${env}" "up --force-recreate --detach --wait mongodb"
+run_just docker-compose "up --force-recreate --detach --wait mongodb"
 
 echo "⬆️ Importing the dump into the new MongoDB version..."
-run_just mongodb-import "${env}"
+run_just mongodb-import
 
 echo "▶️ Starting the PHP container again..."
-run_just docker-compose "${env}" "up --detach --wait php"
+run_just docker-compose "up --detach --wait php"
 
 # nginx resolves `php` only at startup, so it would keep proxying to the old container's address.
 echo "🔃 Restarting nginx..."
-run_just docker-compose "${env}" "restart nginx"
+run_just docker-compose "restart nginx"
 
 rm -f "${upgrade_marker}"
 

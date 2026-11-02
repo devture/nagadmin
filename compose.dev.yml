@@ -1,8 +1,6 @@
 # Development-only overrides, combined with the shared compose.yml:
 #
-#     docker compose -f compose.yml -f compose.dev.yml ...
-#
-# The justfile does this automatically (its recipes default to `env=dev`).
+#     COMPOSE_FILE=compose.yml:compose.dev.yml (in .env, as .env.dist has it)
 
 services:
   # Captures all outgoing e-mail during development and shows it in a web UI,

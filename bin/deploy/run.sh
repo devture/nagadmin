@@ -2,14 +2,12 @@
 set -euo pipefail
 
 # Applies the checked-out commit to the running stack (`just deploy`, after checking out the commit).
-# The stack itself keeps running attached (`just run prod`, e.g. in a systemd unit); this reconciles it underneath.
+# The stack itself keeps running attached (`just run`, e.g. in a systemd unit); this reconciles it underneath.
 
-just="${1:?Usage: $0 <just executable> <compose env>}"
-# An empty env uses the Compose files from COMPOSE_FILE in .env.
-env="${2?Usage: $0 <just executable> <compose env>}"
+just="${1:?Usage: $0 <just executable>}"
 cd "$(dirname "$0")/../.."
 
-compose() { "${just}" docker-compose "${env}" "$@"; }
+compose() { "${just}" docker-compose "$@"; }
 
 # With Docker's containerd image store, the default provenance attestation gives every build a new image ID, even a fully cached one,
 # so `up` would recreate the built services (MongoDB too, when built by compose.override.yml) on every deploy. Without it, an unchanged build keeps its ID.
@@ -30,8 +28,8 @@ bin/deploy/retry.sh "${just}" composer-install
 
 # Retried too, as they change nothing that serves.
 echo "🔨 Building and pulling images, while the old ones keep serving..."
-bin/deploy/retry.sh "${just}" docker-compose "${env}" build
-bin/deploy/retry.sh "${just}" docker-compose "${env}" pull --ignore-buildable --quiet
+bin/deploy/retry.sh "${just}" docker-compose build
+bin/deploy/retry.sh "${just}" docker-compose pull --ignore-buildable --quiet
 
 containers_data_path=var/container-data
 upgrade_marker="${containers_data_path}/mongodb-upgrade-in-progress"
@@ -48,7 +46,7 @@ mongodb_container=$(compose ps --all --quiet mongodb)
 if [ -z "${mongodb_container}" ]; then
 	# Only the container tells which version wrote the data, and `just stop` removes it.
 	if [ -n "$(ls -A "${containers_data_path}/mongodb" 2>/dev/null)" ]; then
-		echo "❌ There is MongoDB data, but no container to tell which version wrote it. Start the stack (just run ${env}), then deploy again." >&2
+		echo "❌ There is MongoDB data, but no container to tell which version wrote it. Start the stack (just run), then deploy again." >&2
 		exit 1
 	fi
 else
@@ -56,7 +54,7 @@ else
 	wanted=$(compose config --images mongodb)
 	if [ "${running}" != "${wanted}" ] && { [ -z "$(major_minor "${running}")" ] || [ "$(major_minor "${running}")" != "$(major_minor "${wanted}")" ]; }; then
 		echo "⬆️ MongoDB changes from ${running} to ${wanted}: upgrading with a dump and restore..."
-		"${just}" mongodb-upgrade "${env}"
+		"${just}" mongodb-upgrade
 	fi
 fi
 

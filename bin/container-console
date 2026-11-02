@@ -18,12 +18,12 @@ fi
 
 cd "$(dirname "$0")/.."
 
-# The files from COMPOSE_FILE in .env (see .env.dist); compose.yml alone where .env lacks it.
-compose_args='-f compose.yml'
-if grep -Eq '^[[:space:]]*(export[[:space:]]+)?COMPOSE_FILE[[:space:]]*=' .env 2>/dev/null; then
-	compose_args=''
+# Without COMPOSE_FILE, Compose would silently use compose.yml (and compose.override.yml) alone.
+if ! grep -Eq '^[[:space:]]*(export[[:space:]]+)?COMPOSE_FILE[[:space:]]*=[[:space:]]*[^[:space:]]' .env 2>/dev/null; then
+	echo "Error: COMPOSE_FILE is not set in .env (see .env.dist)" >&2
+	exit 1
 fi
 
-docker compose $compose_args \
+docker compose \
 run $docker_compose_run_flags --rm --user='100:101' php sh -c \
 "cd /code/app && NAGADMIN_RUNTIME_DIR=/tmp/nagadmin-console php bin/console $C"

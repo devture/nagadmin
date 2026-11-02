@@ -1,8 +1,6 @@
 # Production-only overrides, combined with the shared compose.yml:
 #
-#     docker compose -f compose.yml -f compose.prod.yml ...
-#
-# The justfile does this with `env=prod` (e.g. `just run prod`).
+#     COMPOSE_FILE=compose.yml:compose.prod.yml (in .env)
 
 services:
   # Outgoing mail relay for Nagios notifications. The application hands mail to
