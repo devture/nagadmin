@@ -2,7 +2,7 @@ FROM docker.io/alpine:3.24.3
 
 ARG PHP_VERSION=85
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
-ARG MONGODB_VERSION=2.5.6
+ARG MONGODB_VERSION=2.5.7
 
 WORKDIR /code
 
