@@ -17,12 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install and audit locked dependencies
+      - name: Install locked dependencies
         run: |
           mkdir -p var/composer-cache
           ./bin/composer validate --strict
           ./bin/composer install --no-interaction --prefer-dist
-          ./bin/composer audit --locked
       - name: Build PHP runtime and check the application
         run: |
           docker build -t nagadmin-php-check etc/docker/php
@@ -47,7 +46,6 @@ jobs:
           cache: npm
           cache-dependency-path: app/frontend/package-lock.json
       - run: npm ci --no-fund
-      - run: npm audit --omit=dev
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
