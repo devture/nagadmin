@@ -40,7 +40,7 @@ RUN apk add --no-cache \
 RUN apk add --no-cache libstdc++ \
     && apk add --no-cache --virtual .mongodb-build-deps \
         autoconf build-base linux-headers php${PHP_VERSION}-dev curl openssl-dev \
-    && curl -fsSL --retry 3 \
+    && curl -fsSL --retry 10 --retry-delay 15 --retry-max-time 300 \
         "https://github.com/mongodb/mongo-php-driver/releases/download/${MONGODB_VERSION}/mongodb-${MONGODB_VERSION}.tgz" \
         -o /tmp/mongodb.tgz \
     && tar -xzf /tmp/mongodb.tgz -C /tmp \
