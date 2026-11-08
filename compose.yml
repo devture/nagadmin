@@ -26,7 +26,8 @@ services:
 
   php:
     build: ./etc/docker/php
-    image: devture/nagadmin-php:8.5-alpine-3.24.3-1
+    image: devture/nagadmin-php:local
+    pull_policy: build
     # We run PHP with the same user that Nagios runs with, because
     # we need it to be able to write to the nagios.cmd file.
     user: 100:101
