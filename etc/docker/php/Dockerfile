@@ -1,4 +1,4 @@
-FROM docker.io/alpine:3.24.3
+FROM docker.io/alpine:3.24.4
 
 ARG PHP_VERSION=85
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
