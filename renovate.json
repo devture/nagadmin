@@ -79,6 +79,21 @@
       "matchPackageNames": ["*"],
       "automerge": false,
       "schedule": ["at any time"]
+    },
+    {
+      "description": "Composer minor and patch updates in one PR, so lock changes don't conflict with each other. Development dependencies are grouped separately (next rule).",
+      "matchManagers": ["composer"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Composer non-major dependencies"
+    },
+    {
+      "description": "Composer development dependencies (require-dev: code style fixers, static analysis, the profiler) release often and the running app doesn't use them. Offer their minor and patch updates in one PR on Mondays only (Renovate runs on other days leave an open one as it is). The lock may also move dependencies the app shares with them. This rule comes after the \"at any time\" rule above, so its schedule wins.",
+      "matchManagers": ["composer"],
+      "matchDepTypes": ["require-dev"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Composer development dependencies",
+      "schedule": ["* * * * 1"],
+      "updateNotScheduled": false
     }
   ]
 }
