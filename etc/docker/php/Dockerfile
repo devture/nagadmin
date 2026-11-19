@@ -9,7 +9,7 @@ ARG PHP_VERSION
 # doesn't have the version yet.
 ARG PHP_PACKAGE_VERSION="8.5.12-r0"
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
-ARG MONGODB_VERSION=2.5.7
+ARG MONGODB_VERSION=2.5.8
 
 WORKDIR /code
 
