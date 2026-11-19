@@ -1,6 +1,11 @@
 FROM docker.io/alpine:3.24.4
 
 ARG PHP_VERSION=85
+# The minimum version of Alpine's PHP packages. Alpine ships PHP releases into its stable branch without a new
+# Alpine release, and a rebuild would reuse the cached `apk add` layer below: bumping this (Renovate does, from
+# Alpine's package index) rebuilds that layer, refreshing every package in it, and fails the build if the mirror
+# doesn't have the version yet.
+ARG PHP_PACKAGE_VERSION="8.5.12-r0"
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
 ARG MONGODB_VERSION=2.5.7
 
@@ -17,9 +22,8 @@ WORKDIR /code
 #   fileinfo, intl                  — HttpFoundation MIME detection / Symfony i18n helpers
 #   phar, tokenizer                 — used by Symfony console tooling
 # OPcache ships with the main php85 package (no separate extension to install).
-# Keep the main package pin literal so Renovate can track PHP security releases.
 RUN apk add --no-cache \
-    php85=8.5.12-r0 \
+    "php${PHP_VERSION}>=${PHP_PACKAGE_VERSION}" \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-ctype \
     php${PHP_VERSION}-iconv \

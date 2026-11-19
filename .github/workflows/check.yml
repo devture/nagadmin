@@ -17,6 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check the PHP packages' lookup
+        # renovate.json looks up Alpine's PHP package in one Alpine branch's index: the Dockerfile's.
+        # (The image build below fails if the mirror doesn't have the Dockerfile's minimum version.)
+        run: |
+          dockerfile=etc/docker/php/Dockerfile
+          alpine=$(sed -n 's/^FROM docker\.io\/\(library\/\)\{0,1\}alpine:\([0-9]*\.[0-9]*\)\.[0-9]*$/\2/p' "$dockerfile")
+          php=$(sed -n 's/^ARG PHP_VERSION="\{0,1\}\([0-9]*\)"\{0,1\}$/\1/p' "$dockerfile")
+          minimum=$(sed -n 's/^ARG PHP_PACKAGE_VERSION="\([^"]*\)"$/\1/p' "$dockerfile")
+          lookup="$(sed -n 's/^ *"registryUrlTemplate": "https:\/\/dl-cdn\.alpinelinux\.org\/alpine?branch=\(v[0-9.]*\)\&.*",\{0,1\}$/\1/p' renovate.json) $(sed -n 's/^ *"depNameTemplate": "\(php[0-9]*\)",$/\1/p' renovate.json)"
+          echo "renovate.json looks up ${lookup}; the Dockerfile installs v${alpine} php${php}>=${minimum}"
+          test -n "$alpine" && test -n "$php" && test -n "$minimum" && test "$lookup" = "v${alpine} php${php}" ||
+            { echo "renovate.json's PHP package lookup differs from the Dockerfile (or one was not found): move them together." >&2; exit 1; }
       - name: Install locked dependencies
         run: |
           mkdir -p var/composer-cache

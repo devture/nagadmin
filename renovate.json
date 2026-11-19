@@ -8,6 +8,15 @@
   },
   "customManagers": [
     {
+      "description": "The minimum version of Alpine's PHP packages (etc/docker/php/Dockerfile's ARG PHP_PACKAGE_VERSION): Alpine ships PHP releases (and rebuilds) into its stable branch without an Alpine release. Looked up in that branch's package index (what apk installs from); the Check fails if this isn't the Dockerfile's Alpine branch and PHP.",
+      "customType": "regex",
+      "managerFilePatterns": ["/^etc/docker/php/Dockerfile$/"],
+      "matchStrings": ["ARG PHP_PACKAGE_VERSION=\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "php85",
+      "datasourceTemplate": "apk",
+      "registryUrlTemplate": "https://dl-cdn.alpinelinux.org/alpine?branch=v3.24&components=community&arch=x86_64"
+    },
+    {
       "customType": "regex",
       "managerFilePatterns": ["/^etc/docker/php/Dockerfile$/"],
       "matchStrings": [
@@ -30,11 +39,9 @@
       "prPriority": 100
     },
     {
-      "description": "Track PHP package security releases independently of Alpine image releases",
+      "description": "Prioritize PHP package security releases (the Dockerfile's PHP_PACKAGE_VERSION) in Renovate's PR queue",
       "matchDatasources": ["apk"],
-      "matchFileNames": ["etc/docker/php/Dockerfile"],
       "matchPackageNames": ["php85"],
-      "registryUrls": ["https://dl-cdn.alpinelinux.org/alpine?branch=v3.24&components=community&arch=x86_64"],
       "prPriority": 100
     },
     {
