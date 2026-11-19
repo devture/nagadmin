@@ -37,11 +37,11 @@ deploy: _require_root_env_file_or_fail _require_app_env_file_or_fail _prepare_de
 
 # Installs PHP dependencies via composer
 composer-install: _var-composer-cache
-	./bin/composer install --optimize-autoloader --ignore-platform-req=php
+	./bin/composer install --optimize-autoloader
 
 # Updates PHP dependencies via composer
 composer-update: _var-composer-cache
-	./bin/composer update --optimize-autoloader --ignore-platform-req=php
+	./bin/composer update --optimize-autoloader
 
 # Runs static analysis (PHPStan) against the app's PHP code
 php-analyze: _prepare_deps

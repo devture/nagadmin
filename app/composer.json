@@ -6,7 +6,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.4",
+        "php": "~8.5.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mongodb": "^2.5",

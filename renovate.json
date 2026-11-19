@@ -20,12 +20,12 @@
       "customType": "regex",
       "managerFilePatterns": ["/^etc/docker/php/Dockerfile$/"],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>github-releases) depName=(?<depName>[^\\s]+)\\s+ARG MONGODB_VERSION=(?<currentValue>[^\\s]+)"
+        "# renovate: datasource=(?<datasource>github-releases) depName=(?<depName>[^\\s]+)\\s+ARG (?:MONGODB|COMPOSER)_VERSION=(?<currentValue>[^\\s]+)"
       ]
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^bin/composer$/", "/^justfile$/"],
+      "managerFilePatterns": ["/^justfile$/"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+)\\s+[a-z_]+\\s*:?=\\s*[\"']?(?:[^\\s\"']+):(?<currentValue>[^\\s\"']+)"
       ]
@@ -62,6 +62,12 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/devture/exim-relay"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?-r(?<build>\\d+)-(?<revision>\\d+)$"
+    },
+    {
+      "description": "app/composer.json's require.php is the image's PHP minor (etc/docker/php/Dockerfile's PHP_VERSION; the Check compares them) and picks the PHP Renovate's own Composer runs on. Move it by hand with the Dockerfile.",
+      "matchManagers": ["composer"],
+      "matchDepNames": ["php"],
+      "enabled": false
     },
     {
       "description": "Keep Symfony framework components on the same release line",

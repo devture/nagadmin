@@ -14,8 +14,9 @@ if [ -t 1 ]; then
 	docker_run_flags='-it'
 fi
 
-# renovate: datasource=docker depName=docker.io/composer
-composer_image=docker.io/composer:2.11.2
+# Composer runs on the app's own PHP image: the PHP Dockerfile's `composer` stage (fully cached after the first build).
+composer_image=localhost/devture/nagadmin-composer
+docker build --quiet --target composer --tag "$composer_image" etc/docker/php > /dev/null || exit 1
 
 docker run \
 	$docker_run_flags \

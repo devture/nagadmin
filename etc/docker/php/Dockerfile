@@ -1,6 +1,8 @@
-FROM docker.io/alpine:3.24.4
-
 ARG PHP_VERSION=85
+
+FROM docker.io/alpine:3.24.4 AS base
+
+ARG PHP_VERSION
 # The minimum version of Alpine's PHP packages. Alpine ships PHP releases into its stable branch without a new
 # Alpine release, and a rebuild would reuse the cached `apk add` layer below: bumping this (Renovate does, from
 # Alpine's package index) rebuilds that layer, refreshing every package in it, and fails the build if the mirror
@@ -62,6 +64,22 @@ RUN apk add --no-cache libstdc++ \
 # (bin/container-console, the compose CMD) does not hardcode the PHP version.
 RUN ln -sf /usr/bin/php${PHP_VERSION} /usr/bin/php && \
     ln -sf /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm
+
+# Composer, on the image's PHP and extensions (bin/composer builds this stage, the GitHub Check through it).
+# It adds what Composer itself needs: git and unzip.
+FROM base AS composer
+
+# renovate: datasource=github-releases depName=composer/composer
+ARG COMPOSER_VERSION=2.11.2
+
+RUN apk add --no-cache git unzip
+
+ADD --chmod=755 https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar /usr/local/bin/composer
+
+# The production image: the last stage, so building without a target gives it.
+FROM base AS production
+
+ARG PHP_VERSION
 
 COPY override.ini /etc/php${PHP_VERSION}/conf.d/zz-override.ini
 
