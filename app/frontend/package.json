@@ -5,7 +5,7 @@
 		"build": "node build.mjs",
 		"watch": "node build.mjs --watch",
 		"lint": "eslint .",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "node node_modules/typescript-native/bin/tsc --noEmit"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "7.3.*",
@@ -19,12 +19,12 @@
 		"esbuild": "0.28.2",
 		"eslint": "9.39.5",
 		"@eslint/js": "9.39.5",
-		"typescript-eslint": "8.72.2",
+		"typescript-eslint": "8.73.0",
 		"eslint-plugin-react": "7.37.5",
 		"eslint-plugin-react-hooks": "7.1.1",
 		"typescript": "npm:@typescript/typescript6@6.0.2",
 		"globals": "17.14.0",
 		"@types/react": "19.3.0",
-		"@typescript/native": "npm:typescript@7.0.2"
+		"typescript-native": "npm:typescript@7.0.2"
 	}
 }

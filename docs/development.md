@@ -86,10 +86,11 @@ Linting (ESLint) and type-checking (strict TypeScript) together:
 just js-analyze
 ```
 
-Type checking uses TypeScript 7's native `tsc`, installed under the
-`@typescript/native` npm alias. ESLint still needs the TypeScript 6 JavaScript API,
-so `typescript` aliases `@typescript/typescript6`, which re-exports that API and
-provides `tsc6`. Keep both aliases when updating dependencies; see Microsoft's
+Type checking invokes TypeScript 7's native `tsc` directly through the
+`typescript-native` npm alias. typescript-eslint looks for `@typescript/native`
+when using its experimental parser backend, which requires TypeScript 7.1.
+ESLint uses the TypeScript 6 JavaScript API via the `typescript` alias for
+`@typescript/typescript6`, which also provides `tsc6`. See Microsoft's
 [side-by-side setup](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0).
 
 `just js-autofix` applies the auto-fixable ESLint fixes, and
