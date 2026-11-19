@@ -74,7 +74,10 @@ ARG COMPOSER_VERSION=2.11.2
 
 RUN apk add --no-cache git unzip
 
-ADD --chmod=755 https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar /usr/local/bin/composer
+# A RUN, not an ADD: BuildKit revalidates a remote ADD with the server on every build, so even a fully cached build
+# would fail while getcomposer.org is down. This layer is cached by its command, which carries the version.
+RUN wget -q -O /usr/local/bin/composer "https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar" && \
+    chmod 755 /usr/local/bin/composer
 
 # The production image: the last stage, so building without a target gives it.
 FROM base AS production
