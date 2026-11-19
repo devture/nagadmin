@@ -84,7 +84,7 @@ js-analyze-lint: _public-assets-frontend
 
 # Runs TypeScript compiler type checking
 js-analyze-type-check: _public-assets-frontend
-	./bin/node /bin/sh -c 'cd /app/src && tsc --noEmit'
+	./bin/node /bin/sh -c 'cd /app/src && node "$FRONTEND_NODE_MODULES/typescript-native/bin/tsc" --noEmit'
 
 # Runs ESLint on React/TypeScript code and auto-fixes issues
 js-autofix: _public-assets-frontend
