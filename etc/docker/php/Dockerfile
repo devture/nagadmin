@@ -7,7 +7,7 @@ ARG PHP_VERSION
 # Alpine release, and a rebuild would reuse the cached `apk add` layer below: bumping this (Renovate does, from
 # Alpine's package index) rebuilds that layer, refreshing every package in it, and fails the build if the mirror
 # doesn't have the version yet.
-ARG PHP_PACKAGE_VERSION="8.5.12-r0"
+ARG PHP_PACKAGE_VERSION="8.5.13-r0"
 # renovate: datasource=github-releases depName=mongodb/mongo-php-driver
 ARG MONGODB_VERSION=2.5.8
 
