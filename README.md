@@ -200,7 +200,9 @@ lose notifications: queued mail is retried until it is delivered.
 With the stack running (`just run`, e.g. in a systemd unit), check out the new commit and run `just deploy`.
 It installs PHP dependencies, builds the images whose inputs (build context and settings) changed and pulls missing
 ones, upgrades MongoDB with a dump and restore when its minor or major version changes, updates the containers, clears
-the cache and deploys the Nagios configuration.
+the cache and deploys the Nagios configuration (which restarts Nagios). Run by a deployment tool that sets
+`KUKAROLL_PREVIOUS_COMMIT` (the last successfully deployed commit), it deploys the Nagios configuration only when `app/`
+(other than `app/frontend/`) changed since then, or when an earlier deploy of it did not finish.
 
 A failed MongoDB upgrade leaves `var/container-data/mongodb-upgrade-in-progress` behind, and deploys refuse to run until
 you've checked the data (the old one is kept in `var/container-data/mongodb-backup-*`) and removed it.
