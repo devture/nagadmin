@@ -60,6 +60,7 @@ you. No hand-editing `.cfg` files, no separate Nagios install to wire up.
 - [Docker](https://www.docker.com/)
 - Docker Compose (v1 or v2)
 - [just](https://github.com/casey/just) (command runner)
+- [jq](https://jqlang.org/), for deploys (`just deploy`), and GNU tar if a `compose.override.yml` builds an image from a directory outside the checkout
 - [zstd](https://facebook.github.io/zstd/), for MongoDB dumps (`just mongodb-dump`, `just mongodb-import`, MongoDB upgrades); the MongoDB container doesn't have it, so it runs on the host
 
 ### 1. Get the code
@@ -197,8 +198,9 @@ lose notifications: queued mail is retried until it is delivered.
 ### Deploying updates
 
 With the stack running (`just run`, e.g. in a systemd unit), check out the new commit and run `just deploy`.
-It installs PHP dependencies, builds and pulls images, upgrades MongoDB with a dump and restore when its minor or major
-version changes, updates the containers, clears the cache and deploys the Nagios configuration.
+It installs PHP dependencies, builds the images whose inputs (build context and settings) changed and pulls missing
+ones, upgrades MongoDB with a dump and restore when its minor or major version changes, updates the containers, clears
+the cache and deploys the Nagios configuration.
 
 A failed MongoDB upgrade leaves `var/container-data/mongodb-upgrade-in-progress` behind, and deploys refuse to run until
 you've checked the data (the old one is kept in `var/container-data/mongodb-backup-*`) and removed it.

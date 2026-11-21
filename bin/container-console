@@ -24,6 +24,12 @@ if ! grep -Eq '^[[:space:]]*(export[[:space:]]+)?COMPOSE_FILE[[:space:]]*=[[:spa
 	exit 1
 fi
 
+# A deploy (bin/deploy/run.sh) has already prepared the php image, and sets IMAGES_PREPARED=1: without `--pull never`,
+# php's `pull_policy: build` would rebuild it here (a cold build, after the build cache was pruned).
+if [ "${IMAGES_PREPARED:-}" = 1 ]; then
+	docker_compose_run_flags="${docker_compose_run_flags} --pull never"
+fi
+
 docker compose \
 run $docker_compose_run_flags --rm --user='100:101' php sh -c \
 "cd /code/app && NAGADMIN_RUNTIME_DIR=/tmp/nagadmin-console php bin/console $C"

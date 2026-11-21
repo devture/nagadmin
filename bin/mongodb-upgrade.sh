@@ -77,9 +77,17 @@ test -n "$(run_just docker-compose "ps -q mongodb")" || exit 1
 # Doing both keeps this script working either way:
 # - `pull --ignore-buildable` skips images that are built locally (a plain `pull` would fail for them)
 # - `build` does nothing for services that don't have a `build:` section
-echo "🔃 Ensure the (new) MongoDB container image is pulled (or built)..."
-run_just docker-compose "pull --ignore-buildable mongodb"
-run_just docker-compose "build mongodb"
+#
+# A deploy (bin/deploy/run.sh) has already prepared every image, and sets IMAGES_PREPARED=1: rebuilding here could give
+# the image a new ID (without build cache), and the deploy's own preparation is what the rest of the stack runs on.
+up_flags=""
+if [ "${IMAGES_PREPARED:-}" = 1 ]; then
+	up_flags="--no-build --pull never"
+else
+	echo "🔃 Ensure the (new) MongoDB container image is pulled (or built)..."
+	run_just docker-compose "pull --ignore-buildable mongodb"
+	run_just docker-compose "build mongodb"
+fi
 
 if [ -e "${var_mongodb_io_path}/import.archive.zst" ]; then
 	echo "🧹 Removing old ${var_mongodb_io_path}/import.archive.zst..."
@@ -107,13 +115,13 @@ docker run --rm --mount "type=bind,src=${base_directory},dst=/base" "${alpine_co
 	sh -c "mkdir -p /base/var/container-data/mongodb && chown ${mongodb_data_user} /base/var/container-data/mongodb"
 
 echo "▶️ Starting the (new) MongoDB container against the empty data directory..."
-run_just docker-compose "up --force-recreate --detach --wait mongodb"
+run_just docker-compose "up ${up_flags} --force-recreate --detach --wait mongodb"
 
 echo "⬆️ Importing the dump into the new MongoDB version..."
 run_just mongodb-import
 
 echo "▶️ Starting the PHP container again..."
-run_just docker-compose "up --detach --wait php"
+run_just docker-compose "up ${up_flags} --detach --wait php"
 
 # nginx resolves `php` only at startup, so it would keep proxying to the old container's address.
 echo "🔃 Restarting nginx..."
