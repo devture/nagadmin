@@ -70,7 +70,7 @@ RUN ln -sf /usr/bin/php${PHP_VERSION} /usr/bin/php && \
 FROM base AS composer
 
 # renovate: datasource=github-releases depName=composer/composer
-ARG COMPOSER_VERSION=2.11.2
+ARG COMPOSER_VERSION=2.11.3
 
 RUN apk add --no-cache git unzip
 
