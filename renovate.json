@@ -117,18 +117,20 @@
       "updateNotScheduled": false
     },
     {
-      "description": "npm minor and patch updates (libraries and development tools) in one PR on the 15th of each month only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. After the \"at any time\" rule above, so this schedule wins; lock file maintenance has its own schedule, the same day.",
+      "description": "npm build tooling and types: minor and patch updates in one PR on 15 January and 15 July only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. React's types stay in the React group; neither it nor the libraries the app uses are restricted. After the \"at any time\" rule above, so this schedule wins. Lock file maintenance has its own schedule.",
       "matchManagers": ["npm"],
+      "matchPackageNames": ["esbuild", "eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*", "typescript", "@typescript/**", "typescript-eslint", "@typescript-eslint/**", "globals", "@types/**", "!@types/react", "!@types/react-dom"],
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "npm non-major dependencies",
-      "schedule": ["* * 15 * *"],
+      "groupName": "npm build tooling",
+      "schedule": ["* * 15 1,7 *"],
       "updateNotScheduled": false
     },
     {
-      "description": "npm major updates: a PR each (React's together), offered on the 15th of each month only. An open one keeps being updated.",
+      "description": "npm build tooling and types: major updates, a PR each, on the same two days. An open one keeps being updated.",
       "matchManagers": ["npm"],
+      "matchPackageNames": ["esbuild", "eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*", "typescript", "@typescript/**", "typescript-eslint", "@typescript-eslint/**", "globals", "@types/**", "!@types/react", "!@types/react-dom"],
       "matchUpdateTypes": ["major"],
-      "schedule": ["* * 15 * *"]
+      "schedule": ["* * 15 1,7 *"]
     }
   ]
 }
