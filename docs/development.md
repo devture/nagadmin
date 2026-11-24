@@ -115,8 +115,8 @@ Runtime image and PHP package updates take priority in Renovate's PR queue.
 PR branches are refreshed after base-branch changes so new CI workflows and
 compatibility fixes become available for ArtiDezi assessments.
 ArtiDezi owns automatic merging after review and successful GitHub checks;
-Renovate itself does not merge updates. Weekly lockfile maintenance refreshes
-transitive dependencies within the declared ranges.
+Renovate itself does not merge updates. Monthly lockfile maintenance, on the 15th,
+refreshes transitive dependencies within the declared ranges.
 Minor and patch updates of Composer itself and of Composer development
 dependencies are offered on the 1st of each month only.
 

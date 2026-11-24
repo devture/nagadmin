@@ -4,7 +4,7 @@
   "rebaseWhen": "behind-base-branch",
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 5am on monday"]
+    "schedule": ["* * 15 * *"]
   },
   "customManagers": [
     {
@@ -117,7 +117,7 @@
       "updateNotScheduled": false
     },
     {
-      "description": "npm minor and patch updates (libraries and development tools) in one PR on the 15th of each month only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. After the \"at any time\" rule above, so this schedule wins; lock file maintenance isn't affected.",
+      "description": "npm minor and patch updates (libraries and development tools) in one PR on the 15th of each month only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. After the \"at any time\" rule above, so this schedule wins; lock file maintenance has its own schedule, the same day.",
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm non-major dependencies",
