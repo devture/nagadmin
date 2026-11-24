@@ -119,7 +119,7 @@ Renovate itself does not merge updates. Monthly lockfile maintenance, on the 15t
 refreshes transitive dependencies within the declared ranges.
 Minor and patch updates of Composer itself and of Composer development
 dependencies are offered on the 1st of each month only. npm build tooling and
-types (except React's) are offered on 15 January and 15 July only.
+types (except majors of React's) are offered on 15 January and 15 July only.
 
 Commit both `app/composer.lock` and `app/frontend/package-lock.json` after
 updates. Symfony components are grouped in Renovate; their `composer.json`

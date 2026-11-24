@@ -76,8 +76,9 @@
       "groupName": "Symfony components"
     },
     {
-      "description": "Keep React runtime and type definitions together",
+      "description": "Keep React runtime and type definitions together when a major comes (the types' minors and patches are npm build tooling, below; a group's packages share one schedule)",
       "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
       "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
       "groupName": "React"
     },
@@ -117,16 +118,16 @@
       "updateNotScheduled": false
     },
     {
-      "description": "npm build tooling and types: minor and patch updates in one PR on 15 January and 15 July only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. React's types stay in the React group; neither it nor the libraries the app uses are restricted. After the \"at any time\" rule above, so this schedule wins. Lock file maintenance has its own schedule.",
+      "description": "npm build tooling and types: minor and patch updates in one PR on 15 January and 15 July only, as devture's shared Renovate rules do elsewhere (Renovate runs on other days leave an open one as it is). When one matters sooner, tick the update on the Dependency Dashboard. React itself and the other libraries the app uses aren't restricted. After the \"at any time\" rule above, so this schedule wins. Lock file maintenance has its own schedule.",
       "matchManagers": ["npm"],
-      "matchPackageNames": ["esbuild", "eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*", "typescript", "@typescript/**", "typescript-eslint", "@typescript-eslint/**", "globals", "@types/**", "!@types/react", "!@types/react-dom"],
+      "matchPackageNames": ["esbuild", "eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*", "typescript", "@typescript/**", "typescript-eslint", "@typescript-eslint/**", "globals", "@types/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm build tooling",
       "schedule": ["* * 15 1,7 *"],
       "updateNotScheduled": false
     },
     {
-      "description": "npm build tooling and types: major updates, a PR each, on the same two days. An open one keeps being updated.",
+      "description": "npm build tooling and types: major updates, a PR each, on the same two days. Not React's types, which come with React's major at any time. An open one keeps being updated.",
       "matchManagers": ["npm"],
       "matchPackageNames": ["esbuild", "eslint", "@eslint/**", "eslint-plugin-*", "eslint-config-*", "typescript", "@typescript/**", "typescript-eslint", "@typescript-eslint/**", "globals", "@types/**", "!@types/react", "!@types/react-dom"],
       "matchUpdateTypes": ["major"],
