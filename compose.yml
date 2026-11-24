@@ -9,7 +9,7 @@ services:
     - ./var/mongodb-io:/mongodb-io:rw,cached
 
   nginx:
-    image: docker.io/nginx:1.31.9-alpine
+    image: docker.io/nginx:1.31.10-alpine
     restart: unless-stopped
     label_file: ./var/nginx-labels
     # Any random non-root user will do
