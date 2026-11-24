@@ -30,7 +30,7 @@ class ContactValidator extends BaseValidator {
 		} else {
 			try {
 				$ent = $this->repository->findOneBy(array('name' => $name));
-				if (spl_object_hash($ent) !== spl_object_hash($entity)) {
+				if ($ent !== $entity) {
 					$violations->add('name', 'The name is already in use.');
 				}
 			} catch (NotFound $e) {

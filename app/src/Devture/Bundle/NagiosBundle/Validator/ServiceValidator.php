@@ -34,7 +34,7 @@ class ServiceValidator extends BaseValidator {
 				$host = $entity->getHost();
 				if ($host instanceof Host) {
 					$ent = $this->repository->findOneBy(array('name' => $name, 'hostId' => $host->getId()));
-					if (spl_object_hash($ent) !== spl_object_hash($entity)) {
+					if ($ent !== $entity) {
 						$violations->add('name', 'The name is already in use by another service on that host.');
 					}
 				}
