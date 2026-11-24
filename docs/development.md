@@ -117,6 +117,8 @@ compatibility fixes become available for ArtiDezi assessments.
 ArtiDezi owns automatic merging after review and successful GitHub checks;
 Renovate itself does not merge updates. Weekly lockfile maintenance refreshes
 transitive dependencies within the declared ranges.
+Minor and patch updates of Composer itself and of Composer development
+dependencies are offered on the 1st of each month only.
 
 Commit both `app/composer.lock` and `app/frontend/package-lock.json` after
 updates. Symfony components are grouped in Renovate; their `composer.json`

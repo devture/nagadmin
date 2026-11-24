@@ -100,12 +100,20 @@
       "groupName": "Composer non-major dependencies"
     },
     {
-      "description": "Composer development dependencies (require-dev: code style fixers, static analysis, the profiler) release often and the running app doesn't use them. Offer their minor and patch updates in one PR on Mondays only (Renovate runs on other days leave an open one as it is). The lock may also move dependencies the app shares with them. This rule comes after the \"at any time\" rule above, so its schedule wins.",
+      "description": "Composer development dependencies (require-dev: code style fixers, static analysis, the profiler) release often and the running app doesn't use them. Offer their minor and patch updates in one PR on the 1st of each month only (Renovate runs on other days leave an open one as it is). The lock may also move dependencies the app shares with them. This rule comes after the \"at any time\" rule above, so its schedule wins.",
       "matchManagers": ["composer"],
       "matchDepTypes": ["require-dev"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "Composer development dependencies",
-      "schedule": ["* * * * 1"],
+      "schedule": ["* * 1 * *"],
+      "updateNotScheduled": false
+    },
+    {
+      "description": "Composer itself (the Dockerfile's COMPOSER_VERSION) runs at build time and in checks, not in the running app. Offer its minor and patch updates on the 1st of each month only (Renovate runs on other days leave an open one as it is). This delays its security fixes too; when one matters, tick the update on the Dependency Dashboard. After the \"at any time\" rule above, so this schedule wins.",
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["composer/composer"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "schedule": ["* * 1 * *"],
       "updateNotScheduled": false
     }
   ]
